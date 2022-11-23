@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -26,16 +27,40 @@ class _MyAppState extends State<MyApp> {
   final String? grpdUrl = null;
 
   final double spaceBetweenButton = 20;
-
   final _iAdvizeSdk = IavizeSdk();
+
+  late StreamSubscription _messageSubscription;
+  late StreamSubscription _hasOngoingSubscription;
+  late StreamSubscription _clickedUrlSubscription;
+  late StreamSubscription _targetingRuleAvailabilityUpdatedSubscription;
 
   @override
   void initState() {
     super.initState();
     _iAdvizeSdk.setLanguage('fr');
     _iAdvizeSdk.setLogLevel(LogLevel.verbose);
+    _iAdvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
+    _targetingRuleAvailabilityUpdatedSubscription = _iAdvizeSdk
+        .onActiveTargetingRuleAvailabilityUpdated
+        .listen((bool available) {
+      log('iAdvize Example : Targeting Rule available: $available');
+    });
+    _iAdvizeSdk.setConversationListener();
+    _messageSubscription =
+        _iAdvizeSdk.onReceiveNewMessage.listen((String message) {
+      log('iAdvize Example : New message: $message');
+    });
+    _hasOngoingSubscription =
+        _iAdvizeSdk.hasOngoingConversation.listen((bool ongoing) {
+      log('iAdvize Example : Ongoing: $ongoing');
+    });
+    _clickedUrlSubscription = _iAdvizeSdk.handleClickedUrl.listen((String url) {
+      log('iAdvize Example : Click on url: $url');
+    });
     // _iAdvizeSdk.setDefaultFloatingButton(true);
     // _iAdvizeSdk.setFloatingButtonPosition(25, 25);
+    // _iAdvizeSdk.onConversationListener(
+    //     onReceiveNewMessage: (message) => log('test $message'));
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -85,6 +110,16 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => isActiveTargetingRuleAvailable(),
                 label: 'Is Active Targeting Rule Available',
               ),
+              SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => ongoingConversationId(),
+                label: 'Print Conversation Id',
+              ),
+              SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => ongoingConversationChannel(),
+                label: 'Print Conversation Channel',
+              ),
             ],
           ),
         ),
@@ -100,8 +135,8 @@ class _MyAppState extends State<MyApp> {
           gdprUrl: grpdUrl,
         )
         .then((bool activated) => activated
-            ? log('iAdvize SDK activated')
-            : log('iAdvize SDK not activated'));
+            ? log('iAdvize Example : SDK activated')
+            : log('iAdvize Example : SDK not activated'));
   }
 
   void activateChatTargetingRule() {
@@ -118,8 +153,29 @@ class _MyAppState extends State<MyApp> {
   Future<void> isActiveTargetingRuleAvailable() async {
     await _iAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
-            ? log('iAdvize SDK targeting rule available')
-            : log('iAdvize SDK targeting rule not available'));
+            ? log('iAdvize Example : SDK targeting rule available')
+            : log('iAdvize Example : targeting rule not available'));
+  }
+
+  Future<void> ongoingConversationId() async {
+    await _iAdvizeSdk
+        .ongoingConversationId()
+        .then((String? id) => log('iAdvize Example : conversationId $id'));
+  }
+
+  Future<void> ongoingConversationChannel() async {
+    await _iAdvizeSdk.ongoingConversationChannel().then((ConversationChannel?
+            channel) =>
+        log('iAdvize Example : conversation channel ${channel?.toString()}'));
+  }
+
+  @override
+  void dispose() {
+    _messageSubscription.cancel();
+    _hasOngoingSubscription.cancel();
+    _clickedUrlSubscription.cancel();
+    _targetingRuleAvailabilityUpdatedSubscription.cancel();
+    super.dispose();
   }
 }
 

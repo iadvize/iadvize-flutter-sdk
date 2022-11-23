@@ -2,20 +2,39 @@ import Flutter
 import UIKit
 import IAdvizeConversationSDK
 
-let TAG = "iAdvize SDK"
+
 
 public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
+    let TAG = "iAdvize SDK"
     let CHANNEL_METHOD_ACTIVATE = "activate"
     let CHANNEL_METHOD_LOG_LEVEL = "setLogLevel"
     let CHANNEL_METHOD_LANGUAGE = "setLanguage"
     let CHANNEL_METHOD_ACTIVATE_TARGETING_RULE = "activateTargetingRule"
     let CHANNEL_METHOD_iS_ACTIVE_TARGETING_RULE_AVAILABLE = "isActiveTargetingRuleAvailable"
+    let CHANNEL_METHOD_SET_TARGETING_RULE_AVAILABILITY_LISTENER = "setOnActiveTargetingRuleAvailabilityListener"
+    let CHANNEL_METHOD_SET_CONVERSATION_LISTENER = "setConversationListener"
+    let CHANNEL_METHOD_ONGOING_CONVERSATION_ID = "ongoingConversationId"
+    let CHANNEL_METHOD_ONGOING_CONVERSATION_CHANNEL = "ongoingConversationChannel"
+    
+    var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
+    var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
+    var onOngoingConversationUpdatedStreamHandler: OnUpdatedStreamHandler?
+    var onActiveTargetingRuleAvailabilityUpdatedStreamHandler: OnUpdatedStreamHandler?
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterIadvizeSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
+
+        instance.onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
+        FlutterEventChannel(name: "flutter_iadvize_sdk/onReceiveMessage", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onReceiveMessageStreamHandler)
+        instance.handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
+        FlutterEventChannel(name: "flutter_iadvize_sdk/handleClickUrl", binaryMessenger: registrar.messenger()).setStreamHandler(instance.handleClickUrlStreamHandler)
+        instance.onOngoingConversationUpdatedStreamHandler = OnUpdatedStreamHandler()
+        FlutterEventChannel(name: "flutter_iadvize_sdk/onOngoingConversationUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onOngoingConversationUpdatedStreamHandler)
+        instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler = OnUpdatedStreamHandler()
+        FlutterEventChannel(name: "flutter_iadvize_sdk/onActiveTargetingRuleAvailabilityUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -43,7 +62,15 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             let channel = args["channel"] as! String
             activateTargetingRule(uuid: uuid, channel: channel)
         case self.CHANNEL_METHOD_iS_ACTIVE_TARGETING_RULE_AVAILABLE:
-            isActiveTargetingRuleAvailable(result: result)
+            result(isActiveTargetingRuleAvailable())
+        case self.CHANNEL_METHOD_SET_TARGETING_RULE_AVAILABILITY_LISTENER:
+            setOnActiveTargetingRuleAvailabilityListener()
+        case self.CHANNEL_METHOD_SET_CONVERSATION_LISTENER:
+            setConversationListener()
+        case self.CHANNEL_METHOD_ONGOING_CONVERSATION_ID:
+            result(ongoingConversationId())
+        case self.CHANNEL_METHOD_ONGOING_CONVERSATION_CHANNEL:
+            result(ongoingConversationChannel())
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -51,7 +78,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     
     private func activate(projectId: Int,
                           userId: String?,
-                          gdprUrl: String?, result: @escaping FlutterResult) {
+                          gdprUrl: String?, result: @escaping FlutterResult) -> Void {
         let rgpdOption: IAdvizeConversationSDK.GDPROption = gdprUrl != nil && URL(string: gdprUrl!) != nil ? .enabled(option: .legalInformation(url: URL(string: gdprUrl!)!)) : .disabled
         
         let authenticationOption: IAdvizeConversationSDK.AuthenticationOption = {
@@ -64,12 +91,12 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         IAdvizeSDK.shared.activate(projectId: projectId,
                                    authenticationOption: authenticationOption,
                                    gdprOption: rgpdOption){ success in
-            result(success)
+            
+           result(success)
         }
     }
     
     private func setLogLevel(value: Int) -> Void {
-        print("\(TAG) - setLogLevel called with \(value)")
         IAdvizeSDK.shared.logLevel = logLevelFrom(value: value)
     }
     
@@ -85,7 +112,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func setLanguage(language: String) -> Void {
-        print("\(TAG) - setLanguage called with \(language)")
         IAdvizeSDK.shared.targetingController.language = .custom(value: Language(rawValue: language.lowercased()) ?? .fr)
     }
     
@@ -100,10 +126,45 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         IAdvizeSDK.shared.targetingController.activateTargetingRule(targetingRule: targetingRule)
         
     }
+    
+    private func isActiveTargetingRuleAvailable() -> Bool {
+       return IAdvizeSDK.shared.targetingController.isActiveTargetingRuleAvailable
+    }
 
-    private func isActiveTargetingRuleAvailable(result: @escaping FlutterResult) -> Void {
-        print("iAdvize iOS SDK - isActiveTargetingRuleAvailable called")
-        result(IAdvizeSDK.shared.targetingController.isActiveTargetingRuleAvailable)
+    private func setOnActiveTargetingRuleAvailabilityListener() {
+        IAdvizeSDK.shared.targetingController.delegate = self  
+    }
+
+    private func setConversationListener() {
+        IAdvizeSDK.shared.conversationController.delegate = self   
+    }
+
+    private func ongoingConversationId() -> String? {
+        return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationId.uuidString
+    }
+
+    @objc
+    func ongoingConversationChannel() -> String? {
+        return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationChannel.rawValue
+    }
+}
+
+extension SwiftFlutterIadvizeSdkPlugin: TargetingControllerDelegate {
+    public func activeTargetingRuleAvailabilityDidUpdate(isActiveTargetingRuleAvailable: Bool) {
+        self.onActiveTargetingRuleAvailabilityUpdatedStreamHandler?.onUpdated(value: isActiveTargetingRuleAvailable)
+    }
+}
+
+extension SwiftFlutterIadvizeSdkPlugin: ConversationControllerDelegate {
+    public func ongoingConversationUpdated(ongoingConversation: IAdvizeConversationSDK.OngoingConversation?) {
+        self.onOngoingConversationUpdatedStreamHandler?.onUpdated(value: ongoingConversation != nil)
+    }
+    public func didReceiveNewMessage(content: String) {
+        self.onReceiveMessageStreamHandler?.onMessage(message: content)
+    }
+    public func conversationController(_ controller: ConversationController, shouldOpen url: URL) -> Bool {
+        self.handleClickUrlStreamHandler?.onUrlClicked(url: url.absoluteString)
+        return true;
     }
 }
 

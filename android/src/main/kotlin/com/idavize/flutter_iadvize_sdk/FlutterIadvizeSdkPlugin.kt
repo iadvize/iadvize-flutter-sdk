@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context
 import android.util.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -13,10 +14,13 @@ import io.flutter.plugin.common.MethodChannel.Result
 import com.iadvize.conversation.sdk.IAdvizeSDK
 import com.iadvize.conversation.sdk.IAdvizeSDK.Callback
 import com.iadvize.conversation.sdk.feature.authentication.AuthenticationOption
+import com.iadvize.conversation.sdk.feature.conversation.ConversationListener
+import com.iadvize.conversation.sdk.feature.conversation.OngoingConversation
 import com.iadvize.conversation.sdk.feature.gdpr.GDPREnabledOption
 import com.iadvize.conversation.sdk.feature.gdpr.GDPROption
 import com.iadvize.conversation.sdk.feature.logger.Logger
 import com.iadvize.conversation.sdk.feature.targeting.LanguageOption
+import com.iadvize.conversation.sdk.feature.targeting.TargetingListener
 import com.iadvize.conversation.sdk.type.Language
 import com.iadvize.conversation.sdk.feature.conversation.ConversationChannel
 import com.iadvize.conversation.sdk.feature.targeting.TargetingRule
@@ -38,25 +42,42 @@ inline fun <T> tryOrNull(f: () -> T) =
 
 /** FlutterIadvizeSdkPlugin */
 class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
+    private var chanelMethodName = "flutter_iadvize_sdk"
     private var channelMethodActivate = "activate"
     private var channelMethodSetLogLevel = "setLogLevel"
     private var channelMethodSetLanguage = "setLanguage"
     private var channelMethodActivateTargetingRule = "activateTargetingRule"
     private var channelMethodIsActiveTargetingRuleAvailable = "isActiveTargetingRuleAvailable"
+    private var channelMethodSetConversationListener = "setConversationListener"
+    private var channelMethodSetTargetingRuleAvailabilityListener = "setOnActiveTargetingRuleAvailabilityListener"
+    private var channelMethodOngoingConversationId = "ongoingConversationId"
+    private var channelMethodOngoingConversationChannel = "ongoingConversationChannel"
 
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
+    private lateinit var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler
+    private lateinit var handleClickUrlStreamHandler: HandleClickUrlStreamHandler
+    private lateinit var onOngoingConversationUpdatedStreamHandler: OnUpdatedStreamHandler
+    private lateinit var onActiveTargetingRuleAvailabilityUpdatedStreamHandler: OnUpdatedStreamHandler
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         onAttachedToEngine(
             flutterPluginBinding.getApplicationContext()
         )
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_iadvize_sdk")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, chanelMethodName)
         channel.setMethodCallHandler(this)
-
+        
+        onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
+        EventChannel(flutterPluginBinding.binaryMessenger, "$chanelMethodName/onReceiveMessage").setStreamHandler(onReceiveMessageStreamHandler)
+        handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
+        EventChannel(flutterPluginBinding.binaryMessenger, "$chanelMethodName/handleClickUrl").setStreamHandler(handleClickUrlStreamHandler)
+        onOngoingConversationUpdatedStreamHandler = OnUpdatedStreamHandler()
+        EventChannel(flutterPluginBinding.binaryMessenger, "$chanelMethodName/onOngoingConversationUpdated").setStreamHandler(onOngoingConversationUpdatedStreamHandler)
+        onActiveTargetingRuleAvailabilityUpdatedStreamHandler = OnUpdatedStreamHandler()
+        EventChannel(flutterPluginBinding.binaryMessenger, "$chanelMethodName/onActiveTargetingRuleAvailabilityUpdated").setStreamHandler(onActiveTargetingRuleAvailabilityUpdatedStreamHandler)
     }
 
     private fun onAttachedToEngine(applicationContext: Context) {
@@ -86,7 +107,19 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 activateTargetingRule(uuid, channel)
             }
             channelMethodIsActiveTargetingRuleAvailable -> {
-              isActiveTargetingRuleAvailable(result)
+                result.success(isActiveTargetingRuleAvailable())
+            }
+            channelMethodSetConversationListener -> {
+                setConversationListener()
+            }
+            channelMethodSetTargetingRuleAvailabilityListener -> {
+                setOnActiveTargetingRuleAvailabilityListener()
+            }
+            channelMethodOngoingConversationId -> {
+                result.success(ongoingConversationId())
+            }
+            channelMethodOngoingConversationChannel -> {
+                result.success(ongoingConversationChannel())
             }
             else -> {
                 result.notImplemented()
@@ -150,7 +183,6 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun activateTargetingRule(uuid: String, channel: String) {
-
         var value = UUID.fromString(uuid)
         Log.d(TAG, "activate targeting rule ${value.toString()}")
 
@@ -160,7 +192,6 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 conversationChannelFrom(channel)
             )
         )
-
     }
 
     private fun conversationChannelFrom(value: String): ConversationChannel = when (value) {
@@ -175,8 +206,53 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         else -> "chat"
     }
 
-    private fun isActiveTargetingRuleAvailable(@NonNull result: Result) {
-      result.success(IAdvizeSDK.targetingController.isActiveTargetingRuleAvailable())
+    private fun isActiveTargetingRuleAvailable(): Boolean {
+        return IAdvizeSDK.targetingController.isActiveTargetingRuleAvailable()
     }
-    
+
+    private fun setOnActiveTargetingRuleAvailabilityListener() {
+        Log.d(TAG, "setConversationListener")
+        IAdvizeSDK.targetingController.listeners.add(object : TargetingListener {
+            override fun onActiveTargetingRuleAvailabilityUpdated(isActiveTargetingRuleAvailable: Boolean) {
+                Log.d(TAG, "onActiveTargetingRuleAvailabilityUpdated $isActiveTargetingRuleAvailable")
+                onActiveTargetingRuleAvailabilityUpdatedStreamHandler.onUpdated(isActiveTargetingRuleAvailable)
+            }
+        })
+    }
+
+    private fun ongoingConversationId(): String? {
+        Log.d(TAG, "ongoingConversationId called")
+        return IAdvizeSDK.conversationController.ongoingConversation()?.conversationId
+    }
+
+    private fun ongoingConversationChannel(): String? {
+        Log.d(TAG, "ongoingConversationChannel called")
+        val channel = (IAdvizeSDK.conversationController.ongoingConversation()?.conversationChannel)
+        return if(channel != null) conversationChannelToString(channel) else null
+        
+    }
+
+    private fun setConversationListener() {
+        Log.d(TAG, "setConversationListener")
+        IAdvizeSDK.conversationController.listeners.add(object : ConversationListener {
+            override fun onOngoingConversationUpdated(ongoingConversation: OngoingConversation?) {
+                Log.d(TAG, "onOngoingConversationUpdated ${ongoingConversation != null}")
+                onOngoingConversationUpdatedStreamHandler.onUpdated(ongoingConversation != null)
+            }
+
+            override fun onNewMessageReceived(message: String) {
+                Log.d(TAG, "onNewMessageReceived $message")
+                onReceiveMessageStreamHandler.onMessage(message)
+            }
+
+            override fun handleClickedUrl(uri: Uri): Boolean {
+                Log.d(TAG, "handleClickedUrl $uri")
+                handleClickUrlStreamHandler.onUrlClicked(uri.toString())
+                return true
+            }
+        })
+    }
+
+   
+
 }

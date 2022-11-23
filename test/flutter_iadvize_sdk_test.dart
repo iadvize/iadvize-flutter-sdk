@@ -10,7 +10,7 @@ class MockFlutterIadvizeSdkPlatform
     with MockPlatformInterfaceMixin
     implements IadvizeSdkPlatform {
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
+  Future<String?> getPlatformVersion() => Future<String>.value('42');
 
   @override
   Future<bool> activate(int projectId, String? userId, String? gdprUrl) {

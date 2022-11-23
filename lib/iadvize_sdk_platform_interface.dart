@@ -49,4 +49,30 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
 
   void setOnActiveTargetingRuleAvailabilityListener() => throw UnimplementedError(
       'setOnActiveTargetingRuleAvailabilityListener() has not been implemented.');
+
+  Stream<bool> get onActiveTargetingRuleAvailabilityUpdated =>
+      throw UnimplementedError(
+          'onActiveTargetingRuleAvailabilityUpdated has not been implemented.');
+
+  Future<String?> ongoingConversationId() => throw UnimplementedError(
+      'ongoingConversationId has not been implemented.');
+
+  Future<ConversationChannel?> ongoingConversationChannel() =>
+      throw UnimplementedError(
+          'ongoingConversationChannel has not been implemented.');
+
+  void setConversationListener() => throw UnimplementedError(
+      'setConversationListener() has not been implemented.');
+
+  Stream<String> get onReceiveNewMessage =>
+      throw UnimplementedError('onReceiveNewMessage has not been implemented.');
+
+  Stream<bool> get hasOngoingConversation => throw UnimplementedError(
+      'onOngoingConversationUpdated has not been implemented.');
+
+  Stream<String> get handleClickedUrl =>
+      throw UnimplementedError('handleClickedUrl has not been implemented.');
+
+  // void onConversationListener({Function(String)? onReceiveNewMessage}) =>
+  //     throw UnimplementedError('handleClickedUrl has not been implemented.');
 }

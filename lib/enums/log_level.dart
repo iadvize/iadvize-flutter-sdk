@@ -7,7 +7,7 @@ enum LogLevel {
 }
 
 extension LogLevelExtension on LogLevel {
-  static const logLevelCodes = {
+  static const Map<LogLevel, int> logLevelCodes = <LogLevel, int>{
     LogLevel.verbose: 0,
     LogLevel.info: 1,
     LogLevel.warning: 2,
