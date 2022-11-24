@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
@@ -20,13 +21,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // ignore: todo
   //TODO: replace by real values
-  final int projectId = 8047;
-  final String chatTargetingRule = '3ad856a4-f151-486d-8879-f9924d81a596';
-  final String videoTargetingRule = 'e891e20c-fad9-4b53-ada3-f5fd956d5b57';
-  final String? userId = null;
-  final String? grpdUrl = null;
+  final int _projectId = 8047;
+  final String _chatTargetingRule = '3ad856a4-f151-486d-8879-f9924d81a596';
+  final String _videoTargetingRule = 'e891e20c-fad9-4b53-ada3-f5fd956d5b57';
+  final String? _userId = null;
+  final String? _grpdUrl = null;
+  final String _pushToken = 'device_push_token';
+  final ApplicationMode _applicationMode = ApplicationMode.dev;
 
-  final double spaceBetweenButton = 20;
+  static const double spaceBetweenButton = 20;
+
   final _iAdvizeSdk = IavizeSdk();
 
   late StreamSubscription _messageSubscription;
@@ -92,33 +96,48 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextButton(
-                onPressed: () => activateSDK(),
+                onPressed: () => _activateSDK(),
                 label: 'Activate',
               ),
-              SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
-                onPressed: () => activateChatTargetingRule(),
+                onPressed: () => _activateChatTargetingRule(),
                 label: 'Activate Chat Targeting Rule',
               ),
-              SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
-                onPressed: () => activateVideoTargetingRule(),
+                onPressed: () => _activateVideoTargetingRule(),
                 label: 'Activate Video Targeting Rule',
               ),
-              SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
-                onPressed: () => isActiveTargetingRuleAvailable(),
+                onPressed: () => _isActiveTargetingRuleAvailable(),
                 label: 'Is Active Targeting Rule Available',
               ),
-              SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
-                onPressed: () => ongoingConversationId(),
+                onPressed: () => _ongoingConversationId(),
                 label: 'Print Conversation Id',
               ),
-              SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
-                onPressed: () => ongoingConversationChannel(),
+                onPressed: () => _ongoingConversationChannel(),
                 label: 'Print Conversation Channel',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _registerPushToken(),
+                label: 'Register Push Token',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _enablePushNotifications(),
+                label: 'Enable Push Notifications',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _disablePushNotifications(),
+                label: 'Disnable Push Notifications',
               ),
             ],
           ),
@@ -127,47 +146,54 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> activateSDK() async {
+  Future<void> _activateSDK() async {
     await _iAdvizeSdk
         .activate(
-          projectId: projectId,
-          userId: userId,
-          gdprUrl: grpdUrl,
+          projectId: _projectId,
+          userId: _userId,
+          gdprUrl: _grpdUrl,
         )
         .then((bool activated) => activated
             ? log('iAdvize Example : SDK activated')
             : log('iAdvize Example : SDK not activated'));
   }
 
-  void activateChatTargetingRule() {
-    _iAdvizeSdk.activateTargetingRule(
-        uuid: chatTargetingRule, conversationChannel: ConversationChannel.chat);
-  }
+  void _activateChatTargetingRule() => _iAdvizeSdk.activateTargetingRule(
+      uuid: _chatTargetingRule, conversationChannel: ConversationChannel.chat);
 
-  void activateVideoTargetingRule() {
-    _iAdvizeSdk.activateTargetingRule(
-        uuid: videoTargetingRule,
-        conversationChannel: ConversationChannel.video);
-  }
+  void _activateVideoTargetingRule() => _iAdvizeSdk.activateTargetingRule(
+      uuid: _videoTargetingRule,
+      conversationChannel: ConversationChannel.video);
 
-  Future<void> isActiveTargetingRuleAvailable() async {
+  Future<void> _isActiveTargetingRuleAvailable() async {
     await _iAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
             ? log('iAdvize Example : SDK targeting rule available')
             : log('iAdvize Example : targeting rule not available'));
   }
 
-  Future<void> ongoingConversationId() async {
+  Future<void> _ongoingConversationId() async {
     await _iAdvizeSdk
         .ongoingConversationId()
         .then((String? id) => log('iAdvize Example : conversationId $id'));
   }
 
-  Future<void> ongoingConversationChannel() async {
+  Future<void> _ongoingConversationChannel() async {
     await _iAdvizeSdk.ongoingConversationChannel().then((ConversationChannel?
             channel) =>
-        log('iAdvize Example : conversation channel ${channel?.toString()}'));
+        log('iAdvize Example : conversation channel ${channel?.toValueString()}'));
   }
+
+  void _registerPushToken() => _iAdvizeSdk.registerPushToken(
+      pushToken: _pushToken, mode: _applicationMode);
+
+  void _enablePushNotifications() =>
+      _iAdvizeSdk.enablePushNotifications().then((bool enabled) =>
+          log('iAdvize Example : push notifications enabled $enabled'));
+
+  void _disablePushNotifications() =>
+      _iAdvizeSdk.disablePushNotifications().then((bool disabled) =>
+          log('iAdvize Example : push notifications disabled $disabled'));
 
   @override
   void dispose() {

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_platform_interface.dart';
@@ -25,48 +26,33 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
 
   @override
   Future<bool> activate(int projectId, String? userId, String? gdprUrl) async {
-    try {
-      return await methodChannel.invokeMethod<bool>(
-            'activate',
-            <String, dynamic>{
-              'projectId': projectId,
-              'userId': userId,
-              'gdprUrl': gdprUrl
-            },
-          ) ??
-          false;
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: error');
-      return false;
-    }
+    return _callNativeMethod('activate',
+        arguments: <String, dynamic>{
+          'projectId': projectId,
+          'userId': userId,
+          'gdprUrl': gdprUrl
+        },
+        defaultValue: false);
   }
 
   @override
   void setLogLevel(LogLevel logLevel) {
-    try {
-      methodChannel.invokeMethod(
-        'setLogLevel',
-        <String, dynamic>{
-          'logLevel': logLevel.code,
-        },
-      );
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: setLogLevel error');
-    }
+    _callNativeMethodVoid(
+      'setLogLevel',
+      arguments: <String, dynamic>{
+        'logLevel': logLevel.code,
+      },
+    );
   }
 
   @override
   void setLanguage(String language) {
-    try {
-      methodChannel.invokeMethod(
-        'setLanguage',
-        <String, dynamic>{
-          'language': language,
-        },
-      );
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: setLanguage error');
-    }
+    _callNativeMethodVoid(
+      'setLanguage',
+      arguments: <String, dynamic>{
+        'language': language,
+      },
+    );
   }
 
   @override
@@ -74,44 +60,23 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
     String uuid,
     ConversationChannel conversationChannel,
   ) {
-    try {
-      methodChannel.invokeMethod(
-        'activateTargetingRule',
-        <String, dynamic>{
-          'uuid': uuid,
-          'channel': conversationChannel.toString(),
-        },
-      );
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: activateTargetingRule error');
-    }
+    _callNativeMethodVoid('activateTargetingRule', arguments: <String, dynamic>{
+      'uuid': uuid,
+      'channel': conversationChannel.toValueString(),
+    });
   }
 
   @override
   Future<bool> isActiveTargetingRuleAvailable() async {
-    try {
-      return await methodChannel.invokeMethod(
-            'isActiveTargetingRuleAvailable',
-            <String, dynamic>{},
-          ) ??
-          false;
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: isActiveTargetingRuleAvailable error');
-      return false;
-    }
+    return _callNativeMethod('isActiveTargetingRuleAvailable',
+        defaultValue: false);
   }
 
   @override
   void setOnActiveTargetingRuleAvailabilityListener() {
-    try {
-      methodChannel.invokeMethod(
-        'setOnActiveTargetingRuleAvailabilityListener',
-        <String, dynamic>{},
-      );
-    } on PlatformException catch (e) {
-      log(e.message ??
-          'iAdvize: setOnActiveTargetingRuleAvailabilityListener error');
-    }
+    _callNativeMethodVoid(
+      'setOnActiveTargetingRuleAvailabilityListener',
+    );
   }
 
   @override
@@ -122,42 +87,21 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
 
   @override
   Future<String?> ongoingConversationId() async {
-    try {
-      return await methodChannel.invokeMethod(
-        'ongoingConversationId',
-        <String, dynamic>{},
-      );
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: ongoingConversationId error');
-      return null;
-    }
+    return _callNativeMethod('ongoingConversationId', defaultValue: null);
   }
 
   @override
   Future<ConversationChannel?> ongoingConversationChannel() async {
-    try {
-      String? channel = await methodChannel.invokeMethod(
+    final String? channel = await _callNativeMethod(
         'ongoingConversationChannel',
-        <String, dynamic>{},
-      );
-      return ConversationChannel.values
-          .firstWhereOrNull((ConversationChannel e) => e.toString() == channel);
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: ongoingConversationChannel error');
-      return null;
-    }
+        defaultValue: null);
+    return ConversationChannel.values.firstWhereOrNull(
+        (ConversationChannel e) => e.toValueString() == channel);
   }
 
   @override
   void setConversationListener() {
-    try {
-      methodChannel.invokeMethod(
-        'setConversationListener',
-        <String, dynamic>{},
-      );
-    } on PlatformException catch (e) {
-      log(e.message ?? 'iAdvize: setConversationListener error');
-    }
+    _callNativeMethodVoid('setConversationListener');
   }
 
   @override
@@ -172,23 +116,52 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   Stream<String> get handleClickedUrl =>
       _clickUrlEventChannel.receiveBroadcastStream().cast();
 
-  // @override
-  // void onConversationListener({Function(String)? onReceiveNewMessage}) =>
-  //     _conversationEventChannel
-  //         .receiveBroadcastStream()
-  //         .cast<String>()
-  //         .listen((dynamic event) {
-  //       if (event is String && onReceiveNewMessage != null) {
-  //         onReceiveNewMessage(event);
-  //       }
-  //     });
+  @override
+  void registerPushToken(String pushToken, ApplicationMode mode) {
+    _callNativeMethodVoid('registerPushToken', arguments: <String, dynamic>{
+      'pushToken': pushToken,
+      'mode': mode.toValueString(),
+    });
+  }
 
-  // @override
-  // Stream<String> getonReceiveNewMessage() {
-  //   _conversationEventChannel
-  //       .receiveBroadcastStream()
-  //       .where((dynamic event) => event is Map<String, dynamic> && event[''])
-  //       .map((event) => null)
-  //       .cast();
-  // }
+  @override
+  Future<bool> enablePushNotifications() async {
+    return _callNativeMethod('enablePushNotifications', defaultValue: false);
+  }
+
+  @override
+  Future<bool> disablePushNotifications() async {
+    return _callNativeMethod('disablePushNotifications', defaultValue: false);
+  }
+
+  Future<T> _callNativeMethod<T>(
+    String method, {
+    Map<String, dynamic> arguments = const <String, dynamic>{},
+    required T defaultValue,
+  }) async {
+    try {
+      return await methodChannel.invokeMethod(
+            method,
+            arguments,
+          ) ??
+          defaultValue;
+    } on PlatformException catch (e) {
+      log(e.toString());
+      return defaultValue;
+    }
+  }
+
+  void _callNativeMethodVoid(
+    String method, {
+    Map<String, dynamic> arguments = const <String, dynamic>{},
+  }) {
+    try {
+      methodChannel.invokeMethod(
+        method,
+        arguments,
+      );
+    } on PlatformException catch (e) {
+      log(e.toString());
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_platform_interface.dart';
@@ -54,6 +55,17 @@ class IavizeSdk {
 
   Stream<String> get handleClickedUrl =>
       IadvizeSdkPlatform.instance.handleClickedUrl;
+
+  void registerPushToken(
+          {required String pushToken,
+          ApplicationMode mode = ApplicationMode.dev}) =>
+      IadvizeSdkPlatform.instance.registerPushToken(pushToken, mode);
+
+  Future<bool> enablePushNotifications() =>
+      IadvizeSdkPlatform.instance.enablePushNotifications();
+
+  Future<bool> disablePushNotifications() =>
+      IadvizeSdkPlatform.instance.disablePushNotifications();
 
   // void onConversationListener({Function(String)? onReceiveNewMessage}) =>
   //     IadvizeSdkPlatform.instance

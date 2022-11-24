@@ -15,6 +15,9 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_SET_CONVERSATION_LISTENER = "setConversationListener"
     let CHANNEL_METHOD_ONGOING_CONVERSATION_ID = "ongoingConversationId"
     let CHANNEL_METHOD_ONGOING_CONVERSATION_CHANNEL = "ongoingConversationChannel"
+    let CHANNEL_METHOD_REGISTER_PUSH_TOKEN = "registerPushToken"
+    let CHANNEL_METHOD_ENABLE_PUSH_NOTIFICATIONS = "enablePushNotifications"
+    let CHANNEL_METHOD_DISABLE_PUSH_NOTIFICATIONS = "disablePushNotifications"
     
     var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
     var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
@@ -71,6 +74,14 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             result(ongoingConversationId())
         case self.CHANNEL_METHOD_ONGOING_CONVERSATION_CHANNEL:
             result(ongoingConversationChannel())
+        case self.CHANNEL_METHOD_REGISTER_PUSH_TOKEN:
+            let pushToken = args["pushToken"] as! String
+            let mode = args["mode"] as! String
+           registerPushToken(pushToken: pushToken, mode: mode)
+        case self.CHANNEL_METHOD_ENABLE_PUSH_NOTIFICATIONS:
+           enablePushNotifications(result: result)
+        case self.CHANNEL_METHOD_DISABLE_PUSH_NOTIFICATIONS:
+           disablePushNotifications(result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -97,18 +108,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func setLogLevel(value: Int) -> Void {
-        IAdvizeSDK.shared.logLevel = logLevelFrom(value: value)
-    }
-    
-    private func logLevelFrom(value: Int) -> IAdvizeConversationSDK.Logger.LogLevel{
-        switch value {
-        case 0: return .verbose
-        case 1: return .info
-        case 2: return .warning
-        case 3: return .error
-        case 4: return .success
-        default: return .verbose
-        }
+        IAdvizeSDK.shared.logLevel = IAdvizeConversationSDK.Logger.LogLevel.fromInt(value)
     }
     
     private func setLanguage(language: String) -> Void {
@@ -143,9 +143,26 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationId.uuidString
     }
 
-    @objc
-    func ongoingConversationChannel() -> String? {
+    private func ongoingConversationChannel() -> String? {
         return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationChannel.rawValue
+    }
+
+    private func registerPushToken(pushToken: String, mode: String) -> Void {
+        let applicationMode = ApplicationMode.fromString(mode)
+        IAdvizeSDK.shared.notificationController.registerPushToken(pushToken, applicationMode: applicationMode)
+    }
+
+    private func enablePushNotifications(result: @escaping FlutterResult) -> Void {
+        IAdvizeSDK.shared.notificationController.enablePushNotifications { success in
+            result(success)
+        }
+    }
+    
+    
+    private func disablePushNotifications(result: @escaping FlutterResult) -> Void {
+        IAdvizeSDK.shared.notificationController.disablePushNotifications { success in
+            result(success)
+        }
     }
 }
 
@@ -177,6 +194,32 @@ extension ConversationChannel {
             return .chat
         default:
             return .chat
+        }
+    }
+}
+
+extension ApplicationMode {
+    static func fromString(_ mode: String) -> ApplicationMode {
+        switch mode.lowercased() {
+        case "dev":
+            return .dev
+        case "prod":
+            return .prod
+        default:
+            return .dev
+        }
+    }
+}
+
+extension IAdvizeConversationSDK.Logger.LogLevel {
+    static func fromInt(_ value: Int) -> IAdvizeConversationSDK.Logger.LogLevel {
+        switch value {
+        case 0: return .verbose
+        case 1: return .info
+        case 2: return .warning
+        case 3: return .error
+        case 4: return .success
+        default: return .verbose
         }
     }
 }

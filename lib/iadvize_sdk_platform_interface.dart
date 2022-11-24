@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_method_channel.dart';
@@ -73,6 +74,12 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
   Stream<String> get handleClickedUrl =>
       throw UnimplementedError('handleClickedUrl has not been implemented.');
 
-  // void onConversationListener({Function(String)? onReceiveNewMessage}) =>
-  //     throw UnimplementedError('handleClickedUrl has not been implemented.');
+  void registerPushToken(String pushToken, ApplicationMode mode) =>
+      throw UnimplementedError('registerPushToken() has not been implemented.');
+
+  Future<bool> enablePushNotifications() => throw UnimplementedError(
+      'enablePushNotifications() has not been implemented.');
+
+  Future<bool> disablePushNotifications() => throw UnimplementedError(
+      'disablePushNotifications() has not been implemented.');
 }
