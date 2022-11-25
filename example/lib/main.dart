@@ -2,11 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
-import 'package:flutter_iadvize_sdk/entities/transaction.dart';
-import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
-import 'package:flutter_iadvize_sdk/enums/log_level.dart';
-import 'package:flutter_iadvize_sdk/enums/navigation_option.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
 import 'package:flutter_iadvize_sdk_example/keys.dart';
 
@@ -60,23 +55,6 @@ class _MyAppState extends State<MyApp> {
     _iAdvizeSdk.setDefaultFloatingButton(true);
     _iAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
   }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  // Future<void> initPlatformState() async {
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   // We also handle the message potentially returning null.
-  //   try {
-  //     // await _flutterIadvizeSdkPlugin.getPlatformVersion();
-  //     _flutterIadvizeSdkPlugin.activate(projectId: 8047);
-  //   } on PlatformException {
-  //     log('errror');
-  //   }
-
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-  // }
 
   @override
   Widget build(BuildContext context) {
