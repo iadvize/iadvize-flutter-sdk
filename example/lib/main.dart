@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
+import 'package:flutter_iadvize_sdk/entities/transaction.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
+import 'package:flutter_iadvize_sdk/enums/navigation_option.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
 import 'package:flutter_iadvize_sdk_example/keys.dart';
 
@@ -42,6 +44,7 @@ class _MyAppState extends State<MyApp> {
         .listen((bool available) {
       log('iAdvize Example : Targeting Rule available: $available');
     });
+
     _iAdvizeSdk.setConversationListener();
     _messageSubscription =
         _iAdvizeSdk.onReceiveNewMessage.listen((String message) {
@@ -107,6 +110,11 @@ class _MyAppState extends State<MyApp> {
               ),
               const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
+                onPressed: () => _registerUserNavigation(),
+                label: 'Register User Navigation',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
                 onPressed: () => _ongoingConversationId(),
                 label: 'Print Conversation Id',
               ),
@@ -135,6 +143,16 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _setChatboxConfiguration(),
                 label: 'Set ChatboxConfiguration',
               ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _registertransaction(),
+                label: 'Register Transaction',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _logout(),
+                label: 'Logout',
+              ),
             ],
           ),
         ),
@@ -154,17 +172,23 @@ class _MyAppState extends State<MyApp> {
             : log('iAdvize Example : SDK not activated'));
   }
 
-  void _activateChatTargetingRule() => _iAdvizeSdk.activateTargetingRule(
-      uuid: chatTargetingRule, conversationChannel: ConversationChannel.chat);
+  void _activateChatTargetingRule() =>
+      _iAdvizeSdk.activateTargetingRule(chatTargetingRule);
 
-  void _activateVideoTargetingRule() => _iAdvizeSdk.activateTargetingRule(
-      uuid: videoTargetingRule, conversationChannel: ConversationChannel.video);
+  void _activateVideoTargetingRule() =>
+      _iAdvizeSdk.activateTargetingRule(videoTargetingRule);
 
   Future<void> _isActiveTargetingRuleAvailable() async {
     await _iAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
             ? log('iAdvize Example : SDK targeting rule available')
             : log('iAdvize Example : targeting rule not available'));
+  }
+
+  void _registerUserNavigation() {
+    _iAdvizeSdk.registerUserNavigation(
+        navigationOption: NavigationOption.optionNew,
+        newTargetingRule: videoTargetingRule);
   }
 
   Future<void> _ongoingConversationId() async {
@@ -196,14 +220,23 @@ class _MyAppState extends State<MyApp> {
       navigationBarBackgroundColor: Colors.black,
       navigationBarTitle: 'Test',
       navigationBarMainColor: Colors.yellow,
-      fontName: 'Fruit Days',
-      fontSize: 25,
-      fontPath: 'fonts/Test-Font.ttf',
+      iosFontName: 'Fruit Days',
+      iosFontSize: 25,
+      androidFontPath: 'fonts/Test-Font.ttf',
       automaticMessage: 'Hello! Please ask your question :)',
       gdprMessage: 'Your own GDPR message.',
       incomingMessageAvatarImage: const AssetImage('assets/test.jpeg'),
       incomingMessageAvatarURL: 'https://picsum.photos/200/200',
     ));
+  }
+
+  void _registertransaction() {
+    _iAdvizeSdk.registerTransaction(Transaction(
+        transactionId: 'transactionId', currency: 'EUR', amount: 25));
+  }
+
+  void _logout() {
+    _iAdvizeSdk.logout();
   }
 
   @override

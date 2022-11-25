@@ -7,9 +7,9 @@ class ChatboxConfiguration {
     this.navigationBarBackgroundColor,
     this.navigationBarMainColor,
     this.navigationBarTitle,
-    this.fontName,
-    this.fontSize,
-    this.fontPath,
+    this.iosFontName,
+    this.iosFontSize,
+    this.androidFontPath,
     this.automaticMessage,
     this.gdprMessage,
     this.incomingMessageAvatarImage,
@@ -20,9 +20,9 @@ class ChatboxConfiguration {
   final Color? navigationBarBackgroundColor;
   final Color? navigationBarMainColor;
   final String? navigationBarTitle;
-  final String? fontName;
-  final int? fontSize;
-  final String? fontPath;
+  final String? iosFontName;
+  final int? iosFontSize;
+  final String? androidFontPath;
   final String? automaticMessage;
   final String? gdprMessage;
   final AssetImage? incomingMessageAvatarImage;
@@ -39,9 +39,9 @@ class ChatboxConfiguration {
       if (navigationBarMainColor != null)
         'navigationBarMainColor': navigationBarMainColor!.toHexString(),
       if (navigationBarTitle != null) 'navigationBarTitle': navigationBarTitle,
-      if (fontName != null) 'fontName': fontName,
-      if (fontSize != null) 'fontSize': fontSize,
-      if (fontPath != null) 'fontPath': fontPath,
+      if (iosFontName != null) 'fontName': iosFontName,
+      if (iosFontSize != null) 'fontSize': iosFontSize,
+      if (androidFontPath != null) 'fontPath': androidFontPath,
       if (automaticMessage != null) 'automaticMessage': automaticMessage,
       if (gdprMessage != null) 'gdprMessage': gdprMessage,
       if (incomingMessageAvatarImage != null)

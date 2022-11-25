@@ -1,7 +1,10 @@
 import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
+import 'package:flutter_iadvize_sdk/entities/targeting_rule.dart';
+import 'package:flutter_iadvize_sdk/entities/transaction.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
+import 'package:flutter_iadvize_sdk/enums/navigation_option.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_platform_interface.dart';
 
 class IavizeSdk {
@@ -12,8 +15,11 @@ class IavizeSdk {
   /// Activate the iAdvize Conversation SDK.
   /// Once this call succeeds, the iAdvize Conversation SDK is activated.
   /// IAdvizeSDK.chatboxController can be used to display the Chat Button to the user and the user can start a conversation.
-  Future<bool> activate(
-          {required int projectId, String? userId, String? gdprUrl}) =>
+  Future<bool> activate({
+    required int projectId,
+    String? userId,
+    String? gdprUrl,
+  }) =>
       IadvizeSdkPlatform.instance.activate(projectId, userId, gdprUrl);
 
   void setLogLevel(LogLevel logLevel) =>
@@ -22,12 +28,10 @@ class IavizeSdk {
   void setLanguage(String language) =>
       IadvizeSdkPlatform.instance.setLanguage(language);
 
-  void activateTargetingRule({
-    required String uuid,
-    required ConversationChannel conversationChannel,
-  }) =>
-      IadvizeSdkPlatform.instance
-          .activateTargetingRule(uuid, conversationChannel);
+  void activateTargetingRule(
+    TargetingRule targetingRule,
+  ) =>
+      IadvizeSdkPlatform.instance.activateTargetingRule(targetingRule);
 
   Future<bool> isActiveTargetingRuleAvailable() =>
       IadvizeSdkPlatform.instance.isActiveTargetingRuleAvailable();
@@ -38,6 +42,13 @@ class IavizeSdk {
 
   Stream<bool> get onActiveTargetingRuleAvailabilityUpdated =>
       IadvizeSdkPlatform.instance.onActiveTargetingRuleAvailabilityUpdated;
+
+  void registerUserNavigation({
+    required NavigationOption navigationOption,
+    TargetingRule? newTargetingRule,
+  }) =>
+      IadvizeSdkPlatform.instance
+          .registerUserNavigation(navigationOption, newTargetingRule);
 
   Future<String?> ongoingConversationId() =>
       IadvizeSdkPlatform.instance.ongoingConversationId();
@@ -57,9 +68,10 @@ class IavizeSdk {
   Stream<String> get handleClickedUrl =>
       IadvizeSdkPlatform.instance.handleClickedUrl;
 
-  void registerPushToken(
-          {required String pushToken,
-          ApplicationMode mode = ApplicationMode.dev}) =>
+  void registerPushToken({
+    required String pushToken,
+    ApplicationMode mode = ApplicationMode.dev,
+  }) =>
       IadvizeSdkPlatform.instance.registerPushToken(pushToken, mode);
 
   Future<bool> enablePushNotifications() =>
@@ -71,11 +83,18 @@ class IavizeSdk {
   void setDefaultFloatingButton(bool active) =>
       IadvizeSdkPlatform.instance.setDefaultFloatingButton(active);
 
-  void setFloatingButtonPosition(
-          {required int leftMargin, required int bottomMargin}) =>
+  void setFloatingButtonPosition({
+    required int leftMargin,
+    required int bottomMargin,
+  }) =>
       IadvizeSdkPlatform.instance
           .setFloatingButtonPosition(leftMargin, bottomMargin);
 
   void setChatboxConfiguration(ChatboxConfiguration configuration) =>
       IadvizeSdkPlatform.instance.setChatboxConfiguration(configuration);
+
+  void registerTransaction(Transaction transaction) =>
+      IadvizeSdkPlatform.instance.registerTransaction(transaction);
+
+  void logout() => IadvizeSdkPlatform.instance.logout();
 }

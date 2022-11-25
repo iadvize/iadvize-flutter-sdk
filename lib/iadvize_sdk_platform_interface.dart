@@ -1,7 +1,10 @@
 import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
+import 'package:flutter_iadvize_sdk/entities/targeting_rule.dart';
+import 'package:flutter_iadvize_sdk/entities/transaction.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
+import 'package:flutter_iadvize_sdk/enums/navigation_option.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -40,8 +43,7 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
       throw UnimplementedError('setLanguage() has not been implemented.');
 
   void activateTargetingRule(
-    String uuid,
-    ConversationChannel conversationChannel,
+    TargetingRule targetingRule,
   ) =>
       throw UnimplementedError(
           'activateTargetingRule() has not been implemented.');
@@ -55,6 +57,11 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
   Stream<bool> get onActiveTargetingRuleAvailabilityUpdated =>
       throw UnimplementedError(
           'onActiveTargetingRuleAvailabilityUpdated has not been implemented.');
+
+  void registerUserNavigation(
+          NavigationOption navigationOption, TargetingRule? newTargetingRule) =>
+      throw UnimplementedError(
+          'registerUserNavigation() has not been implemented.');
 
   Future<String?> ongoingConversationId() => throw UnimplementedError(
       'ongoingConversationId has not been implemented.');
@@ -91,7 +98,13 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
       throw UnimplementedError(
           'setDefaultFloatingButton() has not been implemented.');
 
-  Future<void> setChatboxConfiguration(ChatboxConfiguration configuration) =>
+  void setChatboxConfiguration(ChatboxConfiguration configuration) =>
       throw UnimplementedError(
           'setChatboxConfiguration() has not been implemented.');
+
+  void registerTransaction(Transaction transaction) => throw UnimplementedError(
+      'registerTransaction() has not been implemented.');
+
+  void logout() =>
+      throw UnimplementedError('logout() has not been implemented.');
 }

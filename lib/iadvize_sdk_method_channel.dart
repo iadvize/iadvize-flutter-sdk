@@ -4,13 +4,18 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
+import 'package:flutter_iadvize_sdk/entities/targeting_rule.dart';
+import 'package:flutter_iadvize_sdk/entities/transaction.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
+import 'package:flutter_iadvize_sdk/enums/navigation_option.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk_platform_interface.dart';
 
 /// An implementation of [IadvizeSdkPlatform] that uses method channels.
 class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
+  static const String tag = 'iAdvize - ';
+
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   static const MethodChannel methodChannel =
@@ -57,14 +62,9 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   }
 
   @override
-  void activateTargetingRule(
-    String uuid,
-    ConversationChannel conversationChannel,
-  ) {
-    _callNativeMethodVoid('activateTargetingRule', arguments: <String, dynamic>{
-      'uuid': uuid,
-      'channel': conversationChannel.toValueString(),
-    });
+  void activateTargetingRule(TargetingRule targetingRule) {
+    _callNativeMethodVoid('activateTargetingRule',
+        arguments: targetingRule.toMap());
   }
 
   @override
@@ -85,6 +85,21 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
       _activeTargetingRuleAvailabilityUpdatedEventChannel
           .receiveBroadcastStream()
           .cast();
+
+  @override
+  void registerUserNavigation(
+      NavigationOption navigationOption, TargetingRule? newTargetingRule) {
+    if (navigationOption == NavigationOption.optionNew &&
+        newTargetingRule == null) {
+      log('$tag When NavigationOption is new, you must provide new targeting rule');
+    } else {
+      _callNativeMethodVoid('registerUserNavigation',
+          arguments: <String, dynamic>{
+            'navigationOption': navigationOption.toValueString(),
+            if (newTargetingRule != null) ...newTargetingRule.toMap(),
+          });
+    }
+  }
 
   @override
   Future<String?> ongoingConversationId() async {
@@ -137,13 +152,13 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
 
   @override
   void setDefaultFloatingButton(bool active) {
-    return _callNativeMethodVoid('setDefaultFloatingButton',
+    _callNativeMethodVoid('setDefaultFloatingButton',
         arguments: <String, dynamic>{'active': active});
   }
 
   @override
   void setFloatingButtonPosition(int leftMargin, int bottomMargin) {
-    return _callNativeMethodVoid('setFloatingButtonPosition',
+    _callNativeMethodVoid('setFloatingButtonPosition',
         arguments: <String, dynamic>{
           'leftMargin': leftMargin,
           'bottomMargin': bottomMargin,
@@ -151,12 +166,20 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   }
 
   @override
-  Future<void> setChatboxConfiguration(
-      ChatboxConfiguration configuration) async {
-    // log(' ${await configuration.toMap()}');
-    return _callNativeMethodVoid('setChatboxConfiguration',
+  void setChatboxConfiguration(ChatboxConfiguration configuration) async {
+    _callNativeMethodVoid('setChatboxConfiguration',
         arguments: await configuration.toMap());
   }
+
+  @override
+  void registerTransaction(Transaction transaction) =>
+      _callNativeMethodVoid('registerTransaction',
+          arguments: transaction.toMap());
+
+  @override
+  void logout() => _callNativeMethodVoid(
+        'logout',
+      );
 
   Future<T> _callNativeMethod<T>(
     String method, {
@@ -170,22 +193,27 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
           ) ??
           defaultValue;
     } on PlatformException catch (e) {
-      log(e.toString());
+      log('$tag ${e.code} : ${e.message}');
+      return defaultValue;
+    } catch (err) {
+      log(err.toString());
       return defaultValue;
     }
   }
 
-  void _callNativeMethodVoid(
+  Future<void> _callNativeMethodVoid(
     String method, {
     Map<String, dynamic> arguments = const <String, dynamic>{},
-  }) {
+  }) async {
     try {
-      methodChannel.invokeMethod(
+      await methodChannel.invokeMethod(
         method,
         arguments,
       );
     } on PlatformException catch (e) {
-      log(e.toString());
+      log('$tag ${e.code} : ${e.message}');
+    } catch (err) {
+      log(err.toString());
     }
   }
 }

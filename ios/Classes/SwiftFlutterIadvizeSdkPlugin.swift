@@ -13,6 +13,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_iS_ACTIVE_TARGETING_RULE_AVAILABLE = "isActiveTargetingRuleAvailable"
     let CHANNEL_METHOD_SET_TARGETING_RULE_AVAILABILITY_LISTENER = "setOnActiveTargetingRuleAvailabilityListener"
     let CHANNEL_METHOD_SET_CONVERSATION_LISTENER = "setConversationListener"
+    let CHANNEL_METHOD_REGISTER_USER_NAVIGATION = "registerUserNavigation"
     let CHANNEL_METHOD_ONGOING_CONVERSATION_ID = "ongoingConversationId"
     let CHANNEL_METHOD_ONGOING_CONVERSATION_CHANNEL = "ongoingConversationChannel"
     let CHANNEL_METHOD_REGISTER_PUSH_TOKEN = "registerPushToken"
@@ -21,6 +22,8 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_SET_DEFAULT_BUTTON = "setDefaultFloatingButton"
     let CHANNEL_METHOD_SET_BUTTON_POSITION = "setFloatingButtonPosition"
     let CHANNEL_METHOD_SET_CHATBOX_CONFIG = "setChatboxConfiguration"
+    let CHANNEL_METHOD_REGISTER_TRANSACTION = "registerTransaction"
+    let CHANNEL_METHOD_LOGOUT = "logout"
     
     var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
     var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
@@ -71,6 +74,11 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             result(isActiveTargetingRuleAvailable())
         case self.CHANNEL_METHOD_SET_TARGETING_RULE_AVAILABILITY_LISTENER:
             setOnActiveTargetingRuleAvailabilityListener()
+        case self.CHANNEL_METHOD_REGISTER_USER_NAVIGATION:
+            let uuid = args["uuid"] as! String?
+            let channel = args["channel"] as! String?
+            let option = args["navigationOption"] as! String
+            registerUserNavigation(navigationOption: option, uuid: uuid, channel: channel)
         case self.CHANNEL_METHOD_SET_CONVERSATION_LISTENER:
             setConversationListener()
         case self.CHANNEL_METHOD_ONGOING_CONVERSATION_ID:
@@ -99,7 +107,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             let navigationBarTitle = args["navigationBarTitle"] as! String?
             let fontName = args["fontName"] as! String?
             let fontSize = args["fontSize"] as! Int?
-            let fontPath = args["fontPath"] as! String?
             let automaticMessage = args["automaticMessage"] as! String?
             let gdprMessage = args["gdprMessage"] as! String?
             
@@ -108,7 +115,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             if incomingMessageAvatarImageFlutter != nil {incomingMessageAvatarImage = [UInt8](incomingMessageAvatarImageFlutter!.data)}
             let incomingMessageAvatarURL = args["incomingMessageAvatarURL"] as! String?
             
-            
             setChatboxConfiguration(
                 mainColor:mainColor,
                 navigationBarBackgroundColor:navigationBarBackgroundColor,
@@ -116,12 +122,22 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
                 navigationBarTitle:navigationBarTitle,
                 fontName:fontName,
                 fontSize:fontSize,
-                fontPath:fontPath,
                 automaticMessage:automaticMessage,
                 gdprMessage:gdprMessage,
                 incomingMessageAvatarImage:incomingMessageAvatarImage,
                 incomingMessageAvatarURL:incomingMessageAvatarURL
             )
+        case self.CHANNEL_METHOD_REGISTER_TRANSACTION:
+            let transactionId = args["transactionId"] as! String
+            let amount = args["amount"] as! Double
+            let currency = args["currency"] as! String
+            let success = registerTransaction(transactionId: transactionId, amount: amount, currencyName: currency)
+            if(!success) {
+                result(FlutterError.init(code: "BAD_ARGS",
+                                                   message: "\(TAG): Invalid currency",
+                                                   details: nil))
+            }
+        case self.CHANNEL_METHOD_LOGOUT: logout()
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -175,6 +191,11 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         IAdvizeSDK.shared.targetingController.delegate = self
     }
     
+    private func registerUserNavigation(navigationOption: String, uuid: String?, channel: String?) -> Void {
+        let navOption = NavigationOption.fromString(navigationOption, uuid: uuid, channel: channel)
+        IAdvizeSDK.shared.targetingController.registerUserNavigation(navigationOption: navOption)
+    }
+    
     private func setConversationListener() {
         IAdvizeSDK.shared.conversationController.delegate = self
     }
@@ -198,7 +219,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    
     private func disablePushNotifications(result: @escaping FlutterResult) -> Void {
         IAdvizeSDK.shared.notificationController.disablePushNotifications { success in
             result(success)
@@ -219,7 +239,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
                                          navigationBarTitle:String?,
                                          fontName:String?,
                                          fontSize:Int?,
-                                         fontPath:String?,
                                          automaticMessage:String?,
                                          gdprMessage:String?,
                                          incomingMessageAvatarImage:[UInt8]?,
@@ -259,6 +278,23 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         
         IAdvizeSDK.shared.chatboxController.setupChatbox(configuration: configuration)
     }
+    
+    private func registerTransaction(transactionId: String, amount: Double, currencyName: String) -> Bool {
+        guard let currency = Currency(rawValue: currencyName) else{
+            print("error")
+            return false
+        }
+        if(currency == Currency.__unknown(currencyName)) {
+            return false
+        }
+        let transaction = Transaction(externalTransactionId: transactionId, date: Date(), amount: amount, currency: currency)
+        IAdvizeSDK.shared.transactionController.registerTransaction(transaction)
+        return true
+    }
+
+    private func logout() -> Void {
+            IAdvizeSDK.shared.logout()
+    }
 }
 
 extension SwiftFlutterIadvizeSdkPlugin: TargetingControllerDelegate {
@@ -282,10 +318,10 @@ extension SwiftFlutterIadvizeSdkPlugin: ConversationControllerDelegate {
 
 extension ConversationChannel {
     static func fromString(_ channel: String) -> ConversationChannel {
-        switch channel.uppercased() {
-        case "VIDEO":
+        switch channel.lowercased() {
+        case "video":
             return .video
-        case "CHAT":
+        case "chat":
             return .chat
         default:
             return .chat
@@ -302,6 +338,27 @@ extension ApplicationMode {
             return .prod
         default:
             return .dev
+        }
+    }
+}
+
+extension NavigationOption {
+    static func fromString(_ navigationOption: String, uuid: String?, channel: String?) -> NavigationOption {
+        switch navigationOption.lowercased() {
+            case "clear":
+                return .clearActiveRule
+            case "keep":
+                return .keepActiveRule
+            case "new":
+                guard let uuid = UUID(uuidString: uuid!) else {
+                    print("Unable to activate targeting rule: targeting rule id not valid")
+                    return .clearActiveRule
+                }
+                let channel = ConversationChannel.fromString(channel!)
+                let targetingRule = TargetingRule(id: uuid, conversationChannel: channel)
+                return .activateNewRule(targetingRule: targetingRule)
+            default:
+                return .clearActiveRule
         }
     }
 }

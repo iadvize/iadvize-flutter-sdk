@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
-import androidx.annotation.NonNull
 import com.iadvize.conversation.sdk.IAdvizeSDK
 import com.iadvize.conversation.sdk.IAdvizeSDK.Callback
 import com.iadvize.conversation.sdk.feature.authentication.AuthenticationOption
@@ -24,8 +23,11 @@ import com.iadvize.conversation.sdk.feature.gdpr.GDPREnabledOption
 import com.iadvize.conversation.sdk.feature.gdpr.GDPROption
 import com.iadvize.conversation.sdk.feature.logger.Logger
 import com.iadvize.conversation.sdk.feature.targeting.LanguageOption
+import com.iadvize.conversation.sdk.feature.targeting.NavigationOption
 import com.iadvize.conversation.sdk.feature.targeting.TargetingListener
 import com.iadvize.conversation.sdk.feature.targeting.TargetingRule
+import com.iadvize.conversation.sdk.feature.transaction.Transaction
+import com.iadvize.conversation.sdk.type.Currency
 import com.iadvize.conversation.sdk.type.Language
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
@@ -60,6 +62,8 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         private const val channelMethodSetConversationListener = "setConversationListener"
         private const val channelMethodSetTargetingRuleAvailabilityListener =
             "setOnActiveTargetingRuleAvailabilityListener"
+        private const val channelMethodRegisterUserNavigation =
+            "registerUserNavigation"
         private const val channelMethodOngoingConversationId = "ongoingConversationId"
         private const val channelMethodOngoingConversationChannel = "ongoingConversationChannel"
         private const val channelMethodRegisterPushToken = "registerPushToken"
@@ -69,6 +73,8 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         private const val channelMethodSetDefaultFloatingButtonPosition =
             "setFloatingButtonPosition"
         private const val channelMethodSetChatboxConfiguration = "setChatboxConfiguration"
+        private const val channelMethodRegisterTransaction = "registerTransaction"
+        private const val channelMethodLogout = "logout"
         private const val TAG: String = "iAdvize SDK"
     }
 
@@ -81,9 +87,9 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
 
     private var defaultFloatingButtonConfiguration = DefaultFloatingButtonConfiguration()
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         onAttachedToEngine(
-            flutterPluginBinding.getApplicationContext()
+            flutterPluginBinding.applicationContext
         )
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, chanelMethodName)
         channel.setMethodCallHandler(this)
@@ -114,7 +120,7 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         IAdvizeSDK.initiate((applicationContext as Application))
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             channelMethodActivate -> {
                 val projectId = call.argument<Int>("projectId") as Int
@@ -144,6 +150,12 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
             channelMethodSetTargetingRuleAvailabilityListener -> {
                 setOnActiveTargetingRuleAvailabilityListener()
             }
+            channelMethodRegisterUserNavigation -> {
+                val uuid = call.argument<String?>("uuid")
+                val channel = call.argument<String?>("channel")
+                val option = call.argument<String>("navigationOption") as String
+                registerUserNavigation(option, uuid, channel)
+            }
             channelMethodOngoingConversationId -> {
                 result.success(ongoingConversationId())
             }
@@ -171,30 +183,25 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 setFloatingButtonPosition(leftMargin, bottomMargin)
             }
             channelMethodSetChatboxConfiguration -> {
-                val mainColor = call.argument<String?>("mainColor") as String?
+                val mainColor = call.argument<String?>("mainColor")
                 val navigationBarBackgroundColor =
-                    call.argument<String?>("navigationBarBackgroundColor") as String?
+                    call.argument<String?>("navigationBarBackgroundColor")
                 val navigationBarMainColor =
-                    call.argument<String?>("navigationBarMainColor") as String?
-                val navigationBarTitle = call.argument<String?>("navigationBarTitle") as String?
-                val fontName = call.argument<String?>("fontName") as String?
-                val fontSize = call.argument<Int?>("fontSize") as Int?
-                val fontPath = call.argument<String?>("fontPath") as String?
-                val automaticMessage = call.argument<String?>("automaticMessage") as String?
-                val gdprMessage = call.argument<String?>("gdprMessage") as String?
+                    call.argument<String?>("navigationBarMainColor")
+                val navigationBarTitle = call.argument<String?>("navigationBarTitle")
+                val fontPath = call.argument<String?>("fontPath")
+                val automaticMessage = call.argument<String?>("automaticMessage")
+                val gdprMessage = call.argument<String?>("gdprMessage")
                 val incomingMessageAvatarImage =
-                    call.argument<ByteArray?>("incomingMessageAvatarImage") as ByteArray?
-                    Log.d(TAG, "incomingMessageAvatarImage" + incomingMessageAvatarImage)
+                    call.argument<ByteArray?>("incomingMessageAvatarImage")
                 val incomingMessageAvatarURL =
-                    call.argument<String?>("incomingMessageAvatarURL") as String?
+                    call.argument<String?>("incomingMessageAvatarURL")
 
                 setChatboxConfiguration(
                     mainColor,
                     navigationBarBackgroundColor,
                     navigationBarMainColor,
                     navigationBarTitle,
-                    fontName,
-                    fontSize,
                     fontPath,
                     automaticMessage,
                     gdprMessage,
@@ -202,21 +209,29 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                     incomingMessageAvatarURL
                 )
             }
+            channelMethodRegisterTransaction -> {
+                val transactionId = call.argument<String>("transactionId") as String
+                val amount = call.argument<Double>("amount") as Double
+                val currency = call.argument<String>("currency") as String
+                val success = registerTransaction(transactionId, amount, currency)
+                if (!success) result.error("BAD_ARGS", "Invalid currency", "")
+            }
+            channelMethodLogout -> logout()
             else -> {
                 result.notImplemented()
             }
         }
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
 
     private fun activate(
-        @NonNull projectId: Int,
+        projectId: Int,
         userId: String?,
         gdprUrl: String?,
-        @NonNull result: Result
+        result: Result
     ) {
         val authOption =
             if (userId.isNullOrBlank()) AuthenticationOption.Anonymous
@@ -236,7 +251,7 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 }
 
                 override fun onFailure(t: Throwable) {
-                    result.error(TAG, t.toString(), "")
+                    result.error("EX_FAILED", t.toString(), "")
                 }
             }
         )
@@ -247,22 +262,22 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun logLevelFrom(value: Int): Logger.Level {
-        when (value) {
-            0 -> return Logger.Level.VERBOSE
-            1 -> return Logger.Level.INFO
-            2 -> return Logger.Level.WARNING
-            3 -> return Logger.Level.ERROR
-            else -> return Logger.Level.WARNING
+        return when (value) {
+            0 -> Logger.Level.VERBOSE
+            1 -> Logger.Level.INFO
+            2 -> Logger.Level.WARNING
+            3 -> Logger.Level.ERROR
+            else -> Logger.Level.WARNING
         }
     }
 
     private fun setLanguage(language: String) {
-        var lang = tryOrNull { Language.valueOf(language) } ?: Language.en
+        val lang = tryOrNull { Language.valueOf(language) } ?: Language.en
         IAdvizeSDK.targetingController.language = LanguageOption.Custom(lang)
     }
 
     private fun activateTargetingRule(uuid: String, channel: String) {
-        var value = UUID.fromString(uuid)
+        val value = UUID.fromString(uuid)
 
         IAdvizeSDK.targetingController.activateTargetingRule(
             TargetingRule(
@@ -299,6 +314,25 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         })
     }
 
+    private fun registerUserNavigation(navigationOption: String, uuid: String?, channel: String?) {
+        IAdvizeSDK.targetingController.registerUserNavigation(navigationOption.toNavigationOption(uuid, channel))
+    }
+
+    private fun String.toNavigationOption(
+        uuid: String?,
+        channel: String?
+    ): NavigationOption = when (this) {
+        "clear" -> NavigationOption.ClearActiveRule
+        "keep" -> NavigationOption.KeepActiveRule
+        "new" -> NavigationOption.ActivateNewRule(
+            TargetingRule(
+                UUID.fromString(uuid),
+                channel!!.toConversationChannel(),
+            )
+        )
+        else -> NavigationOption.ClearActiveRule
+    }
+
     private fun ongoingConversationId(): String? {
         return IAdvizeSDK.conversationController.ongoingConversation()?.conversationId
     }
@@ -315,8 +349,8 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 onOngoingConversationUpdatedStreamHandler.onUpdated(ongoingConversation != null)
             }
 
-            override fun onNewMessageReceived(message: String) {
-                onReceiveMessageStreamHandler.onMessage(message)
+            override fun onNewMessageReceived(content: String) {
+                onReceiveMessageStreamHandler.onMessage(content)
             }
 
             override fun handleClickedUrl(uri: Uri): Boolean {
@@ -327,30 +361,29 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun registerPushToken(pushToken: String, mode: String) {
-        Log.d(TAG, "set pushToken " + pushToken)
         IAdvizeSDK.notificationController.registerPushToken(pushToken)
     }
 
-    private fun enablePushNotifications(@NonNull result: Result) {
+    private fun enablePushNotifications(result: Result) {
         IAdvizeSDK.notificationController.enablePushNotifications(object : Callback {
             override fun onSuccess() {
                 result.success(true)
             }
 
             override fun onFailure(t: Throwable) {
-                result.error(TAG, t.toString(), "")
+                result.error("EX_FAILED", t.toString(), "")
             }
         })
     }
 
-    private fun disablePushNotifications(@NonNull result: Result) {
+    private fun disablePushNotifications(result: Result) {
         IAdvizeSDK.notificationController.disablePushNotifications(object : Callback {
             override fun onSuccess() {
                 result.success(true)
             }
 
             override fun onFailure(t: Throwable) {
-                result.error(TAG, t.toString(), "")
+                result.error("EX_FAILED", t.toString(), "")
             }
         })
     }
@@ -380,8 +413,6 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         navigationBarBackgroundColor: String?,
         navigationBarMainColor: String?,
         navigationBarTitle: String?,
-        fontName: String?,
-        fontSize: Int?,
         fontPath: String?,
         automaticMessage: String?,
         gdprMessage: String?,
@@ -430,12 +461,36 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
             val d = bd.current
             configuration.incomingMessageAvatar = IncomingMessageAvatar.Image(d)
         }
-        if(incomingMessageAvatarURL != null ) {
-            var url = URL(incomingMessageAvatarURL)
+        if (incomingMessageAvatarURL != null) {
+            val url = URL(incomingMessageAvatarURL)
             configuration.incomingMessageAvatar = IncomingMessageAvatar.Url(url)
         }
         IAdvizeSDK.chatboxController.setupChatbox(configuration)
 
+    }
+
+    private fun registerTransaction(
+        transactionId: String,
+        amount: Double,
+        currencyName: String
+    ): Boolean {
+        val currency = tryOrNull { Currency.valueOf(currencyName ?: "") } ?: return false
+        Log.d(TAG, currencyName ?: "")
+        Log.d(TAG, currency.toString())
+        IAdvizeSDK.transactionController.register(
+            Transaction(
+                transactionId ?: "",
+                Date(),
+                amount ?: 0.0,
+                currency
+            )
+        )
+        return true
+
+    }
+
+    private fun logout() {
+        IAdvizeSDK.logout()
     }
 
 }
