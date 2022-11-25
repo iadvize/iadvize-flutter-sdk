@@ -196,7 +196,7 @@ class _MyAppState extends State<MyApp> {
       navigationBarBackgroundColor: Colors.black,
       navigationBarTitle: 'Test',
       navigationBarMainColor: Colors.yellow,
-      fontName: 'test_font',
+      fontName: 'Fruit Days',
       fontSize: 25,
       fontPath: 'fonts/Test-Font.ttf',
       automaticMessage: 'Hello! Please ask your question :)',
