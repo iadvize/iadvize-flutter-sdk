@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
@@ -67,7 +68,14 @@ class IavizeSdk {
   Future<bool> disablePushNotifications() =>
       IadvizeSdkPlatform.instance.disablePushNotifications();
 
-  // void onConversationListener({Function(String)? onReceiveNewMessage}) =>
-  //     IadvizeSdkPlatform.instance
-  //         .onConversationListener(onReceiveNewMessage: onReceiveNewMessage);
+  void setDefaultFloatingButton(bool active) =>
+      IadvizeSdkPlatform.instance.setDefaultFloatingButton(active);
+
+  void setFloatingButtonPosition(
+          {required int leftMargin, required int bottomMargin}) =>
+      IadvizeSdkPlatform.instance
+          .setFloatingButtonPosition(leftMargin, bottomMargin);
+
+  void setChatboxConfiguration(ChatboxConfiguration configuration) =>
+      IadvizeSdkPlatform.instance.setChatboxConfiguration(configuration);
 }

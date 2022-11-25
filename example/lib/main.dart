@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
+import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
+import 'package:flutter_iadvize_sdk_example/keys.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,15 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // ignore: todo
-  //TODO: replace by real values
-  final int _projectId = 8047;
-  final String _chatTargetingRule = '3ad856a4-f151-486d-8879-f9924d81a596';
-  final String _videoTargetingRule = 'e891e20c-fad9-4b53-ada3-f5fd956d5b57';
-  final String? _userId = null;
-  final String? _grpdUrl = null;
   final String _pushToken = 'device_push_token';
-  final ApplicationMode _applicationMode = ApplicationMode.dev;
 
   static const double spaceBetweenButton = 20;
 
@@ -61,10 +54,8 @@ class _MyAppState extends State<MyApp> {
     _clickedUrlSubscription = _iAdvizeSdk.handleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
-    // _iAdvizeSdk.setDefaultFloatingButton(true);
-    // _iAdvizeSdk.setFloatingButtonPosition(25, 25);
-    // _iAdvizeSdk.onConversationListener(
-    //     onReceiveNewMessage: (message) => log('test $message'));
+    _iAdvizeSdk.setDefaultFloatingButton(true);
+    _iAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -96,7 +87,7 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextButton(
-                onPressed: () => _activateSDK(),
+                onPressed: () async => await _activateSDK(),
                 label: 'Activate',
               ),
               const SizedBox(height: spaceBetweenButton),
@@ -139,6 +130,11 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _disablePushNotifications(),
                 label: 'Disnable Push Notifications',
               ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _setChatboxConfiguration(),
+                label: 'Set ChatboxConfiguration',
+              ),
             ],
           ),
         ),
@@ -149,9 +145,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> _activateSDK() async {
     await _iAdvizeSdk
         .activate(
-          projectId: _projectId,
-          userId: _userId,
-          gdprUrl: _grpdUrl,
+          projectId: projectId,
+          userId: userId,
+          gdprUrl: grpdUrl,
         )
         .then((bool activated) => activated
             ? log('iAdvize Example : SDK activated')
@@ -159,11 +155,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _activateChatTargetingRule() => _iAdvizeSdk.activateTargetingRule(
-      uuid: _chatTargetingRule, conversationChannel: ConversationChannel.chat);
+      uuid: chatTargetingRule, conversationChannel: ConversationChannel.chat);
 
   void _activateVideoTargetingRule() => _iAdvizeSdk.activateTargetingRule(
-      uuid: _videoTargetingRule,
-      conversationChannel: ConversationChannel.video);
+      uuid: videoTargetingRule, conversationChannel: ConversationChannel.video);
 
   Future<void> _isActiveTargetingRuleAvailable() async {
     await _iAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
@@ -185,7 +180,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _registerPushToken() => _iAdvizeSdk.registerPushToken(
-      pushToken: _pushToken, mode: _applicationMode);
+      pushToken: _pushToken, mode: applicationMode);
 
   void _enablePushNotifications() =>
       _iAdvizeSdk.enablePushNotifications().then((bool enabled) =>
@@ -194,6 +189,22 @@ class _MyAppState extends State<MyApp> {
   void _disablePushNotifications() =>
       _iAdvizeSdk.disablePushNotifications().then((bool disabled) =>
           log('iAdvize Example : push notifications disabled $disabled'));
+
+  Future<void> _setChatboxConfiguration() async {
+    _iAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
+      mainColor: Colors.red,
+      navigationBarBackgroundColor: Colors.black,
+      navigationBarTitle: 'Test',
+      navigationBarMainColor: Colors.yellow,
+      fontName: 'test_font',
+      fontSize: 25,
+      fontPath: 'fonts/Test-Font.ttf',
+      automaticMessage: 'Hello! Please ask your question :)',
+      gdprMessage: 'Your own GDPR message.',
+      incomingMessageAvatarImage: const AssetImage('assets/test.jpeg'),
+      incomingMessageAvatarURL: 'https://picsum.photos/200/200',
+    ));
+  }
 
   @override
   void dispose() {

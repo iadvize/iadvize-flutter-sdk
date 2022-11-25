@@ -18,6 +18,9 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_REGISTER_PUSH_TOKEN = "registerPushToken"
     let CHANNEL_METHOD_ENABLE_PUSH_NOTIFICATIONS = "enablePushNotifications"
     let CHANNEL_METHOD_DISABLE_PUSH_NOTIFICATIONS = "disablePushNotifications"
+    let CHANNEL_METHOD_SET_DEFAULT_BUTTON = "setDefaultFloatingButton"
+    let CHANNEL_METHOD_SET_BUTTON_POSITION = "setFloatingButtonPosition"
+    let CHANNEL_METHOD_SET_CHATBOX_CONFIG = "setChatboxConfiguration"
     
     var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
     var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
@@ -29,7 +32,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         let channel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterIadvizeSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-
+        
         instance.onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
         FlutterEventChannel(name: "flutter_iadvize_sdk/onReceiveMessage", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onReceiveMessageStreamHandler)
         instance.handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
@@ -77,11 +80,48 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         case self.CHANNEL_METHOD_REGISTER_PUSH_TOKEN:
             let pushToken = args["pushToken"] as! String
             let mode = args["mode"] as! String
-           registerPushToken(pushToken: pushToken, mode: mode)
+            registerPushToken(pushToken: pushToken, mode: mode)
         case self.CHANNEL_METHOD_ENABLE_PUSH_NOTIFICATIONS:
-           enablePushNotifications(result: result)
+            enablePushNotifications(result: result)
         case self.CHANNEL_METHOD_DISABLE_PUSH_NOTIFICATIONS:
-           disablePushNotifications(result: result)
+            disablePushNotifications(result: result)
+        case self.CHANNEL_METHOD_SET_DEFAULT_BUTTON:
+            let active = args["active"] as! Bool
+            setDefaultFloatingButton(active: active)
+        case self.CHANNEL_METHOD_SET_BUTTON_POSITION:
+            let leftMargin = args["leftMargin"] as! Int
+            let bottomMargin = args["bottomMargin"] as! Int
+            setFloatingButtonPosition(leftMargin: leftMargin, bottomMargin: bottomMargin)
+        case self.CHANNEL_METHOD_SET_CHATBOX_CONFIG:
+            let mainColor = args["mainColor"] as! String?
+            let navigationBarBackgroundColor = args["navigationBarBackgroundColor"] as! String?
+            let navigationBarMainColor = args["navigationBarMainColor"] as! String?
+            let navigationBarTitle = args["navigationBarTitle"] as! String?
+            let fontName = args["fontName"] as! String?
+            let fontSize = args["fontSize"] as! Int?
+            let fontPath = args["fontPath"] as! String?
+            let automaticMessage = args["automaticMessage"] as! String?
+            let gdprMessage = args["gdprMessage"] as! String?
+            
+            var incomingMessageAvatarImage: [UInt8]?
+            let incomingMessageAvatarImageFlutter = args["incomingMessageAvatarImage"] as! FlutterStandardTypedData?
+            if incomingMessageAvatarImageFlutter != nil {incomingMessageAvatarImage = [UInt8](incomingMessageAvatarImageFlutter!.data)}
+            let incomingMessageAvatarURL = args["incomingMessageAvatarURL"] as! String?
+            
+            
+            setChatboxConfiguration(
+                mainColor:mainColor,
+                navigationBarBackgroundColor:navigationBarBackgroundColor,
+                navigationBarMainColor:navigationBarMainColor,
+                navigationBarTitle:navigationBarTitle,
+                fontName:fontName,
+                fontSize:fontSize,
+                fontPath:fontPath,
+                automaticMessage:automaticMessage,
+                gdprMessage:gdprMessage,
+                incomingMessageAvatarImage:incomingMessageAvatarImage,
+                incomingMessageAvatarURL:incomingMessageAvatarURL
+            )
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -103,7 +143,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
                                    authenticationOption: authenticationOption,
                                    gdprOption: rgpdOption){ success in
             
-           result(success)
+            result(success)
         }
     }
     
@@ -128,30 +168,30 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func isActiveTargetingRuleAvailable() -> Bool {
-       return IAdvizeSDK.shared.targetingController.isActiveTargetingRuleAvailable
+        return IAdvizeSDK.shared.targetingController.isActiveTargetingRuleAvailable
     }
-
+    
     private func setOnActiveTargetingRuleAvailabilityListener() {
-        IAdvizeSDK.shared.targetingController.delegate = self  
+        IAdvizeSDK.shared.targetingController.delegate = self
     }
-
+    
     private func setConversationListener() {
-        IAdvizeSDK.shared.conversationController.delegate = self   
+        IAdvizeSDK.shared.conversationController.delegate = self
     }
-
+    
     private func ongoingConversationId() -> String? {
         return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationId.uuidString
     }
-
+    
     private func ongoingConversationChannel() -> String? {
         return IAdvizeSDK.shared.conversationController.ongoingConversation()?.conversationChannel.rawValue
     }
-
+    
     private func registerPushToken(pushToken: String, mode: String) -> Void {
         let applicationMode = ApplicationMode.fromString(mode)
         IAdvizeSDK.shared.notificationController.registerPushToken(pushToken, applicationMode: applicationMode)
     }
-
+    
     private func enablePushNotifications(result: @escaping FlutterResult) -> Void {
         IAdvizeSDK.shared.notificationController.enablePushNotifications { success in
             result(success)
@@ -163,6 +203,61 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         IAdvizeSDK.shared.notificationController.disablePushNotifications { success in
             result(success)
         }
+    }
+    
+    private func setDefaultFloatingButton(active: Bool) -> Void {
+        IAdvizeSDK.shared.chatboxController.useDefaultFloatingButton = active
+    }
+    
+    private func setFloatingButtonPosition(leftMargin: Int, bottomMargin: Int) -> Void {
+        IAdvizeSDK.shared.chatboxController.setFloatingButtonPosition(leftMargin: Double(leftMargin), bottomMargin: Double(bottomMargin))
+    }
+    
+    private func setChatboxConfiguration(mainColor:String?,
+                                         navigationBarBackgroundColor:String?,
+                                         navigationBarMainColor:String?,
+                                         navigationBarTitle:String?,
+                                         fontName:String?,
+                                         fontSize:Int?,
+                                         fontPath:String?,
+                                         automaticMessage:String?,
+                                         gdprMessage:String?,
+                                         incomingMessageAvatarImage:[UInt8]?,
+                                         incomingMessageAvatarURL:String?) -> Void {
+        var configuration = ChatboxConfiguration()
+        if mainColor != nil, let color = UIColor(hexString: mainColor!) {
+            configuration.mainColor = color
+        }
+        if navigationBarBackgroundColor != nil, let color = UIColor(hexString: navigationBarBackgroundColor!) {
+            configuration.navigationBarBackgroundColor = color
+        }
+        if navigationBarMainColor != nil, let color = UIColor(hexString: navigationBarMainColor!) {
+            configuration.navigationBarMainColor = color
+        }
+        if navigationBarTitle != nil {
+            configuration.navigationBarTitle = navigationBarTitle
+        }
+        if fontName != nil && fontSize != nil {
+            configuration.font = UIFont(name: fontName!, size: CGFloat(fontSize!))
+        }
+        if automaticMessage != nil {
+            configuration.automaticMessage = automaticMessage
+        }
+        if gdprMessage != nil {
+            configuration.gdprMessage = gdprMessage
+        }
+        if incomingMessageAvatarImage != nil {
+            let data = Data(bytes: incomingMessageAvatarImage!, count: incomingMessageAvatarImage!.count)
+            if let image = UIImage(data: data){
+                configuration.incomingMessageAvatar = .image(image: image)
+            }
+        }
+        if incomingMessageAvatarURL != nil,
+           let url = URL(string: incomingMessageAvatarURL!) {
+            configuration.incomingMessageAvatar = .url(url: url)
+        }
+        
+        IAdvizeSDK.shared.chatboxController.setupChatbox(configuration: configuration)
     }
 }
 

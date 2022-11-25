@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
@@ -132,6 +133,29 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   @override
   Future<bool> disablePushNotifications() async {
     return _callNativeMethod('disablePushNotifications', defaultValue: false);
+  }
+
+  @override
+  void setDefaultFloatingButton(bool active) {
+    return _callNativeMethodVoid('setDefaultFloatingButton',
+        arguments: <String, dynamic>{'active': active});
+  }
+
+  @override
+  void setFloatingButtonPosition(int leftMargin, int bottomMargin) {
+    return _callNativeMethodVoid('setFloatingButtonPosition',
+        arguments: <String, dynamic>{
+          'leftMargin': leftMargin,
+          'bottomMargin': bottomMargin,
+        });
+  }
+
+  @override
+  Future<void> setChatboxConfiguration(
+      ChatboxConfiguration configuration) async {
+    // log(' ${await configuration.toMap()}');
+    return _callNativeMethodVoid('setChatboxConfiguration',
+        arguments: await configuration.toMap());
   }
 
   Future<T> _callNativeMethod<T>(

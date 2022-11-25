@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/enums/application_mode.dart';
 import 'package:flutter_iadvize_sdk/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/enums/log_level.dart';
@@ -82,4 +83,15 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
 
   Future<bool> disablePushNotifications() => throw UnimplementedError(
       'disablePushNotifications() has not been implemented.');
+
+  void setDefaultFloatingButton(bool active) => throw UnimplementedError(
+      'setDefaultFloatingButton() has not been implemented.');
+
+  void setFloatingButtonPosition(int leftMargin, int bottomMargin) =>
+      throw UnimplementedError(
+          'setDefaultFloatingButton() has not been implemented.');
+
+  Future<void> setChatboxConfiguration(ChatboxConfiguration configuration) =>
+      throw UnimplementedError(
+          'setChatboxConfiguration() has not been implemented.');
 }

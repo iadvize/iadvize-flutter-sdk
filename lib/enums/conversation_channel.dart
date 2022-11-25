@@ -3,7 +3,7 @@ enum ConversationChannel {
   video,
 }
 
-extension ParseToString on ConversationChannel {
+extension ConversationChannelExt on ConversationChannel {
   String toValueString() {
     return toString().split('.').last;
   }

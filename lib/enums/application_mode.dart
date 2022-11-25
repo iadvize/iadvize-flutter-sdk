@@ -3,7 +3,7 @@ enum ApplicationMode {
   prod,
 }
 
-extension ParseToString on ApplicationMode {
+extension ApplicationModeExt on ApplicationMode {
   String toValueString() {
     return toString().split('.').last;
   }
