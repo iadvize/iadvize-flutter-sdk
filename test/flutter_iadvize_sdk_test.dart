@@ -103,7 +103,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    IavizeSdk flutterIadvizeSdkPlugin = IavizeSdk();
+    IadvizeSdk flutterIadvizeSdkPlugin = IadvizeSdk();
     MockFlutterIadvizeSdkPlatform fakePlatform =
         MockFlutterIadvizeSdkPlatform();
     IadvizeSdkPlatform.instance = fakePlatform;

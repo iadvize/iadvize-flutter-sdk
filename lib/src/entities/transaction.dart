@@ -12,6 +12,6 @@ class Transaction {
   Map<String, dynamic> toMap() => <String, dynamic>{
         'transactionId': transactionId,
         'amount': amount,
-        'currency': currency,
+        'currency': currency.toUpperCase(),
       };
 }

@@ -21,8 +21,6 @@ class _MyAppState extends State<MyApp> {
 
   static const double spaceBetweenButton = 20;
 
-  final _iAdvizeSdk = IavizeSdk();
-
   late StreamSubscription _messageSubscription;
   late StreamSubscription _hasOngoingSubscription;
   late StreamSubscription _clickedUrlSubscription;
@@ -31,29 +29,29 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _iAdvizeSdk.setLanguage('fr');
-    _iAdvizeSdk.setLogLevel(LogLevel.verbose);
-    _iAdvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
-    _targetingRuleAvailabilityUpdatedSubscription = _iAdvizeSdk
+    IadvizeSdk.setLanguage('fr');
+    IadvizeSdk.setLogLevel(LogLevel.verbose);
+    IadvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
+    _targetingRuleAvailabilityUpdatedSubscription = IadvizeSdk
         .onActiveTargetingRuleAvailabilityUpdated
         .listen((bool available) {
       log('iAdvize Example : Targeting Rule available: $available');
     });
 
-    _iAdvizeSdk.setConversationListener();
+    IadvizeSdk.setConversationListener();
     _messageSubscription =
-        _iAdvizeSdk.onReceiveNewMessage.listen((String message) {
+        IadvizeSdk.onReceiveNewMessage.listen((String message) {
       log('iAdvize Example : New message: $message');
     });
     _hasOngoingSubscription =
-        _iAdvizeSdk.hasOngoingConversation.listen((bool ongoing) {
+        IadvizeSdk.hasOngoingConversation.listen((bool ongoing) {
       log('iAdvize Example : Ongoing: $ongoing');
     });
-    _clickedUrlSubscription = _iAdvizeSdk.handleClickedUrl.listen((String url) {
+    _clickedUrlSubscription = IadvizeSdk.handleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
-    _iAdvizeSdk.setDefaultFloatingButton(true);
-    _iAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
+    IadvizeSdk.setDefaultFloatingButton(true);
+    IadvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
   }
 
   @override
@@ -68,7 +66,7 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextButton(
-                onPressed: () async => await _activateSDK(),
+                onPressed: () => _activateSDK(),
                 label: 'Activate',
               ),
               const SizedBox(height: spaceBetweenButton),
@@ -138,62 +136,59 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> _activateSDK() async {
-    await _iAdvizeSdk
-        .activate(
-          projectId: projectId,
-          userId: userId,
-          gdprUrl: grpdUrl,
-        )
-        .then((bool activated) => activated
-            ? log('iAdvize Example : SDK activated')
-            : log('iAdvize Example : SDK not activated'));
+  void _activateSDK() {
+    IadvizeSdk.activate(
+      projectId: projectId,
+      userId: userId,
+      gdprUrl: grpdUrl,
+    ).then((bool activated) => activated
+        ? log('iAdvize Example : SDK activated')
+        : log('iAdvize Example : SDK not activated'));
   }
 
   void _activateChatTargetingRule() =>
-      _iAdvizeSdk.activateTargetingRule(chatTargetingRule);
+      IadvizeSdk.activateTargetingRule(chatTargetingRule);
 
   void _activateVideoTargetingRule() =>
-      _iAdvizeSdk.activateTargetingRule(videoTargetingRule);
+      IadvizeSdk.activateTargetingRule(videoTargetingRule);
 
-  Future<void> _isActiveTargetingRuleAvailable() async {
-    await _iAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
+  void _isActiveTargetingRuleAvailable() {
+    IadvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
             ? log('iAdvize Example : SDK targeting rule available')
             : log('iAdvize Example : targeting rule not available'));
   }
 
   void _registerUserNavigation() {
-    _iAdvizeSdk.registerUserNavigation(
+    IadvizeSdk.registerUserNavigation(
         navigationOption: NavigationOption.optionNew,
         newTargetingRule: videoTargetingRule);
   }
 
-  Future<void> _ongoingConversationId() async {
-    await _iAdvizeSdk
-        .ongoingConversationId()
+  void _ongoingConversationId() {
+    IadvizeSdk.ongoingConversationId()
         .then((String? id) => log('iAdvize Example : conversationId $id'));
   }
 
-  Future<void> _ongoingConversationChannel() async {
-    await _iAdvizeSdk.ongoingConversationChannel().then((ConversationChannel?
+  void _ongoingConversationChannel() {
+    IadvizeSdk.ongoingConversationChannel().then((ConversationChannel?
             channel) =>
         log('iAdvize Example : conversation channel ${channel?.toValueString()}'));
   }
 
-  void _registerPushToken() => _iAdvizeSdk.registerPushToken(
+  void _registerPushToken() => IadvizeSdk.registerPushToken(
       pushToken: _pushToken, mode: applicationMode);
 
   void _enablePushNotifications() =>
-      _iAdvizeSdk.enablePushNotifications().then((bool enabled) =>
-          log('iAdvize Example : push notifications enabled $enabled'));
+      IadvizeSdk.enablePushNotifications().then((bool success) =>
+          log('iAdvize Example : push notifications enabled $success'));
 
   void _disablePushNotifications() =>
-      _iAdvizeSdk.disablePushNotifications().then((bool disabled) =>
-          log('iAdvize Example : push notifications disabled $disabled'));
+      IadvizeSdk.disablePushNotifications().then((bool success) =>
+          log('iAdvize Example : push notifications disabled $success'));
 
-  Future<void> _setChatboxConfiguration() async {
-    _iAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
+  void _setChatboxConfiguration() {
+    IadvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
       mainColor: Colors.red,
       navigationBarBackgroundColor: Colors.black,
       navigationBarTitle: 'Test',
@@ -209,12 +204,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _registertransaction() {
-    _iAdvizeSdk.registerTransaction(Transaction(
+    IadvizeSdk.registerTransaction(Transaction(
         transactionId: 'transactionId', currency: 'EUR', amount: 25));
   }
 
   void _logout() {
-    _iAdvizeSdk.logout();
+    IadvizeSdk.logout();
   }
 
   @override
