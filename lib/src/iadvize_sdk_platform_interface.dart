@@ -66,16 +66,16 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
       throw UnimplementedError(
           'ongoingConversationChannel has not been implemented.');
 
-  void setConversationListener() => throw UnimplementedError(
+  void setConversationListener(bool manageUrlClick) => throw UnimplementedError(
       'setConversationListener() has not been implemented.');
 
   Stream<String> get onReceiveNewMessage =>
       throw UnimplementedError('onReceiveNewMessage has not been implemented.');
 
-  Stream<bool> get hasOngoingConversation => throw UnimplementedError(
+  Stream<bool> get onOngoingConversationUpdated => throw UnimplementedError(
       'onOngoingConversationUpdated has not been implemented.');
 
-  Stream<String> get handleClickedUrl =>
+  Stream<String> get onHandleClickedUrl =>
       throw UnimplementedError('handleClickedUrl has not been implemented.');
 
   void registerPushToken(String pushToken, ApplicationMode mode) =>
@@ -103,4 +103,16 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
 
   void logout() =>
       throw UnimplementedError('logout() has not been implemented.');
+
+  void presentChatbox() =>
+      throw UnimplementedError('presentChatbox() has not been implemented.');
+
+  void dissmissChatbox() =>
+      throw UnimplementedError('dissmissChatbox() has not been implemented.');
+
+  Future<bool> isChatboxPresented() => throw UnimplementedError(
+      'isChatboxPresented() has not been implemented.');
+
+  Future<bool> isSDKActivated() =>
+      throw UnimplementedError('isSDKActivated() has not been implemented.');
 }

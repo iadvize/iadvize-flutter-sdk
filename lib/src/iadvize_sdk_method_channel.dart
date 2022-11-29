@@ -23,7 +23,7 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   static final EventChannel _messageEventChannel =
       EventChannel('${methodChannel.name}/onReceiveMessage');
   static final EventChannel _clickUrlEventChannel =
-      EventChannel('${methodChannel.name}/handleClickUrl');
+      EventChannel('${methodChannel.name}/onHandleClickUrl');
   static final EventChannel _conversationUpdatedEventChannel =
       EventChannel('${methodChannel.name}/onOngoingConversationUpdated');
   static final EventChannel
@@ -116,8 +116,9 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   }
 
   @override
-  void setConversationListener() {
-    _callNativeMethodVoid('setConversationListener');
+  void setConversationListener(bool manageUrlClick) {
+    _callNativeMethodVoid('setConversationListener',
+        arguments: <String, dynamic>{'manageUrlClick': manageUrlClick});
   }
 
   @override
@@ -125,11 +126,11 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
       _messageEventChannel.receiveBroadcastStream().cast();
 
   @override
-  Stream<bool> get hasOngoingConversation =>
+  Stream<bool> get onOngoingConversationUpdated =>
       _conversationUpdatedEventChannel.receiveBroadcastStream().cast();
 
   @override
-  Stream<String> get handleClickedUrl =>
+  Stream<String> get onHandleClickedUrl =>
       _clickUrlEventChannel.receiveBroadcastStream().cast();
 
   @override
@@ -180,6 +181,20 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   void logout() => _callNativeMethodVoid(
         'logout',
       );
+
+  @override
+  void presentChatbox() => _callNativeMethodVoid('presentChatbox');
+
+  @override
+  void dissmissChatbox() => _callNativeMethodVoid('dissmissChatbox');
+
+  @override
+  Future<bool> isChatboxPresented() =>
+      _callNativeMethod('isChatboxPresented', defaultValue: false);
+
+  @override
+  Future<bool> isSDKActivated() =>
+      _callNativeMethod('isSDKActivated', defaultValue: false);
 
   Future<T> _callNativeMethod<T>(
     String method, {

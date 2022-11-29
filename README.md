@@ -215,7 +215,7 @@ IadvizeSdk.ongoingConversationChannel().then((ConversationChannel? channel) =>
 You can also add a delegate to be informed in real time about conversation events:
 
 ```dart
-IadvizeSdk.hasOngoingConversation.listen((bool ongoing) {
+IadvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
     log('iAdvize Example : Ongoing: $ongoing');
 });
 
@@ -223,7 +223,7 @@ IadvizeSdk.onReceiveNewMessage.listen((String message) {
     log('iAdvize Example : New message: $message');
 });
 
-IadvizeSdk.handleClickedUrl.listen((String url) {
+IadvizeSdk.onHandleClickedUrl.listen((String url) {
     log('iAdvize Example : Click on url: $url');
 });
 ```

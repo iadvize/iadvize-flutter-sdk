@@ -21,7 +21,6 @@ allprojects {
     repositories {
         // iAdvize SDK repository
         maven { url "https://raw.github.com/iadvize/iadvize-android-sdk/master" }
-        
         google()
         gradlePluginPortal()
         jcenter()

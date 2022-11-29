@@ -75,6 +75,10 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         private const val channelMethodSetChatboxConfiguration = "setChatboxConfiguration"
         private const val channelMethodRegisterTransaction = "registerTransaction"
         private const val channelMethodLogout = "logout"
+        private const val channelMethodPresentChatbox = "presentChatbox"
+        private const val channelMethodDismissChatbox = "dissmissChatbox"
+        private const val channelMethodIsChatboxPresented = "isChatboxPresented"
+        private const val channelMethodIsSDKActivated = "isSDKActivated"
         private const val TAG: String = "iAdvize SDK"
     }
 
@@ -84,12 +88,15 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var handleClickUrlStreamHandler: HandleClickUrlStreamHandler
     private lateinit var onOngoingConversationUpdatedStreamHandler: OnUpdatedStreamHandler
     private lateinit var onActiveTargetingRuleAvailabilityUpdatedStreamHandler: OnUpdatedStreamHandler
+    private lateinit var context: Context
 
     private var defaultFloatingButtonConfiguration = DefaultFloatingButtonConfiguration()
+    private var flutterWillManageUrlClick = false
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
         onAttachedToEngine(
-            flutterPluginBinding.applicationContext
+            context
         )
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, chanelMethodName)
         channel.setMethodCallHandler(this)
@@ -102,7 +109,7 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
         handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
         EventChannel(
             flutterPluginBinding.binaryMessenger,
-            "$chanelMethodName/handleClickUrl"
+            "$chanelMethodName/onHandleClickUrl"
         ).setStreamHandler(handleClickUrlStreamHandler)
         onOngoingConversationUpdatedStreamHandler = OnUpdatedStreamHandler()
         EventChannel(
@@ -145,6 +152,7 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 result.success(isActiveTargetingRuleAvailable())
             }
             channelMethodSetConversationListener -> {
+                flutterWillManageUrlClick = call.argument<Boolean>("manageUrlClick") as Boolean
                 setConversationListener()
             }
             channelMethodSetTargetingRuleAvailabilityListener -> {
@@ -217,6 +225,20 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
                 if (!success) result.error("BAD_ARGS", "Invalid currency", "")
             }
             channelMethodLogout -> logout()
+            channelMethodPresentChatbox -> {
+                presentChatbox()
+            }
+            channelMethodDismissChatbox -> {
+                dissmissChatbox()
+            }
+            channelMethodIsChatboxPresented -> {
+                val presented = isChatboxPresented()
+                result.success(presented)
+            }
+            channelMethodIsSDKActivated -> {
+                val activated = isSDKActivated()
+                result.success(activated)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -315,7 +337,12 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun registerUserNavigation(navigationOption: String, uuid: String?, channel: String?) {
-        IAdvizeSDK.targetingController.registerUserNavigation(navigationOption.toNavigationOption(uuid, channel))
+        IAdvizeSDK.targetingController.registerUserNavigation(
+            navigationOption.toNavigationOption(
+                uuid,
+                channel
+            )
+        )
     }
 
     private fun String.toNavigationOption(
@@ -355,7 +382,7 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
 
             override fun handleClickedUrl(uri: Uri): Boolean {
                 handleClickUrlStreamHandler.onUrlClicked(uri.toString())
-                return true
+                return flutterWillManageUrlClick
             }
         })
     }
@@ -491,6 +518,22 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun logout() {
         IAdvizeSDK.logout()
+    }
+
+    private fun presentChatbox() {
+        IAdvizeSDK.chatboxController.presentChatbox(context)
+    }
+
+    private fun dissmissChatbox() {
+        IAdvizeSDK.chatboxController.dismissChatbox()
+    }
+
+    private fun isChatboxPresented(): Boolean {
+        return IAdvizeSDK.chatboxController.isChatboxPresented()
+    }
+
+    private fun isSDKActivated(): Boolean {
+        return IAdvizeSDK.activationStatus == IAdvizeSDK.ActivationStatus.ACTIVATED
     }
 
 }

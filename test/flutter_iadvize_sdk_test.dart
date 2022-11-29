@@ -36,10 +36,10 @@ class MockFlutterIadvizeSdkPlatform
   }
 
   @override
-  Stream<String> get handleClickedUrl => throw UnimplementedError();
+  Stream<String> get onHandleClickedUrl => throw UnimplementedError();
 
   @override
-  Stream<bool> get hasOngoingConversation => throw UnimplementedError();
+  Stream<bool> get onOngoingConversationUpdated => throw UnimplementedError();
 
   @override
   Future<bool> isActiveTargetingRuleAvailable() {

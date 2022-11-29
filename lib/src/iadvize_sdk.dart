@@ -52,17 +52,17 @@ class IadvizeSdk {
   static Future<ConversationChannel?> ongoingConversationChannel() =>
       IadvizeSdkPlatform.instance.ongoingConversationChannel();
 
-  static void setConversationListener() =>
-      IadvizeSdkPlatform.instance.setConversationListener();
+  static void setConversationListener({bool manageUrlClick = false}) =>
+      IadvizeSdkPlatform.instance.setConversationListener(manageUrlClick);
 
   static Stream<String> get onReceiveNewMessage =>
       IadvizeSdkPlatform.instance.onReceiveNewMessage;
 
-  static Stream<bool> get hasOngoingConversation =>
-      IadvizeSdkPlatform.instance.hasOngoingConversation;
+  static Stream<bool> get onOngoingConversationUpdated =>
+      IadvizeSdkPlatform.instance.onOngoingConversationUpdated;
 
-  static Stream<String> get handleClickedUrl =>
-      IadvizeSdkPlatform.instance.handleClickedUrl;
+  static Stream<String> get onHandleClickedUrl =>
+      IadvizeSdkPlatform.instance.onHandleClickedUrl;
 
   static void registerPushToken({
     required String pushToken,
@@ -93,4 +93,15 @@ class IadvizeSdk {
       IadvizeSdkPlatform.instance.registerTransaction(transaction);
 
   static void logout() => IadvizeSdkPlatform.instance.logout();
+
+  static void presentChatbox() => IadvizeSdkPlatform.instance.presentChatbox();
+
+  static void dissmissChatbox() =>
+      IadvizeSdkPlatform.instance.dissmissChatbox();
+
+  static Future<bool> isChatboxPresented() =>
+      IadvizeSdkPlatform.instance.isChatboxPresented();
+
+  static Future<bool> isSDKActivated() =>
+      IadvizeSdkPlatform.instance.isSDKActivated();
 }

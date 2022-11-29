@@ -24,14 +24,21 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_SET_CHATBOX_CONFIG = "setChatboxConfiguration"
     let CHANNEL_METHOD_REGISTER_TRANSACTION = "registerTransaction"
     let CHANNEL_METHOD_LOGOUT = "logout"
+    let CHANNEL_METHOD_PRESENT_CHATBOX = "presentChatbox"
+    let CHANNEL_METHOD_DISMISS_CHATBOX = "dismissChatbox"
+    let CHANNEL_METHOD_IS_SDK_ACTIVATED = "isSDKActivated"
+    let CHANNEL_METHOD_IS_CHATBOX_PRESENTED = "isChatboxPresented"
     
     var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
     var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
     var onOngoingConversationUpdatedStreamHandler: OnUpdatedStreamHandler?
     var onActiveTargetingRuleAvailabilityUpdatedStreamHandler: OnUpdatedStreamHandler?
+
+    var flutterWillManageUrlClick = false
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
+        
         let channel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterIadvizeSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
@@ -39,7 +46,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         instance.onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
         FlutterEventChannel(name: "flutter_iadvize_sdk/onReceiveMessage", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onReceiveMessageStreamHandler)
         instance.handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
-        FlutterEventChannel(name: "flutter_iadvize_sdk/handleClickUrl", binaryMessenger: registrar.messenger()).setStreamHandler(instance.handleClickUrlStreamHandler)
+        FlutterEventChannel(name: "flutter_iadvize_sdk/onHandleClickUrl", binaryMessenger: registrar.messenger()).setStreamHandler(instance.handleClickUrlStreamHandler)
         instance.onOngoingConversationUpdatedStreamHandler = OnUpdatedStreamHandler()
         FlutterEventChannel(name: "flutter_iadvize_sdk/onOngoingConversationUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onOngoingConversationUpdatedStreamHandler)
         instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler = OnUpdatedStreamHandler()
@@ -80,6 +87,7 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             let option = args["navigationOption"] as! String
             registerUserNavigation(navigationOption: option, uuid: uuid, channel: channel)
         case self.CHANNEL_METHOD_SET_CONVERSATION_LISTENER:
+            self.flutterWillManageUrlClick = args["manageUrlClick"] as! Bool
             setConversationListener()
         case self.CHANNEL_METHOD_ONGOING_CONVERSATION_ID:
             result(ongoingConversationId())
@@ -134,10 +142,18 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             let success = registerTransaction(transactionId: transactionId, amount: amount, currencyName: currency)
             if(!success) {
                 result(FlutterError.init(code: "BAD_ARGS",
-                                                   message: "\(TAG): Invalid currency",
-                                                   details: nil))
+                                         message: "\(TAG): Invalid currency",
+                                         details: nil))
             }
         case self.CHANNEL_METHOD_LOGOUT: logout()
+        case self.CHANNEL_METHOD_PRESENT_CHATBOX: presentChatbox()
+        case self.CHANNEL_METHOD_DISMISS_CHATBOX: dismissChatbox()
+        case self.CHANNEL_METHOD_IS_CHATBOX_PRESENTED:
+            let presented = isChatboxPresented()
+            result(presented)
+        case self.CHANNEL_METHOD_IS_SDK_ACTIVATED:
+            let activated = isSDKActivated()
+            result(activated)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -291,10 +307,33 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
         IAdvizeSDK.shared.transactionController.registerTransaction(transaction)
         return true
     }
-
+    
     private func logout() -> Void {
-            IAdvizeSDK.shared.logout()
+        IAdvizeSDK.shared.logout()
     }
+    
+    private func presentChatbox() -> Void {
+        IAdvizeSDK.shared.chatboxController.presentChatbox(
+            animated: true,
+            presentingViewController: UIApplication.shared.keyWindow?.rootViewController) {
+                
+            }
+        
+    }
+    
+    private func dismissChatbox() -> Void {
+        IAdvizeSDK.shared.chatboxController.dismissChatbox()
+        
+    }
+    
+    private func isSDKActivated() -> Bool {
+        return IAdvizeSDK.shared.activationStatus == .activated
+    }
+    
+    private func isChatboxPresented() -> Bool {
+        return IAdvizeSDK.shared.chatboxController.isChatboxPresented()
+    }
+    
 }
 
 extension SwiftFlutterIadvizeSdkPlugin: TargetingControllerDelegate {
@@ -312,7 +351,7 @@ extension SwiftFlutterIadvizeSdkPlugin: ConversationControllerDelegate {
     }
     public func conversationController(_ controller: ConversationController, shouldOpen url: URL) -> Bool {
         self.handleClickUrlStreamHandler?.onUrlClicked(url: url.absoluteString)
-        return true;
+        return !self.flutterWillManageUrlClick;
     }
 }
 
@@ -345,20 +384,20 @@ extension ApplicationMode {
 extension NavigationOption {
     static func fromString(_ navigationOption: String, uuid: String?, channel: String?) -> NavigationOption {
         switch navigationOption.lowercased() {
-            case "clear":
+        case "clear":
+            return .clearActiveRule
+        case "keep":
+            return .keepActiveRule
+        case "new":
+            guard let uuid = UUID(uuidString: uuid!) else {
+                print("Unable to activate targeting rule: targeting rule id not valid")
                 return .clearActiveRule
-            case "keep":
-                return .keepActiveRule
-            case "new":
-                guard let uuid = UUID(uuidString: uuid!) else {
-                    print("Unable to activate targeting rule: targeting rule id not valid")
-                    return .clearActiveRule
-                }
-                let channel = ConversationChannel.fromString(channel!)
-                let targetingRule = TargetingRule(id: uuid, conversationChannel: channel)
-                return .activateNewRule(targetingRule: targetingRule)
-            default:
-                return .clearActiveRule
+            }
+            let channel = ConversationChannel.fromString(channel!)
+            let targetingRule = TargetingRule(id: uuid, conversationChannel: channel)
+            return .activateNewRule(targetingRule: targetingRule)
+        default:
+            return .clearActiveRule
         }
     }
 }

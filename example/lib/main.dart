@@ -19,6 +19,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final String _pushToken = 'device_push_token';
 
+  // Var for Custom button
+  bool _showCustomButton = false;
+  bool _newMessage = false;
+  bool _useCustomButton = false;
+
+  bool _hasOngoingConversation = false;
+
   static const double spaceBetweenButton = 20;
 
   late StreamSubscription _messageSubscription;
@@ -36,18 +43,25 @@ class _MyAppState extends State<MyApp> {
         .onActiveTargetingRuleAvailabilityUpdated
         .listen((bool available) {
       log('iAdvize Example : Targeting Rule available: $available');
+      _updateCustomChatButtonVisibility();
     });
 
-    IadvizeSdk.setConversationListener();
+    IadvizeSdk.setConversationListener(manageUrlClick: true);
     _messageSubscription =
         IadvizeSdk.onReceiveNewMessage.listen((String message) {
       log('iAdvize Example : New message: $message');
+      setState(() {
+        _newMessage = true;
+      });
     });
     _hasOngoingSubscription =
-        IadvizeSdk.hasOngoingConversation.listen((bool ongoing) {
+        IadvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
       log('iAdvize Example : Ongoing: $ongoing');
+      _hasOngoingConversation = ongoing;
+      _updateCustomChatButtonVisibility();
     });
-    _clickedUrlSubscription = IadvizeSdk.handleClickedUrl.listen((String url) {
+    _clickedUrlSubscription =
+        IadvizeSdk.onHandleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
     IadvizeSdk.setDefaultFloatingButton(true);
@@ -61,6 +75,18 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('iAdvize Flutter Plugin Example'),
         ),
+        floatingActionButton: _showCustomButton && _useCustomButton
+            ? FloatingActionButton(
+                backgroundColor: _newMessage ? Colors.red : Colors.blue,
+                child: const Icon(Icons.chat),
+                onPressed: () {
+                  _presentChatbox();
+                  setState(() {
+                    _newMessage = false;
+                  });
+                },
+              )
+            : null,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -128,6 +154,26 @@ class _MyAppState extends State<MyApp> {
               CustomTextButton(
                 onPressed: () => _logout(),
                 label: 'Logout',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () {
+                  setState(() {
+                    _useCustomButton = true;
+                  });
+                  IadvizeSdk.setDefaultFloatingButton(false);
+                },
+                label: 'Show Custom Button example',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () {
+                  setState(() {
+                    _useCustomButton = false;
+                  });
+                  IadvizeSdk.setDefaultFloatingButton(true);
+                },
+                label: 'Hide Custom Button example',
               ),
             ],
           ),
@@ -210,6 +256,22 @@ class _MyAppState extends State<MyApp> {
 
   void _logout() {
     IadvizeSdk.logout();
+  }
+
+  void _presentChatbox() {
+    IadvizeSdk.presentChatbox();
+  }
+
+  Future<void> _updateCustomChatButtonVisibility() async {
+    final bool sdkActivated = await IadvizeSdk.isSDKActivated();
+    final bool ruleAvailable =
+        await IadvizeSdk.isActiveTargetingRuleAvailable();
+
+    setState(() {
+      _showCustomButton =
+          sdkActivated && (_hasOngoingConversation || ruleAvailable);
+    });
+    log('$_showCustomButton : $sdkActivated && ($_hasOngoingConversation || $ruleAvailable)');
   }
 
   @override
