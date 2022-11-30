@@ -6,7 +6,7 @@ Embed the iAdvize Conversation SDK in your app and connect your visitors with yo
 
 You will find an example of integration in the ` example/` folder of this repository.
 
-Just run `flutter run example/lib/main.dart` and run the project `react-native ios (or android)`.
+Just run `flutter run example/lib/main.dart`.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ The Android API reference is available [here](https://iadvize.github.io/iadvize-
 
 ### Get the SDK
 
-Run this command `flutter pub add device_info_plus`:
+Run this command `flutter pub add device_info_plus`
 
 ### For iOS
 
@@ -178,6 +178,12 @@ IAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
 Or if you want to be informed of rule availability updates, you can add a delegate:
 
 ```dart
+IAdvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
+```
+
+And retrieve update by doing:
+
+```dart
 IadvizeSdk
     .onActiveTargetingRuleAvailabilityUpdated
     .listen((bool available) {
@@ -222,6 +228,12 @@ IAdvizeSdk.ongoingConversationChannel().then((ConversationChannel? channel) =>
 You can also add a delegate to be informed in real time about conversation events:
 
 ```dart
+IAdvizeSdk.setConversationListener(manageUrlClick: true);
+```
+
+After the set of listener, you can catch update by doing:
+
+```dart
 IAdvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
     log('iAdvize Example : Ongoing: $ongoing');
 });
@@ -236,6 +248,8 @@ IAdvizeSdk.onHandleClickedUrl.listen((String url) {
 ```
 
 ### Push notifications
+
+Before starting this part you will need to ensure that the push notifications are setup in your iAdvize project. The process is described above in [the SDK Knowledge Base.](https://help.iadvize.com/hc/en-gb/articles/360019839480)
 
 #### Configuration
 
@@ -292,7 +306,45 @@ The default chat button is anchored to the bottom-left of your screen, you can c
 IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
 ```
 
-#### Customization
+##### Custom chat Button
+
+You can display your own button by hidding default button.
+
+```dart
+IAdvizeSdk.setDefaultFloatingButton(false);
+```
+
+Then the visibility of your button must depend on:
+
+```dart
+bool _showCustomButton = false;
+bool _hasOngoingConversation = false;
+
+IAdvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
+    log('iAdvize Example : Ongoing: $ongoing');
+    _hasOngoingConversation = ongoing;
+    _updateCustomChatButtonVisibility();
+});
+
+IAdvizeSdk.onActiveTargetingRuleAvailabilityUpdated
+    .listen((bool available) {
+        log('iAdvize Example : Targeting Rule available: $available');
+        _updateCustomChatButtonVisibility();
+    });
+
+Future<void> _updateCustomChatButtonVisibility() async {
+    final bool sdkActivated = await IAdvizeSdk.isSDKActivated();
+    final bool ruleAvailable =
+        await IAdvizeSdk.isActiveTargetingRuleAvailable();
+
+    setState(() {
+        _showCustomButton =
+            sdkActivated && (_hasOngoingConversation || ruleAvailable);
+    });
+}
+```
+
+#### Chatbox Customization
 
 You can customize the chatbox UI by calling the following method:
 
@@ -391,6 +443,14 @@ final ChatboxConfiguration customChatboxConfig = ChatboxConfiguration(
 final ChatboxConfiguration customChatboxConfig = ChatboxConfiguration(
   incomingMessageAvatarURL: 'url',
 );
+```
+
+##### Opening/Hidding the Chatbox
+
+```dart
+IAdvizeSdk.presentChatbox();
+//OR
+IAdvizeSdk.dissmissChatbox();
 ```
 
 ### Transaction
