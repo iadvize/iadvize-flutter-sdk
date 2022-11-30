@@ -1,0 +1,30 @@
+name: flutter_iadvize_sdk
+description: iAdvize Conversation SDK - Flutter Plugin
+version: 0.0.1
+homepage: https://github.com/iadvize/flutter-iadvize-sdk#readme
+repository: https://github.com/iadvize/flutter-iadvize-sdk
+issue_tracker: https://github.com/iadvize/flutter-iadvize-sdk/issues
+
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+  flutter: '>=2.5.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.3
+  collection: ^1.16.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.idavize.flutter_iadvize_sdk
+        pluginClass: FlutterIadvizeSdkPlugin
+      ios:
+        pluginClass: FlutterIadvizeSdkPlugin

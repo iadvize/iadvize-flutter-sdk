@@ -1,0 +1,19 @@
+# VSCode
+.vscode/
+
+# Xcode
+build/
+
+# Cocoapods
+#
+example/ios/Pods
+
+# Android/IJ
+#
+.idea
+.gradle
+local.properties
+android.iml
+
+# Flutter
+.dart_tool/
