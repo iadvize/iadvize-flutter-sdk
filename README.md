@@ -67,6 +67,13 @@ end
 
 > This post_install hook is required because the iAdvize SDK supports [module stability](https://swift.org/blog/abi-stability-and-more/). Therefore, all its dependencies must be built using the "Build Libraries for Distribution" option.
 
+The SDK supports video conversations. Thus it will request camera and microphone access before entering a video call. To avoid the app to crash, you have to setup two keys in your app Info.plist
+
+```ruby
+NSMicrophoneUsageDescription
+NSCameraUsageDescription
+```
+
 ## Usage
 
 ### Import
@@ -82,7 +89,7 @@ import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
 To activate the SDK you must use the **activate** function. You also have access to a asynchronous callback in order to know if the SDK has been successfully activated (and to retry later if the activation fails):
 
 ```dart
-await IadvizeSdk.activate(
+await IAdvizeSdk.activate(
       projectId: 'projectId',
       userId: 'userId' OR null,
       gdprUrl: 'grpdUrl' OR null,
@@ -116,7 +123,7 @@ You can empty value in the `gdprURL` parameter to disable GDPR.
 By default, the SDK will **only log Warnings and Errors**. You can make it more verbose and choose between multiple levels of log for a better integration experience:
 
 ```dart
-IadvizeSdk.setLogLevel(LogLevel.verbose);
+IAdvizeSdk.setLogLevel(LogLevel.verbose);
 ```
 
 Possible values are :
@@ -138,7 +145,7 @@ enum LogLevel {
 By default, the SDK will use the device language for **targeting a conversation**. With this variable you can specify the language you want to use for targetting:
 
 ```js
-IadvizeSdk.setLanguage('fr');
+IAdvizeSdk.setLanguage('fr');
 ```
 
 The parameter passed to the function is a `string` parameter.
@@ -150,9 +157,9 @@ The parameter passed to the function is a `string` parameter.
 For the iAdvize SDK to work, you have to setup an active targeting rule. To do so, you can call the following method:
 
 ```dart
- IadvizeSdk.activateTargetingRule(TargetingRule(uuid: 'targeting-rule-uuid', channel: ConversationChannel.chat));
+ IAdvizeSdk.activateTargetingRule(TargetingRule(uuid: 'targeting-rule-uuid', channel: ConversationChannel.chat));
 // OR
- IadvizeSdk.activateTargetingRule(TargetingRule(uuid: 'targeting-rule-uuid', channel: ConversationChannel.video));
+ IAdvizeSdk.activateTargetingRule(TargetingRule(uuid: 'targeting-rule-uuid', channel: ConversationChannel.video));
 ```
 
 #### Targeting rule availability
@@ -162,7 +169,7 @@ The targeting rule availability check will be triggered when you update the acti
 You can check the active rule availability by accessing:
 
 ```dart
-IadvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
+IAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
     available
         ? log('iAdvize Example : SDK targeting rule available')
         : log('iAdvize Example : targeting rule not available'))
@@ -183,13 +190,13 @@ IadvizeSdk
 To allow iAdvize statistics to be processed you need to inform the SDK when the user navigates through the screens your app, you will have to call `registerUserNavigation` and pass a navigation option which allows you to clear, keep or activate a new targeting rule.
 
 ```dart
-IadvizeSdk.registerUserNavigation(
+IAdvizeSdk.registerUserNavigation(
     navigationOption: NavigationOption.optionKeep);
 // OR
-IadvizeSdk.registerUserNavigation(
+IAdvizeSdk.registerUserNavigation(
     navigationOption: NavigationOption.optionClear);
 // OR
-IadvizeSdk.registerUserNavigation(
+IAdvizeSdk.registerUserNavigation(
     navigationOption: NavigationOption.optionNew,
     newTargetingRule: TargetingRule(uuid: 'targeting-rule-uuid', channel: ConversationChannel.chat))
 ```
@@ -201,29 +208,29 @@ IadvizeSdk.registerUserNavigation(
 To know and to observe the evolution of the conversation state, you will have access to a variable:
 
 ```dart
-IadvizeSdk.ongoingConversationId()
+IAdvizeSdk.ongoingConversationId()
     .then((String? id) => log('iAdvize Example : conversationId $id'));
 ```
 
 you will be able to figure out the channel of the current conversation by calling:
 
 ```dart
-IadvizeSdk.ongoingConversationChannel().then((ConversationChannel? channel) =>
+IAdvizeSdk.ongoingConversationChannel().then((ConversationChannel? channel) =>
     log('iAdvize Example : conversation channel ${channel?.toValueString()}'));
 ```
 
 You can also add a delegate to be informed in real time about conversation events:
 
 ```dart
-IadvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
+IAdvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
     log('iAdvize Example : Ongoing: $ongoing');
 });
 
-IadvizeSdk.onReceiveNewMessage.listen((String message) {
+IAdvizeSdk.onReceiveNewMessage.listen((String message) {
     log('iAdvize Example : New message: $message');
 });
 
-IadvizeSdk.onHandleClickedUrl.listen((String url) {
+IAdvizeSdk.onHandleClickedUrl.listen((String url) {
     log('iAdvize Example : Click on url: $url');
 });
 ```
@@ -235,7 +242,7 @@ IadvizeSdk.onHandleClickedUrl.listen((String url) {
 To receive push notification when a message is sent to the visitor, you must register the current **push token** of the device:
 
 ```dart
-IadvizeSdk.registerPushToken(pushToken: 'your_push_token', mode: ApplicationMode.dev);
+IAdvizeSdk.registerPushToken(pushToken: 'your_push_token', mode: ApplicationMode.dev);
 ```
 
 Possible values of `ApplicationMode` are (useful for iOS only) :
@@ -252,10 +259,10 @@ You can register your push token at any time.
 By default, push notifications are activated if you have setup the push notifications information for your app on the iAdvize administration website. You can manually enable/disable them at any time using:
 
 ```dart
-IadvizeSdk.enablePushNotifications().then((bool success) =>
+IAdvizeSdk.enablePushNotifications().then((bool success) =>
     log('iAdvize Example : push notifications enabled $success'));
 
-IadvizeSdk.disablePushNotifications().then((bool success) =>
+IAdvizeSdk.disablePushNotifications().then((bool success) =>
     log('iAdvize Example : push notifications disabled $success'));
 ```
 
@@ -272,7 +279,7 @@ When the active targeting rule is available, a chat button is displayed to invit
 You can decide to let the SDK manage the chat button visibility or control it yourself using the following flag:
 
 ```dart
-IadvizeSdk.setDefaultFloatingButton(true);
+IAdvizeSdk.setDefaultFloatingButton(true);
 ```
 
 ##### Default chat button
@@ -282,7 +289,7 @@ If `setDefaultFloatingButton == true` the SDK will use the iAdvize default chat 
 The default chat button is anchored to the bottom-left of your screen, you can change its position using:
 
 ```dart
-IadvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
+IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
 ```
 
 #### Customization
@@ -291,7 +298,7 @@ You can customize the chatbox UI by calling the following method:
 
 ```dart
 final ChatboxConfiguration customChatboxConfig = ChatboxConfiguration()
-IadvizeSdk.setChatboxConfiguration(customChatboxConfig);
+IAdvizeSdk.setChatboxConfiguration(customChatboxConfig);
 ```
 
 A simple snippet to only change one value:
@@ -300,7 +307,7 @@ A simple snippet to only change one value:
 final ChatboxConfiguration customChatboxConfig = ChatboxConfiguration(
     mainColor: Colors.red,
 );
-IadvizeSdk.setChatboxConfiguration(customChatboxConfig);
+IAdvizeSdk.setChatboxConfiguration(customChatboxConfig);
 ```
 
 The `ChatboxConfiguration` allow you to customize the following attributes:
@@ -393,7 +400,7 @@ You can register a transaction within your application:
 ```dart
 final Transaction transaction = Transaction(
     transactionId: 'transactionId', currency: 'EUR', amount: 25);
-IadvizeSdk.registerTransaction(transaction);
+IAdvizeSdk.registerTransaction(transaction);
 ```
 
 ### Logout
@@ -401,7 +408,7 @@ IadvizeSdk.registerTransaction(transaction);
 When the user is logged out in your app, you need to log out in the iAdvize SDK as well to ensure the privacy of the user data and conversations.
 
 ```dart
-IadvizeSdk.logout();
+IAdvizeSdk.logout();
 ```
 
 This will clear all the locally stored visitor data.

@@ -1,4 +1,4 @@
-import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
+import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
 
 //TODO: replace by iAdvize keys
 const int projectId = 1;

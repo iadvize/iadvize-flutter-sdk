@@ -58,7 +58,6 @@ allprojects {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // implementation("com.iadvize:iadvize-sdk:2.8.0")
 }
 
 configurations {

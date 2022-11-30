@@ -16,5 +16,4 @@ local.properties
 android.iml
 
 # Flutter
-pubspec.lock
 .dart_tool/

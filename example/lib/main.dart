@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
+import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
 import 'package:flutter_iadvize_sdk_example/keys.dart';
 
 void main() {
@@ -36,36 +36,36 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    IadvizeSdk.setLanguage('fr');
-    IadvizeSdk.setLogLevel(LogLevel.verbose);
-    IadvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
-    _targetingRuleAvailabilityUpdatedSubscription = IadvizeSdk
+    IAdvizeSdk.setLanguage('fr');
+    IAdvizeSdk.setLogLevel(LogLevel.verbose);
+    IAdvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
+    _targetingRuleAvailabilityUpdatedSubscription = IAdvizeSdk
         .onActiveTargetingRuleAvailabilityUpdated
         .listen((bool available) {
       log('iAdvize Example : Targeting Rule available: $available');
       _updateCustomChatButtonVisibility();
     });
 
-    IadvizeSdk.setConversationListener(manageUrlClick: true);
+    IAdvizeSdk.setConversationListener(manageUrlClick: true);
     _messageSubscription =
-        IadvizeSdk.onReceiveNewMessage.listen((String message) {
+        IAdvizeSdk.onReceiveNewMessage.listen((String message) {
       log('iAdvize Example : New message: $message');
       setState(() {
         _newMessage = true;
       });
     });
     _hasOngoingSubscription =
-        IadvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
+        IAdvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
       log('iAdvize Example : Ongoing: $ongoing');
       _hasOngoingConversation = ongoing;
       _updateCustomChatButtonVisibility();
     });
     _clickedUrlSubscription =
-        IadvizeSdk.onHandleClickedUrl.listen((String url) {
+        IAdvizeSdk.onHandleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
-    IadvizeSdk.setDefaultFloatingButton(true);
-    IadvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
+    IAdvizeSdk.setDefaultFloatingButton(true);
+    IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
   }
 
   @override
@@ -161,7 +161,7 @@ class _MyAppState extends State<MyApp> {
                   setState(() {
                     _useCustomButton = true;
                   });
-                  IadvizeSdk.setDefaultFloatingButton(false);
+                  IAdvizeSdk.setDefaultFloatingButton(false);
                 },
                 label: 'Show Custom Button example',
               ),
@@ -171,7 +171,7 @@ class _MyAppState extends State<MyApp> {
                   setState(() {
                     _useCustomButton = false;
                   });
-                  IadvizeSdk.setDefaultFloatingButton(true);
+                  IAdvizeSdk.setDefaultFloatingButton(true);
                 },
                 label: 'Hide Custom Button example',
               ),
@@ -183,7 +183,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _activateSDK() {
-    IadvizeSdk.activate(
+    IAdvizeSdk.activate(
       projectId: projectId,
       userId: userId,
       gdprUrl: grpdUrl,
@@ -193,48 +193,49 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _activateChatTargetingRule() =>
-      IadvizeSdk.activateTargetingRule(chatTargetingRule);
+      IAdvizeSdk.activateTargetingRule(chatTargetingRule);
 
   void _activateVideoTargetingRule() =>
-      IadvizeSdk.activateTargetingRule(videoTargetingRule);
+      IAdvizeSdk.activateTargetingRule(videoTargetingRule);
 
   void _isActiveTargetingRuleAvailable() {
-    IadvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
+    IAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
             ? log('iAdvize Example : SDK targeting rule available')
             : log('iAdvize Example : targeting rule not available'));
   }
 
   void _registerUserNavigation() {
-    IadvizeSdk.registerUserNavigation(
-        navigationOption: NavigationOption.optionNew,
-        newTargetingRule: videoTargetingRule);
+    IAdvizeSdk.registerUserNavigation(
+      navigationOption: NavigationOption.optionNew,
+      newTargetingRule: videoTargetingRule,
+    );
   }
 
   void _ongoingConversationId() {
-    IadvizeSdk.ongoingConversationId()
+    IAdvizeSdk.ongoingConversationId()
         .then((String? id) => log('iAdvize Example : conversationId $id'));
   }
 
   void _ongoingConversationChannel() {
-    IadvizeSdk.ongoingConversationChannel().then((ConversationChannel?
+    IAdvizeSdk.ongoingConversationChannel().then((ConversationChannel?
             channel) =>
         log('iAdvize Example : conversation channel ${channel?.toValueString()}'));
   }
 
-  void _registerPushToken() => IadvizeSdk.registerPushToken(
+  void _registerPushToken() => IAdvizeSdk.registerPushToken(
       pushToken: _pushToken, mode: applicationMode);
 
   void _enablePushNotifications() =>
-      IadvizeSdk.enablePushNotifications().then((bool success) =>
+      IAdvizeSdk.enablePushNotifications().then((bool success) =>
           log('iAdvize Example : push notifications enabled $success'));
 
   void _disablePushNotifications() =>
-      IadvizeSdk.disablePushNotifications().then((bool success) =>
+      IAdvizeSdk.disablePushNotifications().then((bool success) =>
           log('iAdvize Example : push notifications disabled $success'));
 
   void _setChatboxConfiguration() {
-    IadvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
+    IAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
       mainColor: Colors.red,
       navigationBarBackgroundColor: Colors.black,
       navigationBarTitle: 'Test',
@@ -250,28 +251,27 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _registertransaction() {
-    IadvizeSdk.registerTransaction(Transaction(
+    IAdvizeSdk.registerTransaction(Transaction(
         transactionId: 'transactionId', currency: 'EUR', amount: 25));
   }
 
   void _logout() {
-    IadvizeSdk.logout();
+    IAdvizeSdk.logout();
   }
 
   void _presentChatbox() {
-    IadvizeSdk.presentChatbox();
+    IAdvizeSdk.presentChatbox();
   }
 
   Future<void> _updateCustomChatButtonVisibility() async {
-    final bool sdkActivated = await IadvizeSdk.isSDKActivated();
+    final bool sdkActivated = await IAdvizeSdk.isSDKActivated();
     final bool ruleAvailable =
-        await IadvizeSdk.isActiveTargetingRuleAvailable();
+        await IAdvizeSdk.isActiveTargetingRuleAvailable();
 
     setState(() {
       _showCustomButton =
           sdkActivated && (_hasOngoingConversation || ruleAvailable);
     });
-    log('$_showCustomButton : $sdkActivated && ($_hasOngoingConversation || $ruleAvailable)');
   }
 
   @override
