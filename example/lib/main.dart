@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
-import 'package:flutter_iadvize_sdk_example/keys.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -17,7 +17,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // TODO: replace by your own values
   final String _pushToken = 'device_push_token';
+  final int projectId = 1;
+  final String? grpdUrl = null;
+  final ApplicationMode applicationMode = ApplicationMode.dev;
+  final TargetingRule chatTargetingRule =
+      TargetingRule(uuid: 'chat_rule_id', channel: ConversationChannel.chat);
+  final TargetingRule videoTargetingRule =
+      TargetingRule(uuid: 'video_rule_id', channel: ConversationChannel.video);
+  final AuthenticationOption authOptionAonymous =
+      AuthenticationOption.anonymous();
+  final AuthenticationOption authOptionSimple =
+      AuthenticationOption.simple(userId: 'your_user_id');
+  final AuthenticationOption authOptionSecured =
+      AuthenticationOption.secured(onJweRequested: () {
+    return Future.value('your_jwe_token');
+  });
 
   // Var for Custom button
   bool _showCustomButton = false;
@@ -170,6 +186,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () {
                   setState(() {
                     _useCustomButton = false;
+                    _newMessage = false;
                   });
                   IAdvizeSdk.setDefaultFloatingButton(true);
                 },
@@ -185,7 +202,7 @@ class _MyAppState extends State<MyApp> {
   void _activateSDK() {
     IAdvizeSdk.activate(
       projectId: projectId,
-      userId: userId,
+      authenticationOption: authOptionAonymous,
       gdprUrl: grpdUrl,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')

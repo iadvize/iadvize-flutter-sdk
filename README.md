@@ -89,10 +89,14 @@ import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
 To activate the SDK you must use the **activate** function. You also have access to a asynchronous callback in order to know if the SDK has been successfully activated (and to retry later if the activation fails):
 
 ```dart
-await IAdvizeSdk.activate(
-      projectId: 'projectId',
-      userId: 'userId' OR null,
-      gdprUrl: 'grpdUrl' OR null,
+IAdvizeSdk.activate(
+    projectId: 'projectId',
+    authenticationOption: AuthenticationOption.anonymous() OR
+                        AuthenticationOption.simple(userId: 'your_user_id') OR
+                        AuthenticationOption.secured(onJweRequested: () {
+                            return Future.value('your_jwe_token');
+                        },
+    gdprUrl: grpdUrl,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')
         : log('iAdvize Example : SDK not activated'));
