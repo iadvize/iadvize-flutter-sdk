@@ -4,27 +4,28 @@ Take your app to the next step and provide a unique conversational experience to
 
 Embed the iAdvize Conversation SDK in your app and connect your visitors with your professional operators or ibbü experts through a fully customised chat experience. Visitors can ask a question and will receive answers directly on their devices with push notifications, in or outside your app.
 
-You will find an example of integration in the ` example/` folder of this repository.
-
-Just run `flutter run example/lib/main.dart`.
+You will find an example of integration in the ` example/` folder of this repository that you can run using  `flutter run example/lib/main.dart`.
 
 ## Requirements
 
-The iAdvize React native SDK use iAdvize iOS and Android SDK.
+The iAdvize Flutter SDK uses the iAdvize native iOS & Android SDKs.
 
-For Android requirements :
-| Minimum Android Version | Kotlin Version |
-| ----------------------- | -------------- |
-| API 21 | 1.6.10 |
+### For Android
 
-For iOS requirements :
-| iOS | Xcode |
-| ----------------------- | -------------- |
-| 12.0 or higher | 13.X |
+| Android Version  | Kotlin Version |
+| ---------------- | -------------- |
+| API 21 or higher | 1.7.20         |
+
+### For iOS
+
+| iOS            | Xcode |
+| -------------- | ----- |
+| 12.0 or higher | 13.X  |
 
 ## Documentation
 
 The iOS API reference is available [here](https://iadvize.github.io/iadvize-ios-sdk/).
+
 The Android API reference is available [here](https://iadvize.github.io/iadvize-android-sdk/).
 
 ## Setup
@@ -41,7 +42,7 @@ The Android API reference is available [here](https://iadvize.github.io/iadvize-
 
 ### Get the SDK
 
-Run this command `flutter pub add device_info_plus`
+Run this command `flutter pub add flutter_iadvize_sdk`
 
 ### For iOS
 
@@ -74,6 +75,18 @@ NSMicrophoneUsageDescription
 NSCameraUsageDescription
 ```
 
+### For Android
+
+Add the following to the bottom of your app module build.gradle:
+
+```
+configurations {
+  all*.exclude group: 'xpp3', module: 'xpp3'
+  debug
+  release
+}
+```
+
 ## Usage
 
 ### Import
@@ -92,10 +105,10 @@ To activate the SDK you must use the **activate** function. You also have access
 IAdvizeSdk.activate(
     projectId: 'projectId',
     authenticationOption: AuthenticationOption.anonymous() OR
-                        AuthenticationOption.simple(userId: 'your_user_id') OR
-                        AuthenticationOption.secured(onJweRequested: () {
-                            return Future.value('your_jwe_token');
-                        },
+                          AuthenticationOption.simple(userId: 'your_user_id') OR
+                          AuthenticationOption.secured(onJweRequested: () {
+                              return Future.value('your_jwe_token');
+                          },
     gdprUrl: grpdUrl,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')
