@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.idavize.flutter_iadvize_sdk_example"
+        applicationId "com.iadvize.flutter_iadvize_sdk_example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

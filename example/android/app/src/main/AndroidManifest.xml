@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.idavize.flutter_iadvize_sdk_example">
+    package="com.iadvize.flutter_iadvize_sdk_example">
    <application
         android:label="flutter_iadvize_sdk_example"
         android:name="${applicationName}"

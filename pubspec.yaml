@@ -24,7 +24,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.idavize.flutter_iadvize_sdk
+        package: com.iadvize.flutter_iadvize_sdk
         pluginClass: FlutterIadvizeSdkPlugin
       ios:
         pluginClass: FlutterIadvizeSdkPlugin

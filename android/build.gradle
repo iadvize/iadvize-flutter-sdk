@@ -1,4 +1,4 @@
-group 'com.idavize.flutter_iadvize_sdk'
+group 'com.iadvize.flutter_iadvize_sdk'
 version '2.8.0'
 
 buildscript {
