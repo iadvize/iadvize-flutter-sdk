@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
-import 'package:flutter_iadvize_sdk/src/iadvize_sdk_method_channel.dart';
-import 'package:flutter_iadvize_sdk/src/iadvize_sdk_platform_interface.dart';
+import 'package:iadvize_flutter_sdk/iadvize_flutter_sdk.dart';
+import 'package:iadvize_flutter_sdk/src/iadvize_sdk_method_channel.dart';
+import 'package:iadvize_flutter_sdk/src/iadvize_sdk_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 

@@ -3,16 +3,16 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_iadvize_sdk/src/entities/authentication_option.dart';
-import 'package:flutter_iadvize_sdk/src/entities/chatbox_configuration.dart';
-import 'package:flutter_iadvize_sdk/src/entities/targeting_rule.dart';
-import 'package:flutter_iadvize_sdk/src/entities/transaction.dart';
-import 'package:flutter_iadvize_sdk/src/enums/application_mode.dart';
-import 'package:flutter_iadvize_sdk/src/enums/authentication_option_type.dart';
-import 'package:flutter_iadvize_sdk/src/enums/conversation_channel.dart';
-import 'package:flutter_iadvize_sdk/src/enums/log_level.dart';
-import 'package:flutter_iadvize_sdk/src/enums/navigation_option.dart';
-import 'package:flutter_iadvize_sdk/src/iadvize_sdk_platform_interface.dart';
+import 'package:iadvize_flutter_sdk/src/entities/authentication_option.dart';
+import 'package:iadvize_flutter_sdk/src/entities/chatbox_configuration.dart';
+import 'package:iadvize_flutter_sdk/src/entities/targeting_rule.dart';
+import 'package:iadvize_flutter_sdk/src/entities/transaction.dart';
+import 'package:iadvize_flutter_sdk/src/enums/application_mode.dart';
+import 'package:iadvize_flutter_sdk/src/enums/authentication_option_type.dart';
+import 'package:iadvize_flutter_sdk/src/enums/conversation_channel.dart';
+import 'package:iadvize_flutter_sdk/src/enums/log_level.dart';
+import 'package:iadvize_flutter_sdk/src/enums/navigation_option.dart';
+import 'package:iadvize_flutter_sdk/src/iadvize_sdk_platform_interface.dart';
 
 /// An implementation of [IadvizeSdkPlatform] that uses method channels.
 class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
@@ -21,7 +21,7 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   static const MethodChannel methodChannel =
-      MethodChannel('flutter_iadvize_sdk');
+      MethodChannel('iadvize_flutter_sdk');
   static final EventChannel _messageEventChannel =
       EventChannel('${methodChannel.name}/onReceiveMessage');
   static final EventChannel _clickUrlEventChannel =

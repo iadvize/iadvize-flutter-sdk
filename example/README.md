@@ -1,6 +1,6 @@
-# flutter_iadvize_sdk_example
+# iadvize_flutter_sdk_example
 
-Demonstrates how to use the flutter_iadvize_sdk plugin.
+Demonstrates how to use the iadvize_flutter_sdk plugin.
 
 ## Getting Started
 

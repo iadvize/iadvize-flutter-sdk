@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
+import 'package:iadvize_flutter_sdk/iadvize_flutter_sdk.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,17 +19,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // TODO: replace by your own values
   final String _pushToken = 'device_push_token';
-  final int projectId = 1;
+  final int projectId = 3585;
   final String? grpdUrl = null;
   final ApplicationMode applicationMode = ApplicationMode.dev;
   final TargetingRule chatTargetingRule =
-      TargetingRule(uuid: 'chat_rule_id', channel: ConversationChannel.chat);
+      TargetingRule(uuid: 'a41611fe-c453-4df5-b6ef-3438527933b4', channel: ConversationChannel.chat);
   final TargetingRule videoTargetingRule =
-      TargetingRule(uuid: 'video_rule_id', channel: ConversationChannel.video);
-  final AuthenticationOption authOptionAonymous =
+      TargetingRule(uuid: '6e9a8e26-65d7-4d68-a699-00c5fe8740b8', channel: ConversationChannel.video);
+  final AuthenticationOption authOptionAnonymous =
       AuthenticationOption.anonymous();
   final AuthenticationOption authOptionSimple =
-      AuthenticationOption.simple(userId: 'your_user_id');
+      AuthenticationOption.simple(userId: 'abcdef');
   final AuthenticationOption authOptionSecured =
       AuthenticationOption.secured(onJweRequested: () {
     return Future.value('your_jwe_token');
@@ -202,7 +202,7 @@ class _MyAppState extends State<MyApp> {
   void _activateSDK() {
     IAdvizeSdk.activate(
       projectId: projectId,
-      authenticationOption: authOptionAonymous,
+      authenticationOption: authOptionAnonymous,
       gdprUrl: grpdUrl,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')

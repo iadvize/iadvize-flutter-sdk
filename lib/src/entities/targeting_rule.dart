@@ -1,4 +1,4 @@
-import 'package:flutter_iadvize_sdk/src/enums/conversation_channel.dart';
+import 'package:iadvize_flutter_sdk/src/enums/conversation_channel.dart';
 
 class TargetingRule {
   TargetingRule({

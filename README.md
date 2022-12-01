@@ -13,13 +13,13 @@ The iAdvize Flutter SDK uses the iAdvize native iOS & Android SDKs.
 ### For Android
 
 | Android Version  | Kotlin Version |
-| ---------------- | -------------- |
+|------------------|----------------|
 | API 21 or higher | 1.7.20         |
 
 ### For iOS
 
 | iOS            | Xcode |
-| -------------- | ----- |
+|----------------|-------|
 | 12.0 or higher | 13.X  |
 
 ## Documentation
@@ -42,7 +42,7 @@ The Android API reference is available [here](https://iadvize.github.io/iadvize-
 
 ### Get the SDK
 
-Run this command `flutter pub add flutter_iadvize_sdk`
+Run this command `flutter pub add iadvize_flutter_sdk`
 
 ### For iOS
 
@@ -94,7 +94,7 @@ configurations {
 You need to import the SDK.
 
 ```dart
-import 'package:flutter_iadvize_sdk/iadvize_sdk.dart';
+import 'package:iadvize_flutter_sdk/iadvize_sdk.dart';
 ```
 
 ### Activation

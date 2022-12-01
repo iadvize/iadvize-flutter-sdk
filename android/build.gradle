@@ -1,4 +1,4 @@
-group 'com.iadvize.flutter_iadvize_sdk'
+group 'com.iadvize.iadvize_flutter_sdk'
 version '2.8.0'
 
 buildscript {
@@ -46,7 +46,7 @@ allprojects {
     repositories {
         // iAdvize SDK repository
         maven { url "https://raw.github.com/iadvize/iadvize-android-sdk/master" }
-        
+
         google()
         gradlePluginPortal()
         jcenter()
@@ -61,7 +61,7 @@ dependencies {
 }
 
 configurations {
-  all*.exclude group: 'xpp3', module: 'xpp3'
-  debug
-  release
+    all*.exclude group: 'xpp3', module: 'xpp3'
+    debug
+    release
 }
