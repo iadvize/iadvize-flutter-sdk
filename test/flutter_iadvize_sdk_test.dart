@@ -10,7 +10,8 @@ class MockFlutterIadvizeSdkPlatform
     with MockPlatformInterfaceMixin
     implements IadvizeSdkPlatform {
   @override
-  Future<bool> activate(int projectId, String? userId, String? gdprUrl) =>
+  Future<bool> activate(
+          int projectId, AuthenticationOption authOption, String? gdprUrl) =>
       Future<bool>.value(true);
 
   @override
@@ -123,6 +124,10 @@ void main() {
         MockFlutterIadvizeSdkPlatform();
     IadvizeSdkPlatform.instance = fakePlatform;
 
-    expect(await IAdvizeSdk.activate(projectId: 0), true);
+    expect(
+        await IAdvizeSdk.activate(
+            projectId: 0,
+            authenticationOption: AuthenticationOption.anonymous()),
+        true);
   });
 }

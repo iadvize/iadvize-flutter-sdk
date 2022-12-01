@@ -1,3 +1,4 @@
+export 'src/entities/authentication_option.dart';
 export 'src/entities/chatbox_configuration.dart';
 export 'src/entities/targeting_rule.dart';
 export 'src/entities/transaction.dart';
