@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.iadvize.conversation.sdk.IAdvizeSDK
 import com.iadvize.conversation.sdk.IAdvizeSDK.Callback
@@ -130,10 +132,48 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             channelMethodActivate -> {
+                val authenticationOptionType = call.argument<String>("type") as String
                 val projectId = call.argument<Int>("projectId") as Int
-                val userId = call.argument<String?>("userId")
                 val gdprUrl = call.argument<String?>("gdprUrl")
-                activate(projectId, userId, gdprUrl, result)
+                when (authenticationOptionType) {
+                    "anonymous" -> {
+                        val authOption = AuthenticationOption.Anonymous
+                        activate(projectId, authOption, gdprUrl, result)
+                    }
+                    "simple" -> {
+                        val userId = call.argument<String>("userId") as String
+                        val authOption = AuthenticationOption.Simple(userId)
+                        activate(projectId, authOption, gdprUrl, result)
+                    }
+                    "secured" -> {
+                        val authOption =
+                            AuthenticationOption.Secured(object : AuthenticationOption.JWEProvider {
+                                override fun onJWERequested(callback: AuthenticationOption.JWECallback) {
+                                    // Fetch JWE from your own secure auth process
+                                    Handler(Looper.getMainLooper()).post(Runnable {
+                                        channel.invokeMethod("get_jwe", null, object : Result {
+                                            override fun success(jwe: Any?) {
+                                                Log.d(TAG, "jwe: $jwe")
+                                                callback.onJWERetrieved(jwe as String)
+                                            }
+
+                                            override fun error(s: String, s1: String?, o: Any?) {
+                                                callback.onJWEFailure(java.lang.Exception(s))
+                                            }
+
+                                            override fun notImplemented() {
+                                                callback.onJWEFailure(java.lang.Exception("Flutter not Implemented"))
+                                            }
+                                        })
+                                    })
+                                }
+                            })
+                        activate(projectId, authOption, gdprUrl, result)
+                    }
+                    else -> {
+                        result.notImplemented()
+                    }
+                }
             }
             channelMethodSetLogLevel -> {
                 val logLevel = call.argument<Int>("logLevel") as Int
@@ -251,13 +291,11 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun activate(
         projectId: Int,
-        userId: String?,
+        authOption: AuthenticationOption,
         gdprUrl: String?,
         result: Result
     ) {
-        val authOption =
-            if (userId.isNullOrBlank()) AuthenticationOption.Anonymous
-            else AuthenticationOption.Simple(userId)
+
         val legalUrl =
             if (gdprUrl.isNullOrBlank()) null
             else tryOrNull { URI(gdprUrl) }
@@ -537,3 +575,4 @@ class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
 
 }
+

@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
 import 'package:flutter_iadvize_sdk/src/iadvize_sdk_method_channel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,6 +20,7 @@ void main() {
   });
 
   test('activate', () async {
-    expect(await platform.activate(0, null, null), true);
+    expect(await platform.activate(0, AuthenticationOption.anonymous(), null),
+        true);
   });
 }

@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iadvize_sdk/src/entities/authentication_option.dart';
 import 'package:flutter_iadvize_sdk/src/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/src/entities/targeting_rule.dart';
 import 'package:flutter_iadvize_sdk/src/entities/transaction.dart';
 import 'package:flutter_iadvize_sdk/src/enums/application_mode.dart';
+import 'package:flutter_iadvize_sdk/src/enums/authentication_option_type.dart';
 import 'package:flutter_iadvize_sdk/src/enums/conversation_channel.dart';
 import 'package:flutter_iadvize_sdk/src/enums/log_level.dart';
 import 'package:flutter_iadvize_sdk/src/enums/navigation_option.dart';
@@ -31,11 +33,23 @@ class MethodChannelIadvizeSdk extends IadvizeSdkPlatform {
           '${methodChannel.name}/onActiveTargetingRuleAvailabilityUpdated');
 
   @override
-  Future<bool> activate(int projectId, String? userId, String? gdprUrl) async {
+  Future<bool> activate(int projectId,
+      AuthenticationOption authenticationOption, String? gdprUrl) async {
+    if (authenticationOption is Secured) {
+      //Listening for native request to get jwe
+      methodChannel.setMethodCallHandler((MethodCall methodCall) async {
+        if (methodCall.method == 'get_jwe') {
+          String jwe = await authenticationOption.onJweRequested();
+          return jwe;
+        }
+      });
+    }
     return _callNativeMethod('activate',
         arguments: <String, dynamic>{
           'projectId': projectId,
-          'userId': userId,
+          'type': authenticationOption.type.toValueString(),
+          if (authenticationOption is Simple)
+            'userId': (authenticationOption).userId,
           'gdprUrl': gdprUrl
         },
         defaultValue: false);

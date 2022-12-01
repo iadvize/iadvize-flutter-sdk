@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/src/entities/authentication_option.dart';
 import 'package:flutter_iadvize_sdk/src/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/src/entities/targeting_rule.dart';
 import 'package:flutter_iadvize_sdk/src/entities/transaction.dart';
@@ -11,15 +12,16 @@ class IAdvizeSdk {
   /// Activate the iAdvize Conversation SDK.
   ///
   /// [projectId] The name of the flag.
-  /// [userId] allows logged in user to retrieve his conversation history
+  /// [authenticationOption] option for authentication
   /// [gdprUrl] is used to get the visitor consent on GDPR before he starts chatting
   /// Returns [bool] if SDK activated or not
   static Future<bool> activate({
     required int projectId,
-    String? userId,
+    required AuthenticationOption authenticationOption,
     String? gdprUrl,
   }) =>
-      IadvizeSdkPlatform.instance.activate(projectId, userId, gdprUrl);
+      IadvizeSdkPlatform.instance
+          .activate(projectId, authenticationOption, gdprUrl);
 
   /// Displaying logs
   ///

@@ -1,3 +1,4 @@
+import 'package:flutter_iadvize_sdk/src/entities/authentication_option.dart';
 import 'package:flutter_iadvize_sdk/src/entities/chatbox_configuration.dart';
 import 'package:flutter_iadvize_sdk/src/entities/targeting_rule.dart';
 import 'package:flutter_iadvize_sdk/src/entities/transaction.dart';
@@ -29,7 +30,8 @@ abstract class IadvizeSdkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<bool> activate(int projectId, String? userId, String? gdprUrl) =>
+  Future<bool> activate(int projectId,
+          AuthenticationOption authenticationOption, String? gdprUrl) =>
       throw UnimplementedError('activate() has not been implemented.');
 
   void setLogLevel(LogLevel logLevel) =>

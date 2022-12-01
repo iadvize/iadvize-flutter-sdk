@@ -29,18 +29,20 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     let CHANNEL_METHOD_IS_SDK_ACTIVATED = "isSDKActivated"
     let CHANNEL_METHOD_IS_CHATBOX_PRESENTED = "isChatboxPresented"
     
+    var methodChannel: FlutterMethodChannel?
     var onReceiveMessageStreamHandler: OnReceiveMessageStreamHandler?
     var handleClickUrlStreamHandler: HandleClickUrlStreamHandler?
     var onOngoingConversationUpdatedStreamHandler: OnUpdatedStreamHandler?
     var onActiveTargetingRuleAvailabilityUpdatedStreamHandler: OnUpdatedStreamHandler?
-
+    
     var flutterWillManageUrlClick = false
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        
-        let channel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterIadvizeSdkPlugin()
+        
+        instance.methodChannel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
+        let channel = instance.methodChannel!
         registrar.addMethodCallDelegate(instance, channel: channel)
         
         instance.onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
@@ -64,9 +66,22 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             
         case self.CHANNEL_METHOD_ACTIVATE:
             let projectId : Int = args["projectId"] as! Int
-            let userId = args["userId"] as? String ?? nil
             let gdprUrl = args["gdprUrl"] as? String ?? nil
-            activate(projectId: projectId, userId: userId, gdprUrl: gdprUrl, result: result)
+            let authenticationOptionType : String = args["type"] as! String
+            switch authenticationOptionType {
+            case "anonymous":
+                let authOption: IAdvizeConversationSDK.AuthenticationOption = .anonymous
+                activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
+            case "simple":
+                let userId = args["userId"] as! String
+                let authOption: IAdvizeConversationSDK.AuthenticationOption = .simple(userId: userId)
+                activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
+            case "secured":
+                let authOption: IAdvizeConversationSDK.AuthenticationOption = .secured(jweProvider: self)
+                activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
+            default:
+                result(FlutterMethodNotImplemented)
+            }
         case self.CHANNEL_METHOD_LOG_LEVEL:
             let logLevel = args["logLevel"] as! Int
             setLogLevel(value: logLevel)
@@ -160,19 +175,12 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func activate(projectId: Int,
-                          userId: String?,
+                          authOption: AuthenticationOption,
                           gdprUrl: String?, result: @escaping FlutterResult) -> Void {
         let rgpdOption: IAdvizeConversationSDK.GDPROption = gdprUrl != nil && URL(string: gdprUrl!) != nil ? .enabled(option: .legalInformation(url: URL(string: gdprUrl!)!)) : .disabled
         
-        let authenticationOption: IAdvizeConversationSDK.AuthenticationOption = {
-            guard userId != nil && userId!.isEmpty == false else {
-                return .anonymous
-            }
-            return .simple(userId: userId!)
-        }()
-        
         IAdvizeSDK.shared.activate(projectId: projectId,
-                                   authenticationOption: authenticationOption,
+                                   authenticationOption: authOption,
                                    gdprOption: rgpdOption){ success in
             
             result(success)
@@ -297,7 +305,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     
     private func registerTransaction(transactionId: String, amount: Double, currencyName: String) -> Bool {
         guard let currency = Currency(rawValue: currencyName) else{
-            print("error")
             return false
         }
         if(currency == Currency.__unknown(currencyName)) {
@@ -411,6 +418,18 @@ extension IAdvizeConversationSDK.Logger.LogLevel {
         case 3: return .error
         case 4: return .success
         default: return .verbose
+        }
+    }
+}
+
+extension SwiftFlutterIadvizeSdkPlugin: JWEProvider {
+    public func willRequestJWE(completion: @escaping (Result<IAdvizeConversationSDK.JWE, Error>) -> Void) {
+        DispatchQueue.main.async {
+            self.methodChannel?.invokeMethod("get_jwe", arguments: nil, result: {(r:Any?) -> () in
+                if r is String? { let jwe = r as! String
+                    completion(.success(IAdvizeConversationSDK.JWE(value: jwe)))
+                }
+            })
         }
     }
 }
