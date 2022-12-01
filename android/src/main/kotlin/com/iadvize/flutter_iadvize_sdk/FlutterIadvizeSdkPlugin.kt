@@ -1,4 +1,4 @@
-package com.idavize.flutter_iadvize_sdk
+package com.iadvize.flutter_iadvize_sdk
 
 import android.app.Application
 import android.content.Context
