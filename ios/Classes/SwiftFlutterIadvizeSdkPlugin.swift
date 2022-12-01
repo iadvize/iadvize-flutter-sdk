@@ -70,16 +70,13 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
             let authenticationOptionType : String = args["type"] as! String
             switch authenticationOptionType {
             case "anonymous":
-                print("anonymous")
                 let authOption: IAdvizeConversationSDK.AuthenticationOption = .anonymous
                 activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
             case "simple":
                 let userId = args["userId"] as! String
-                print("simple " + userId)
                 let authOption: IAdvizeConversationSDK.AuthenticationOption = .simple(userId: userId)
                 activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
             case "secured":
-                print("secured")
                 let authOption: IAdvizeConversationSDK.AuthenticationOption = .secured(jweProvider: self)
                 activate(projectId: projectId, authOption: authOption, gdprUrl: gdprUrl, result: result)
             default:
@@ -308,7 +305,6 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     
     private func registerTransaction(transactionId: String, amount: Double, currencyName: String) -> Bool {
         guard let currency = Currency(rawValue: currencyName) else{
-            print("error")
             return false
         }
         if(currency == Currency.__unknown(currencyName)) {
