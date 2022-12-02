@@ -17,22 +17,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // TODO: replace by your own values
+   // TODO Replace with the device token
   final String _pushToken = 'device_push_token';
-  final int projectId = 3585;
+   // TODO Replace with your project id
+  final int projectId = -1;
   final String? grpdUrl = null;
   final ApplicationMode applicationMode = ApplicationMode.dev;
+   // TODO Replace with your targeting rule id
   final TargetingRule chatTargetingRule =
-      TargetingRule(uuid: 'a41611fe-c453-4df5-b6ef-3438527933b4', channel: ConversationChannel.chat);
+      TargetingRule(uuid: 'A chat channel rule UUID', channel: ConversationChannel.chat);
   final TargetingRule videoTargetingRule =
-      TargetingRule(uuid: '6e9a8e26-65d7-4d68-a699-00c5fe8740b8', channel: ConversationChannel.video);
+      TargetingRule(uuid: 'A video channel rule UUID', channel: ConversationChannel.video);
   final AuthenticationOption authOptionAnonymous =
       AuthenticationOption.anonymous();
   final AuthenticationOption authOptionSimple =
-      AuthenticationOption.simple(userId: 'abcdef');
+      AuthenticationOption.simple(userId: 'The user unique identifier');
   final AuthenticationOption authOptionSecured =
       AuthenticationOption.secured(onJweRequested: () {
-    return Future.value('your_jwe_token');
+    return Future.value('JWE token retrieved via your third party secure auth');
   });
 
   // Var for Custom button
