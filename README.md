@@ -4,7 +4,11 @@ Take your app to the next step and provide a unique conversational experience to
 
 Embed the iAdvize Conversation SDK in your app and connect your visitors with your professional operators or ibbü experts through a fully customised chat experience. Visitors can ask a question and will receive answers directly on their devices with push notifications, in or outside your app.
 
-You will find an example of integration in the ` example/` folder of this repository that you can run using  `flutter run example/lib/main.dart`.
+You will find an example of integration in the ` example/` folder of this repository that you can run using 
+```
+cd example
+flutter run example/lib/main.dart
+```
 
 ## Requirements
 
@@ -73,18 +77,6 @@ The SDK supports video conversations. Thus it will request camera and microphone
 ```ruby
 NSMicrophoneUsageDescription
 NSCameraUsageDescription
-```
-
-### For Android
-
-Add the following to the bottom of your app module build.gradle:
-
-```
-configurations {
-  all*.exclude group: 'xpp3', module: 'xpp3'
-  debug
-  release
-}
 ```
 
 ## Usage
