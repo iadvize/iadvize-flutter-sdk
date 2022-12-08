@@ -4,7 +4,7 @@ import IAdvizeConversationSDK
 
 
 
-public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
+public class IAdvizeSdkSwiftFlutterPlugin: NSObject, FlutterPlugin {
     let TAG = "iAdvize SDK"
     let CHANNEL_METHOD_ACTIVATE = "activate"
     let CHANNEL_METHOD_LOG_LEVEL = "setLogLevel"
@@ -39,20 +39,20 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let instance = SwiftFlutterIadvizeSdkPlugin()
+        let instance = IAdvizeSdkSwiftFlutterPlugin()
         
-        instance.methodChannel = FlutterMethodChannel(name: "flutter_iadvize_sdk", binaryMessenger: registrar.messenger())
+        instance.methodChannel = FlutterMethodChannel(name: "iadvize_flutter_sdk", binaryMessenger: registrar.messenger())
         let channel = instance.methodChannel!
         registrar.addMethodCallDelegate(instance, channel: channel)
         
         instance.onReceiveMessageStreamHandler = OnReceiveMessageStreamHandler()
-        FlutterEventChannel(name: "flutter_iadvize_sdk/onReceiveMessage", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onReceiveMessageStreamHandler)
+        FlutterEventChannel(name: "iadvize_flutter_sdk/onReceiveMessage", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onReceiveMessageStreamHandler)
         instance.handleClickUrlStreamHandler = HandleClickUrlStreamHandler()
-        FlutterEventChannel(name: "flutter_iadvize_sdk/onHandleClickUrl", binaryMessenger: registrar.messenger()).setStreamHandler(instance.handleClickUrlStreamHandler)
+        FlutterEventChannel(name: "iadvize_flutter_sdk/onHandleClickUrl", binaryMessenger: registrar.messenger()).setStreamHandler(instance.handleClickUrlStreamHandler)
         instance.onOngoingConversationUpdatedStreamHandler = OnUpdatedStreamHandler()
-        FlutterEventChannel(name: "flutter_iadvize_sdk/onOngoingConversationUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onOngoingConversationUpdatedStreamHandler)
+        FlutterEventChannel(name: "iadvize_flutter_sdk/onOngoingConversationUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onOngoingConversationUpdatedStreamHandler)
         instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler = OnUpdatedStreamHandler()
-        FlutterEventChannel(name: "flutter_iadvize_sdk/onActiveTargetingRuleAvailabilityUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler)
+        FlutterEventChannel(name: "iadvize_flutter_sdk/onActiveTargetingRuleAvailabilityUpdated", binaryMessenger: registrar.messenger()).setStreamHandler(instance.onActiveTargetingRuleAvailabilityUpdatedStreamHandler)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -343,13 +343,13 @@ public class SwiftFlutterIadvizeSdkPlugin: NSObject, FlutterPlugin {
     
 }
 
-extension SwiftFlutterIadvizeSdkPlugin: TargetingControllerDelegate {
+extension IAdvizeSdkSwiftFlutterPlugin: TargetingControllerDelegate {
     public func activeTargetingRuleAvailabilityDidUpdate(isActiveTargetingRuleAvailable: Bool) {
         self.onActiveTargetingRuleAvailabilityUpdatedStreamHandler?.onUpdated(value: isActiveTargetingRuleAvailable)
     }
 }
 
-extension SwiftFlutterIadvizeSdkPlugin: ConversationControllerDelegate {
+extension IAdvizeSdkSwiftFlutterPlugin: ConversationControllerDelegate {
     public func ongoingConversationUpdated(ongoingConversation: IAdvizeConversationSDK.OngoingConversation?) {
         self.onOngoingConversationUpdatedStreamHandler?.onUpdated(value: ongoingConversation != nil)
     }
@@ -422,7 +422,7 @@ extension IAdvizeConversationSDK.Logger.LogLevel {
     }
 }
 
-extension SwiftFlutterIadvizeSdkPlugin: JWEProvider {
+extension IAdvizeSdkSwiftFlutterPlugin: JWEProvider {
     public func willRequestJWE(completion: @escaping (Result<IAdvizeConversationSDK.JWE, Error>) -> Void) {
         DispatchQueue.main.async {
             self.methodChannel?.invokeMethod("get_jwe", arguments: nil, result: {(r:Any?) -> () in

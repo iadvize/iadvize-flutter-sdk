@@ -1,4 +1,4 @@
-package com.iadvize.flutter_iadvize_sdk
+package com.iadvize.iadvize_flutter_sdk
 
 import android.app.Application
 import android.content.Context
@@ -51,10 +51,10 @@ inline fun <T> tryOrNull(f: () -> T) =
     }
 
 
-/** FlutterIadvizeSdkPlugin */
-class FlutterIadvizeSdkPlugin : FlutterPlugin, MethodCallHandler {
+/** IAdvizeFlutterSdkPlugin */
+class IAdvizeFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     companion object {
-        private const val chanelMethodName = "flutter_iadvize_sdk"
+        private const val chanelMethodName = "iadvize_flutter_sdk"
         private const val channelMethodActivate = "activate"
         private const val channelMethodSetLogLevel = "setLogLevel"
         private const val channelMethodSetLanguage = "setLanguage"

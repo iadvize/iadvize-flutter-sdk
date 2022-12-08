@@ -1,4 +1,4 @@
-import 'package:flutter_iadvize_sdk/src/enums/authentication_option_type.dart';
+import 'package:iadvize_flutter_sdk/src/enums/authentication_option_type.dart';
 
 class AuthenticationOption {
   AuthenticationOption._();

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_iadvize_sdk/flutter_iadvize_sdk.dart';
+import 'package:iadvize_flutter_sdk/iadvize_flutter_sdk.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,22 +17,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // TODO: replace by your own values
+   // TODO Replace with the device token
   final String _pushToken = 'device_push_token';
-  final int projectId = 1;
+   // TODO Replace with your project id
+  final int projectId = -1;
   final String? grpdUrl = null;
   final ApplicationMode applicationMode = ApplicationMode.dev;
+   // TODO Replace with your targeting rule id
   final TargetingRule chatTargetingRule =
-      TargetingRule(uuid: 'chat_rule_id', channel: ConversationChannel.chat);
+      TargetingRule(uuid: 'A chat channel rule UUID', channel: ConversationChannel.chat);
   final TargetingRule videoTargetingRule =
-      TargetingRule(uuid: 'video_rule_id', channel: ConversationChannel.video);
-  final AuthenticationOption authOptionAonymous =
+      TargetingRule(uuid: 'A video channel rule UUID', channel: ConversationChannel.video);
+  final AuthenticationOption authOptionAnonymous =
       AuthenticationOption.anonymous();
   final AuthenticationOption authOptionSimple =
-      AuthenticationOption.simple(userId: 'your_user_id');
+      AuthenticationOption.simple(userId: 'The user unique identifier');
   final AuthenticationOption authOptionSecured =
       AuthenticationOption.secured(onJweRequested: () {
-    return Future.value('your_jwe_token');
+    return Future.value('JWE token retrieved via your third party secure auth');
   });
 
   // Var for Custom button
@@ -202,7 +204,7 @@ class _MyAppState extends State<MyApp> {
   void _activateSDK() {
     IAdvizeSdk.activate(
       projectId: projectId,
-      authenticationOption: authOptionAonymous,
+      authenticationOption: authOptionAnonymous,
       gdprUrl: grpdUrl,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')

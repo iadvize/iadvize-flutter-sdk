@@ -1,4 +1,4 @@
-package com.iadvize.flutter_iadvize_sdk
+package com.iadvize.iadvize_flutter_sdk
 
 import android.os.Handler
 import io.flutter.plugin.common.EventChannel

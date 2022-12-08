@@ -1,12 +1,12 @@
-import 'package:flutter_iadvize_sdk/src/entities/authentication_option.dart';
-import 'package:flutter_iadvize_sdk/src/entities/chatbox_configuration.dart';
-import 'package:flutter_iadvize_sdk/src/entities/targeting_rule.dart';
-import 'package:flutter_iadvize_sdk/src/entities/transaction.dart';
-import 'package:flutter_iadvize_sdk/src/enums/application_mode.dart';
-import 'package:flutter_iadvize_sdk/src/enums/conversation_channel.dart';
-import 'package:flutter_iadvize_sdk/src/enums/log_level.dart';
-import 'package:flutter_iadvize_sdk/src/enums/navigation_option.dart';
-import 'package:flutter_iadvize_sdk/src/iadvize_sdk_method_channel.dart';
+import 'package:iadvize_flutter_sdk/src/entities/authentication_option.dart';
+import 'package:iadvize_flutter_sdk/src/entities/chatbox_configuration.dart';
+import 'package:iadvize_flutter_sdk/src/entities/targeting_rule.dart';
+import 'package:iadvize_flutter_sdk/src/entities/transaction.dart';
+import 'package:iadvize_flutter_sdk/src/enums/application_mode.dart';
+import 'package:iadvize_flutter_sdk/src/enums/conversation_channel.dart';
+import 'package:iadvize_flutter_sdk/src/enums/log_level.dart';
+import 'package:iadvize_flutter_sdk/src/enums/navigation_option.dart';
+import 'package:iadvize_flutter_sdk/src/iadvize_sdk_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class IadvizeSdkPlatform extends PlatformInterface {
