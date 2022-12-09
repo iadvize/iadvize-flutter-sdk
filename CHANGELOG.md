@@ -1,5 +1,5 @@
-## [0.0.1] - 2022-11-30
+# 2.8.0
 
-#### Added
+### Release date 2022/12/09
 
-- Initial release.
+Initial release
