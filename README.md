@@ -7,7 +7,7 @@ Embed the iAdvize Conversation SDK in your app and connect your visitors with yo
 You will find an example of integration in the ` example/` folder of this repository that you can run using 
 ```
 cd example
-flutter run example/lib/main.dart
+flutter run lib/main.dart
 ```
 
 ## Requirements
@@ -459,7 +459,7 @@ final ChatboxConfiguration customChatboxConfig = ChatboxConfiguration(
 ```dart
 IAdvizeSdk.presentChatbox();
 //OR
-IAdvizeSdk.dissmissChatbox();
+IAdvizeSdk.dismissChatbox();
 ```
 
 ### Transaction
