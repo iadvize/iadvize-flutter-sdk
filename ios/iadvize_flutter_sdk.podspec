@@ -17,7 +17,7 @@ A new Flutter plugin project.
   s.resources    = ['Assets/**.*']
   s.dependency 'Flutter'
   # iAdvize dependencies
-  s.dependency 'iAdvize', '2.8.2'
+  s.dependency 'iAdvize', '~> 2.8.3'
   
   s.platform = :ios, '12.0'
   s.swift_version = '5.0'
