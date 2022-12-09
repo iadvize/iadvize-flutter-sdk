@@ -13,7 +13,7 @@ PODS:
     - CocoaLumberjack/Core
   - Flutter (1.0.0)
   - Gifu (3.3.1)
-  - iAdvize (2.8.1):
+  - iAdvize (2.8.3):
     - Apollo (~> 0.36.0)
     - Apollo/SQLite
     - Gifu (~> 3.3.0)
@@ -24,7 +24,7 @@ PODS:
     - XMPPFramework/Swift (~> 4.0.0)
   - iadvize_flutter_sdk (2.8.0):
     - Flutter
-    - iAdvize (= 2.8.1)
+    - iAdvize (~> 2.8.3)
   - JWTDecode (2.6.3)
   - KissXML (5.3.1):
     - KissXML/All (= 5.3.1)
@@ -82,8 +82,8 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 78abfb691154e2a9df8ded4350d504ee19d90732
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   Gifu: 416d4e38c4c2fed012f019e0a1d3ffcb58e5b842
-  iAdvize: df702bbc066fa854887c69ae3c548ac077af2f4e
-  iadvize_flutter_sdk: bfec9733c2e59dd4f85f3987e53439ba12725c87
+  iAdvize: 7fb21f8029cd2991de7a45043554ccf6029dfed3
+  iadvize_flutter_sdk: 279af3109c28129aa871517c95918290780bb7bd
   JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc

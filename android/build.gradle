@@ -38,7 +38,7 @@ android {
         multiDexEnabled true
     }
     dependencies {
-        implementation 'com.iadvize:iadvize-sdk:2.8.0'
+        implementation 'com.iadvize:iadvize-sdk:2.8.1'
     }
 }
 
