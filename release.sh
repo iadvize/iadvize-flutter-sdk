@@ -9,7 +9,7 @@ if [ -f "IAdvizeSDK.zip" ]; then
     unzip -q IAdvizeSDK.zip -d tmp
 
     echo -e "\033[1;42m => Extracting version name \033[0m"
-    versionName=$(grep "version: " plugin/pubspec.yaml -m 1 | sed "s/version: \(.*\)/\1/")
+    versionName=$(grep "version: " tmp/plugin/pubspec.yaml -m 1 | sed "s/version: \(.*\)/\1/")
 
     echo -e "\033[1;31m WARNING - You are about to push release ${versionName} to the public demo repository. \033[0m"
     echo -e "\033[1;31m Proceed ? [y/n] \033[0m"
