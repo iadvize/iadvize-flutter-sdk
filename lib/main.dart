@@ -116,6 +116,11 @@ class _MyAppState extends State<MyApp> {
               ),
               const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
+                onPressed: () => _logout(),
+                label: 'Logout',
+              ),
+              const SizedBox(height: 2 * spaceBetweenButton),
+              CustomTextButton(
                 onPressed: () => _activateChatTargetingRule(),
                 label: 'Activate Chat Targeting Rule',
               ),
@@ -134,17 +139,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _registerUserNavigation(),
                 label: 'Register User Navigation',
               ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _ongoingConversationId(),
-                label: 'Print Conversation Id',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _ongoingConversationChannel(),
-                label: 'Print Conversation Channel',
-              ),
-              const SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: 2 * spaceBetweenButton),
               CustomTextButton(
                 onPressed: () => _registerPushToken(),
                 label: 'Register Push Token',
@@ -159,20 +154,10 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _disablePushNotifications(),
                 label: 'Disnable Push Notifications',
               ),
-              const SizedBox(height: spaceBetweenButton),
+              const SizedBox(height: 2 * spaceBetweenButton),
               CustomTextButton(
                 onPressed: () => _setChatboxConfiguration(),
                 label: 'Set ChatboxConfiguration',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _registertransaction(),
-                label: 'Register Transaction',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _logout(),
-                label: 'Logout',
               ),
               const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
@@ -194,6 +179,16 @@ class _MyAppState extends State<MyApp> {
                   IAdvizeSdk.setDefaultFloatingButton(true);
                 },
                 label: 'Hide Custom Button example',
+              ),
+              const SizedBox(height: 2 * spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _registerTransaction(),
+                label: 'Register Transaction',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _registerCustomData(),
+                label: 'Register Custom Data',
               ),
             ],
           ),
@@ -232,17 +227,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _ongoingConversationId() {
-    IAdvizeSdk.ongoingConversationId()
-        .then((String? id) => log('iAdvize Example : conversationId $id'));
-  }
-
-  void _ongoingConversationChannel() {
-    IAdvizeSdk.ongoingConversationChannel().then((ConversationChannel?
-            channel) =>
-        log('iAdvize Example : conversation channel ${channel?.toValueString()}'));
-  }
-
   void _registerPushToken() => IAdvizeSdk.registerPushToken(
       pushToken: _pushToken, mode: applicationMode);
 
@@ -270,9 +254,20 @@ class _MyAppState extends State<MyApp> {
     ));
   }
 
-  void _registertransaction() {
+  void _registerTransaction() {
     IAdvizeSdk.registerTransaction(Transaction(
         transactionId: 'transactionId', currency: 'EUR', amount: 25));
+  }
+
+  void _registerCustomData() {
+    List<CustomData> customData = <CustomData>[
+      CustomData.fromString("Test", "Test"),
+      CustomData.fromBoolean("Test2", false),
+      CustomData.fromDouble("Test3", 2.0),
+      CustomData.fromInt("Test4", 3)
+    ];
+    IAdvizeSdk.registerCustomData(customData).then((bool success) =>
+        log('iAdvize Example : custom data registered: $success'));
   }
 
   void _logout() {
