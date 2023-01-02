@@ -29,10 +29,6 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
-	<key>NSCameraUsageDescription</key>
-	<string>This application will use the camera to share photos and during video calls.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This application will use the microphone during video calls.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -51,5 +47,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This application will use the camera to share photos and during video calls.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This application will use the microphone during video calls.</string>
 </dict>
 </plist>

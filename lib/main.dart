@@ -17,32 +17,42 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // TODO Replace with the device token
-  final String _pushToken = 'device_push_token';
-  // TODO Replace with your project id
-  final int projectId = 3585;
-  final String? grpdUrl = null;
+  // Notifications
+  final String _pushToken = 'Replace with the device token (FCM setup)';
   final ApplicationMode applicationMode = ApplicationMode.dev;
-  // TODO Replace with your targeting rule id
-  final TargetingRule chatTargetingRule = TargetingRule(
-      uuid: 'a41611fe-c453-4df5-b6ef-3438527933b4',
-      channel: ConversationChannel.chat);
-  final TargetingRule videoTargetingRule = TargetingRule(
-      uuid: 'A video channel rule UUID', channel: ConversationChannel.video);
-  final AuthenticationOption authOptionAnonymous =
-      AuthenticationOption.anonymous();
-  final AuthenticationOption authOptionSimple =
-      AuthenticationOption.simple(userId: 'The user unique identifier');
-  final AuthenticationOption authOptionSecured =
+
+  // Authentication
+  final int projectId = -1; // TODO Replace with your project id
+  final AuthenticationOption anonAuth = AuthenticationOption.anonymous();
+  final AuthenticationOption simpleAuth =
+      AuthenticationOption.simple(userId: 'user id');
+  final AuthenticationOption securedAuth =
       AuthenticationOption.secured(onJweRequested: () {
     return Future.value('JWE token retrieved via your third party secure auth');
   });
+
+  // GDPR
+  final GDPROption gdprDisabled = GDPROption.disabled();
+  final GDPROption gdprURL =
+      GDPROption.url(url: "http://replace.with.your.gdpr.url/");
+  final GDPROption gdprListener = GDPROption.listener(onMoreInfoClicked: () {
+    log('iAdvize Example : GDPR More Info button clicked');
+    // Implement your own logic here
+  });
+
+  // Targeting / Engagement
+  final TargetingRule chatTargetingRule = TargetingRule(
+      uuid: 'Replace with a chat channel targeting rule id',
+      channel: ConversationChannel.chat);
+
+  final TargetingRule videoTargetingRule = TargetingRule(
+      uuid: 'Replace with a video channel targeting rule id',
+      channel: ConversationChannel.video);
 
   // Var for Custom button
   bool _showCustomButton = false;
   bool _newMessage = false;
   bool _useCustomButton = false;
-
   bool _hasOngoingConversation = false;
 
   static const double spaceBetweenButton = 20;
@@ -55,8 +65,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     IAdvizeSdk.setLanguage('fr');
     IAdvizeSdk.setLogLevel(LogLevel.verbose);
+
     IAdvizeSdk.setOnActiveTargetingRuleAvailabilityListener();
     _targetingRuleAvailabilityUpdatedSubscription = IAdvizeSdk
         .onActiveTargetingRuleAvailabilityUpdated
@@ -83,6 +95,7 @@ class _MyAppState extends State<MyApp> {
         IAdvizeSdk.onHandleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
+
     IAdvizeSdk.setDefaultFloatingButton(true);
     IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
   }
@@ -200,8 +213,8 @@ class _MyAppState extends State<MyApp> {
   void _activateSDK() {
     IAdvizeSdk.activate(
       projectId: projectId,
-      authenticationOption: authOptionAnonymous,
-      gdprUrl: grpdUrl,
+      authenticationOption: simpleAuth,
+      gdprOption: gdprListener,
     ).then((bool activated) => activated
         ? log('iAdvize Example : SDK activated')
         : log('iAdvize Example : SDK not activated'));
