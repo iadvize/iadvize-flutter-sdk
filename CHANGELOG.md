@@ -1,3 +1,12 @@
+# 2.9.1
+
+### Release date 2023/02/09
+
+**Bug fixes**
+
+- (iOS) Fix bot conversation starting without user GDPR consent
+- (Android) Fix file picker permissions on Android 13
+
 # 2.9.0
 
 ### Release date 2022/12/30

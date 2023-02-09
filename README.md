@@ -10,13 +10,11 @@ Embed the iAdvize Messenger SDK into your app and connect your visitors with you
 
 The iAdvize Flutter SDK Plugin uses the iAdvize native iOS & Android SDKs.
 
-| SDK   | Android  | Kotlin |
-| ----- | -------- | ------ |
-| 2.8.2 | 21 -> 33 | 1.7.20 |
-
-| SDK   | iOS  | Xcode  | Swift |
-| ----- | ---- | ------ | ----- |
-| 2.8.4 | 12.0 | 14.1.X | 5     |
+| Plugin | Android SDK | Android  | Kotlin | iOS SDK | iOS  | Xcode  | Swift |
+| ------ | ----------- | -------- | ------ | ------- | ---- | ------ | ----- |
+| 2.9.1  | 2.8.3       | 21 -> 33 | 1.8.10 | 2.9.0   | 12.0 | 14.2.X | 5     |
+| 2.9.0  | 2.8.2       | 21 -> 33 | 1.7.20 | 2.8.4   | 12.0 | 14.1.X | 5     |
+| 2.8.0  | 2.8.1       | 21 -> 33 | 1.7.20 | 2.8.3   | 12.0 | 14.1.X | 5     |
 
 ## Integration
 
