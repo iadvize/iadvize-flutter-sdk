@@ -1,10 +1,4 @@
 PODS:
-  - Apollo (0.36.0):
-    - Apollo/Core (= 0.36.0)
-  - Apollo/Core (0.36.0)
-  - Apollo/SQLite (0.36.0):
-    - Apollo/Core
-    - SQLite.swift (~> 0.12.2)
   - CocoaAsyncSocket (7.6.5)
   - CocoaLumberjack (3.8.0):
     - CocoaLumberjack/Core (= 3.8.0)
@@ -12,20 +6,12 @@ PODS:
   - CocoaLumberjack/Swift (3.8.0):
     - CocoaLumberjack/Core
   - Flutter (1.0.0)
-  - Gifu (3.3.1)
-  - iAdvize (2.8.4):
-    - Apollo (~> 0.36.0)
-    - Apollo/SQLite
-    - Gifu (~> 3.3.0)
-    - JWTDecode (~> 2.6.3)
-    - SwiftGraylog (~> 1.1.1)
-    - SwiftyMarkdown (~> 1.2.4)
+  - iAdvize (2.9.0):
     - TwilioVideo (~> 4.6)
     - XMPPFramework/Swift (~> 4.0.0)
-  - iadvize_flutter_sdk (2.9.0):
+  - iadvize_flutter_sdk (2.9.1):
     - Flutter
-    - iAdvize (~> 2.8.4)
-  - JWTDecode (2.6.3)
+    - iAdvize (~> 2.9.0)
   - KissXML (5.3.1):
     - KissXML/All (= 5.3.1)
   - KissXML/Additions (5.3.1):
@@ -35,11 +21,6 @@ PODS:
     - KissXML/Core
   - KissXML/Core (5.3.1)
   - libidn (1.35)
-  - SQLite.swift (0.12.2):
-    - SQLite.swift/standard (= 0.12.2)
-  - SQLite.swift/standard (0.12.2)
-  - SwiftGraylog (1.1.1)
-  - SwiftyMarkdown (1.2.4)
   - TwilioVideo (4.6.3)
   - XMPPFramework/default (4.0.0):
     - CocoaAsyncSocket (~> 7.6)
@@ -56,17 +37,11 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Apollo
     - CocoaAsyncSocket
     - CocoaLumberjack
-    - Gifu
     - iAdvize
-    - JWTDecode
     - KissXML
     - libidn
-    - SQLite.swift
-    - SwiftGraylog
-    - SwiftyMarkdown
     - TwilioVideo
     - XMPPFramework
 
@@ -77,19 +52,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/iadvize_flutter_sdk/ios"
 
 SPEC CHECKSUMS:
-  Apollo: a8dbf1a55e8860bfbe3e4274919721d102c85413
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: 78abfb691154e2a9df8ded4350d504ee19d90732
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  Gifu: 416d4e38c4c2fed012f019e0a1d3ffcb58e5b842
-  iAdvize: 8cc856a36726503e3b7785fddfa62ef500b4d709
-  iadvize_flutter_sdk: f5250bf9ee91352d7750a4a411a2f0e78914a9af
-  JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
+  iAdvize: 69579eea01655be9081180d46f8ccd9c35797c6c
+  iadvize_flutter_sdk: e1f804668566221ee8d2b0b6cc631dd7bdfbb542
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
-  SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
-  SwiftGraylog: 4fffb151492baa199e708548ece16f4cf1c75413
-  SwiftyMarkdown: 7cdec87c6ab5cd9ea0e22ced288e889960649ba5
   TwilioVideo: 4afaac028c5886f2f3b313a9fcc146a6b7ca34e2
   XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
 
