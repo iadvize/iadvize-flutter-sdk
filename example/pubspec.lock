@@ -73,7 +73,7 @@ packages:
       name: iadvize_flutter_sdk
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.9.1"
+    version: "2.9.2"
   lints:
     dependency: transitive
     description:

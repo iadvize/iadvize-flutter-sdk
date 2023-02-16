@@ -1,0 +1,33 @@
+PODS:
+  - Flutter (1.0.0)
+  - iAdvize (2.10.0):
+    - TwilioVideo (~> 4.6)
+  - iadvize_flutter_sdk (2.9.2):
+    - Flutter
+    - iAdvize (~> 2.10.0)
+  - TwilioVideo (4.6.3)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - iadvize_flutter_sdk (from `.symlinks/plugins/iadvize_flutter_sdk/ios`)
+
+SPEC REPOS:
+  trunk:
+    - iAdvize
+    - TwilioVideo
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  iadvize_flutter_sdk:
+    :path: ".symlinks/plugins/iadvize_flutter_sdk/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  iAdvize: f8718086b6ee275844e54b83058c2b7437861fd3
+  iadvize_flutter_sdk: bf7c845f6bbb1ec0bbb6ba5f25e2aa7f5aab1ebd
+  TwilioVideo: 4afaac028c5886f2f3b313a9fcc146a6b7ca34e2
+
+PODFILE CHECKSUM: bd8d1b33606948f06771808d711de3887d710200
+
+COCOAPODS: 1.11.3

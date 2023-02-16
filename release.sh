@@ -32,7 +32,7 @@ function checkArtifact() {
 
 function updateReleaseFiles() {
   echo -e "\033[1;42m => Updating pubspec.yaml to target latest SDK \033[0m"
-  sed -i '' "s/iadvize_flutter_sdk: ^\(.*\)/iadvize_flutter_sdk: ^${versionName}/" pubspec.yaml
+  sed -i '' "s/iadvize_flutter_sdk: ^\(.*\)/iadvize_flutter_sdk: ^${versionName}/" example/pubspec.yaml
 
   echo -e "\033[1;42m => Updating CHANGELOG, UPGRADING & README \033[0m"
   mv tmp/CHANGELOG.md CHANGELOG.md
@@ -41,7 +41,7 @@ function updateReleaseFiles() {
 }
 
 function printStartSuccess() {
-  echo -e "\033[1;42m => Release ${newVersionName} is applied! This is what remains for you to do: \033[0m"
+  echo -e "\033[1;42m => Release ${versionName} is applied! This is what remains for you to do: \033[0m"
   echo -e "\033[1;95m - Test the sample project locally with this release \033[0m"
   echo -e "\033[1;95m - Execute './release.sh finish' to continue the release process \033[0m"
 }
