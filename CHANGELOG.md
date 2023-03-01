@@ -1,3 +1,11 @@
+# 2.9.3
+
+### Release date 2023/03/01
+
+**Bug fixes**
+
+- (Android) Fix Android build issues
+
 # 2.9.2
 
 ### Release date 2023/02/15
