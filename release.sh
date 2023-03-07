@@ -34,10 +34,8 @@ function updateReleaseFiles() {
   echo -e "\033[1;42m => Updating pubspec.yaml to target latest SDK \033[0m"
   sed -i '' "s/iadvize_flutter_sdk: ^\(.*\)/iadvize_flutter_sdk: ^${versionName}/" example/pubspec.yaml
 
-  echo -e "\033[1;42m => Updating CHANGELOG, UPGRADING & README \033[0m"
-  mv tmp/CHANGELOG.md CHANGELOG.md
-  mv tmp/UPGRADING.md UPGRADING.md
-  mv tmp/README.md README.md
+  echo -e "\033[1;42m => Updating CHANGELOG & UPGRADING & README & SUPPORT. \033[0m"
+  mv tmp/*.md .
 }
 
 function printStartSuccess() {
