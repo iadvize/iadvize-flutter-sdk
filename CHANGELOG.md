@@ -1,3 +1,25 @@
+# 2.10.1
+
+### Release date 2023/03/30
+
+**Bug fixes**
+
+- (Android)) Fix message alignment
+
+# 2.10.0
+
+### Release date 2023/03/29
+
+**Features**
+
+- Disable satisfaction survey after failed bot transfer if parametrized in the admin
+- Handle the Estimated Waiting Time messages
+
+**Bug fixes**
+
+- (Android) Fix pre-conversation custom data not being sent on conversation start
+- (Android) Fix targeting process not being fully restarted after conversation end
+
 # 2.9.4
 
 ### Release date 2023/03/07
