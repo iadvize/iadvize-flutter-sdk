@@ -253,17 +253,20 @@ class _MyAppState extends State<MyApp> {
 
   void _setChatboxConfiguration() {
     IAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
-      mainColor: Colors.red,
-      navigationBarBackgroundColor: Colors.black,
-      navigationBarTitle: 'Test',
-      navigationBarMainColor: Colors.yellow,
-      iosFontName: 'Fruit Days',
+      mainColor: Colors.purple,
+      navigationBarBackgroundColor: Colors.deepPurple,
+      navigationBarTitle: 'Custom chatbox title',
+      navigationBarMainColor: Colors.white,
+      iosFontName: 'Baskerville',
       iosFontSize: 25,
-      androidFontPath: 'fonts/Test-Font.ttf',
-      automaticMessage: 'Hello! Please ask your question :)',
-      gdprMessage: 'Your own GDPR message.',
-      incomingMessageAvatarImage: const AssetImage('assets/test.jpeg'),
-      incomingMessageAvatarURL: 'https://picsum.photos/200/200',
+      androidFontPath: 'fonts/baskerville_regular.ttf',
+      automaticMessage: 'Hello! What can we do for you today?',
+      gdprMessage: 'Custom GDPR explanation message...',
+
+      // If both incomingMessageAvatarImage & incomingMessageAvatarURL are set,
+      // incomingMessageAvatarURL takes precedence
+      incomingMessageAvatarImage: const AssetImage('assets/images/agent.png'),
+      //incomingMessageAvatarURL: 'https://picsum.photos/200/200',
     ));
   }
 

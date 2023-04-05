@@ -1,10 +1,18 @@
+# 2.10.2
+
+### Release date 2023/04/05
+
+**Bug fixes**
+
+- Fix chatbox configuration API
+
 # 2.10.1
 
 ### Release date 2023/03/30
 
 **Bug fixes**
 
-- (Android)) Fix message alignment
+- (Android) Fix message alignment
 
 # 2.10.0
 

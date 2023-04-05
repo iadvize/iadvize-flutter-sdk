@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - iAdvize (2.11.0):
     - TwilioVideo (~> 4.6)
-  - iadvize_flutter_sdk (2.10.1):
+  - iadvize_flutter_sdk (2.10.2):
     - Flutter
     - iAdvize (~> 2.11.0)
   - TwilioVideo (4.6.3)
@@ -25,9 +25,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   iAdvize: 0e1654fc6de3db9cfd86710cf9b1a22fe1aa9f1e
-  iadvize_flutter_sdk: a301ffcb22a75477f6021848feb3305bb692e53c
+  iadvize_flutter_sdk: c518bda0ffba71a39f901a97ad07d28cf5173978
   TwilioVideo: 4afaac028c5886f2f3b313a9fcc146a6b7ca34e2
 
 PODFILE CHECKSUM: bd8d1b33606948f06771808d711de3887d710200
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
