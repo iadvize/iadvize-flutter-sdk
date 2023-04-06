@@ -1,3 +1,11 @@
+# 2.10.3
+
+### Release date 2023/04/06
+
+**Dependencies**
+
+- Set minimum required Dart SDK version to `2.19.0`
+
 # 2.10.2
 
 ### Release date 2023/04/05

@@ -1,3 +1,7 @@
+## 2.10.2 > 2.10.3
+
+The minimum required Dart SDK version was bumped to `>=2.19.0 <3.0.0` so ensure you are using a valid Dart SDK version.
+
 ## 2.10.1 > 2.10.2
 
 *Nothing to report*
