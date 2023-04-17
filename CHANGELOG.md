@@ -1,3 +1,11 @@
+# 2.10.4
+
+### Release date 2023/04/17
+
+**Bug fixes**
+
+- (Android) Fix default floating button showing when disabled
+
 # 2.10.3
 
 ### Release date 2023/04/06
