@@ -12,6 +12,7 @@ Here is the list of currently supported versions:
 
 | Plugin version | Android version (status)  | iOS version (status)       | Status          |
 | -------------- | ------------------------- | -------------------------- | --------------- |
+| `2.11.1`       | `2.10.0` (full support)   | `2.12.0` (full support)    | Full support    |
 | `2.11.0`       | `2.10.0` (full support)   | `2.12.0` (full support)    | Full support    |
 | `2.10.4`       | `2.9.1` (partial support) | `2.11.0` (partial support) | Partial support |
 | `2.10.3`       | `2.9.1` (partial support) | `2.11.0` (partial support) | Partial support |

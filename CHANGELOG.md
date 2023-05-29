@@ -1,6 +1,15 @@
+# 2.11.1
+
+### Release date 2023/05/29
+
+**Bug fixes**
+
+- (Android) Fix compilation issue on build
+
 # 2.11.0
 
 ### Release date 2023/05/25
+
 **Features**
 
 - Disable file attachment buttons when it is disabled in Admin chatbox template
@@ -10,7 +19,7 @@
 - (iOS) Fix camera still opening after manual permission removal
 - (iOS) Fix targeting listener not being triggered when there is an ongoing conversation
 - (iOS) Fix ongoing conversation being returned as true after closing a video conversation
-- (Android)) Fix message alignment
+- (Android) Fix message alignment
 
 # 2.10.4
 

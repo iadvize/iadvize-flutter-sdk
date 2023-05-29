@@ -1,3 +1,7 @@
+## 2.11.0 > 2.11.1
+
+*Nothing to report*
+
 ## 2.10.4 > 2.11.0
 
 From this release and onward, the possibility to upload files in the conversation is based on the option
