@@ -1,3 +1,12 @@
+# 2.11.2
+
+### Release date 2023/05/31
+
+**Bug fixes**
+
+- (iOS) Fix video conversation flow wrongly changing the conversation channel
+- Fix font update on several message types
+
 # 2.11.1
 
 ### Release date 2023/05/29
