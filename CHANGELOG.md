@@ -1,3 +1,24 @@
+# 2.12.0
+
+### Release date 2023/08/16
+
+**Features**
+
+- Allow a more sophisticated message color customization
+- Add a LogLevel mode to remove all logs
+
+**Bug fixes**
+
+- Fix conversation management after various network connection issues (phone sleep / app in background)
+- (iOS) Fix secured auth token concurrency spam
+
+**Dependencies**
+
+- (iOS) Updated min supported iOS platform from `12.0` to `13.0`
+- (Android) Gradle Plugin `7.4.1` -> `8.1.0`
+- (Android) Build Tools `33.0.1` -> `33.0.2`
+- (Android) Kotlin `1.8.10` -> `1.8.21`
+
 # 2.11.2
 
 ### Release date 2023/05/31
