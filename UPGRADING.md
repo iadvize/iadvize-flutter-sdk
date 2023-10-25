@@ -1,3 +1,14 @@
+## 2.12.0 > 2.13.0
+
+Chatbox APIs were added in order for the integrator to know when the Chatbox is opened & closed.
+```
+IAdvizeSdk.setChatboxListener();
+StreamSubscription _chatboxOpenedSubscription = IAdvizeSdk.onChatboxOpened
+    .listen((event) => log('iAdvize Example : Chatbox opened'));
+StreamSubscription _chatboxClosedSubscription = IAdvizeSdk.onChatboxClosed
+    .listen((event) => log('iAdvize Example : Chatbox closed'));
+```
+
 ## 2.11.2 > 2.12.0
 
 This release deprecates the ChatboxConfiguration.mainColor setting and adds new ways to customize the look and feel of the messages, both the ones from the visitor and the ones from the agent. Please review the new parameters to customize them to your liking.

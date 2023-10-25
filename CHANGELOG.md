@@ -1,3 +1,24 @@
+# 2.13.0
+
+### Release date 2023/10/25
+
+**Features**
+
+- Add automatic auth token refresh management
+- Remove preview image when it is empty (previously used a placeholder)
+- Add `onChatboxOpened` & `onChatboxClosed` API
+
+**Bug fixes**
+
+- Fix web & markdown links display
+- (iOS) Fix QuickReplies hit detection when no avatar is set
+- (iOS) Review of Chatbox APIs computation on main UI thread
+
+**Dependencies**
+
+- (iOS) Xcode target `14.2` -> `15.0`
+- (Android) Gradle Plugin `8.1.0` -> `8.1.1`
+
 # 2.12.0
 
 ### Release date 2023/08/16

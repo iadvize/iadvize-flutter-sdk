@@ -61,6 +61,8 @@ class _MyAppState extends State<MyApp> {
   late StreamSubscription _hasOngoingSubscription;
   late StreamSubscription _clickedUrlSubscription;
   late StreamSubscription _targetingRuleAvailabilityUpdatedSubscription;
+  late StreamSubscription _chatboxOpenedSubscription;
+  late StreamSubscription _chatboxClosedSubscription;
 
   @override
   void initState() {
@@ -95,6 +97,12 @@ class _MyAppState extends State<MyApp> {
         IAdvizeSdk.onHandleClickedUrl.listen((String url) {
       log('iAdvize Example : Click on url: $url');
     });
+
+    IAdvizeSdk.setChatboxListener();
+    _chatboxOpenedSubscription = IAdvizeSdk.onChatboxOpened
+        .listen((event) => log('iAdvize Example : Chatbox opened'));
+    _chatboxClosedSubscription = IAdvizeSdk.onChatboxClosed
+        .listen((event) => log('iAdvize Example : Chatbox closed'));
 
     IAdvizeSdk.setDefaultFloatingButton(true);
     IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
