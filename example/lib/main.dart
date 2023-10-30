@@ -325,6 +325,8 @@ class _MyAppState extends State<MyApp> {
     _messageSubscription.cancel();
     _hasOngoingSubscription.cancel();
     _clickedUrlSubscription.cancel();
+    _chatboxOpenedSubscription.cancel();
+    _chatboxClosedSubscription.cancel();
     _targetingRuleAvailabilityUpdatedSubscription.cancel();
     super.dispose();
   }
