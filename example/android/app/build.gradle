@@ -44,6 +44,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.sample"
+        namespace "com.example.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

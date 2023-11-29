@@ -1,3 +1,27 @@
+# 2.13.1 (Cantal)
+
+### Release date 2023/11/29
+
+**Features**
+
+- (iOS) Support multiline in QuickReply choices
+
+**Bug fixes**
+
+- (Android) Fix potential stuck state during GDPR process
+- (Android) Fix conversation not being started properly if network disconnects during MUC/SUB subscription
+- (Android) Remove OnBackPressedHandler which was causing issues in back button handling
+- (iOS) Add missing completion call on secured auth activation failure callback
+- (iOS) Fix conversation closing regression caused by the token refresh strategy
+
+**Dependencies**
+
+- Kotlin `1.9.20`
+- Gradle `8.3`
+- Android Gradle Plugin `8.1.2`
+- Android SDK Target `34`
+- Android SDK Build Tools `34.0.0`
+
 # 2.13.0
 
 ### Release date 2023/10/25
