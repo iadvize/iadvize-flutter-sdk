@@ -1,3 +1,21 @@
+# 2.13.2 (Cantal)
+
+### Release date 2023/12/21
+
+**Features**
+
+- Support simple Markdown syntax inside QuickReply messages
+- Add some translations for GDPR messages (cs, da, pl, sk, sv)
+
+**Bug fixes**
+
+- (Android) Fix a display issue on ProductOffer messages when no offer pric is set
+- (iOS) Fix GDPR mode not updating after multiple activations
+
+**Dependencies**
+
+- (Android) Removed deprecated `play-services-safetynet` dependency in favor of `play-services-basement`
+
 # 2.13.1 (Cantal)
 
 ### Release date 2023/11/29
@@ -22,7 +40,7 @@
 - Android SDK Target `34`
 - Android SDK Build Tools `34.0.0`
 
-# 2.13.0
+# 2.13.0 (Cantal)
 
 ### Release date 2023/10/25
 
@@ -43,7 +61,7 @@
 - (iOS) Xcode target `14.2` -> `15.0`
 - (Android) Gradle Plugin `8.1.0` -> `8.1.1`
 
-# 2.12.0
+# 2.12.0 (Beaufort)
 
 ### Release date 2023/08/16
 
@@ -64,7 +82,7 @@
 - (Android) Build Tools `33.0.1` -> `33.0.2`
 - (Android) Kotlin `1.8.10` -> `1.8.21`
 
-# 2.11.2
+# 2.11.2 (Angelot)
 
 ### Release date 2023/05/31
 
@@ -73,7 +91,7 @@
 - (iOS) Fix video conversation flow wrongly changing the conversation channel
 - Fix font update on several message types
 
-# 2.11.1
+# 2.11.1 (Angelot)
 
 ### Release date 2023/05/29
 
@@ -81,7 +99,7 @@
 
 - (Android) Fix compilation issue on build
 
-# 2.11.0
+# 2.11.0 (Angelot)
 
 ### Release date 2023/05/25
 
