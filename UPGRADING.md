@@ -1,3 +1,34 @@
+## 2.13.2 > 2.13.3
+
+In this release the Push Notification APIs has been enhanced so that you can now clear the iAdvize Push Notifications on demand.
+
+In order to do so on Android, the SDK now provides a specific Notification Channel, where all iAdvize push notifications may be placed. That way, the SDK will automatically clear this notification channel when Chatbox is opened, and you can clear it manually by calling one of the SDK APIs.
+
+First of all you need to create this notification channel:
+
+```
+IAdvizeSdk.createNotificationChannel();
+```
+This call does nothing when called on an iOS platform.
+
+Then, when receiving a push notification, in order to display it via your usual notification library, you need to specify the notificaiton channel id retrieved via:
+```
+final String notifChannelId = await IAdvizeSdk.notificationChannelId();
+```
+Here as well this API does nothing on iOS (it returns an empty string).
+
+In order to know how to specify the notification channel id when displaying the push notification, please refer to the documentation of your notification library.
+
+On iOS the notification channel concept does not exist so nothing has to be done here for configuration.
+
+Once this is done, the push notification coming from iAdvize will be cleared automatically when the visitor opens the Chatbox. 
+If you want to clear them manually at any other time you can call this API:
+
+```
+IAdvizeSDK.clearIAdvizePushNotifications()
+```
+
+
 ## 2.13.1 > 2.13.2
 
 *Nothing to report*

@@ -10,20 +10,12 @@ The iAdvize Flutter Messenger SDK Plugin support is dependent on the support of 
 
 Here is the list of currently supported versions:
 
-| Plugin version | Android version (status)   | iOS version (status)       | Status          |
-| -------------- | -------------------------- | -------------------------- | --------------- |
-| `2.13.2`       | `2.12.3` (full support)    | `2.14.2` (full support)    | Full support    |
-| `2.13.1`       | `2.12.2` (full support)    | `2.14.1` (full support)    | Full support    |
-| `2.13.0`       | `2.12.1` (full support)    | `2.14.0` (full support)    | Full support    |
-| `2.12.0`       | `2.11.0` (partial support) | `2.13.0` (partial support) | Partial support |
-| `2.11.2`       | `2.10.1` (partial support) | `2.12.1` (partial support) | Partial support |
-| `2.11.1`       | `2.10.0` (partial support) | `2.12.0` (partial support) | Partial support |
-| `2.11.0`       | `2.10.0` (partial support) | `2.12.0` (partial support) | Partial support |
-| `2.10.4`       | `2.9.1` (partial support)  | `2.11.0` (partial support) | Partial support |
-| `2.10.3`       | `2.9.1` (partial support)  | `2.11.0` (partial support) | Partial support |
-| `2.10.2`       | `2.9.1` (partial support)  | `2.11.0` (partial support) | Partial support |
-| `2.10.1`       | `2.9.1` (partial support)  | `2.11.0` (partial support) | Partial support |
-| `2.10.0`       | `2.9.0` (partial support)  | `2.11.0` (partial support) | Partial support |
+| Plugin version | Android version (status) | iOS version (status)     | Status          |
+| -------------- | ------------------------ | ------------------------ | --------------- |
+| `2.13`         | `2.12` (full support)    | `2.14` (full support)    | Full support    |
+| `2.12`         | `2.11` (partial support) | `2.13` (partial support) | Partial support |
+| `2.11`         | `2.10` (partial support) | `2.12` (partial support) | Partial support |
+| `2.10`         | `2.9` (partial support)  | `2.11` (partial support) | Partial support |
 
 > *⚠️ All versions that are not listed in the table above are not supported anymore. Please update to a supported version and check your issue again before contacting the iAdvize Help Center.*
 
