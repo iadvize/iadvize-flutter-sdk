@@ -1,3 +1,18 @@
+# 2.13.5
+
+### Release date 2024/03/21
+
+**Features**
+
+- (Android) Rework the initiate API, adding a callback + implementing retry behavior
+
+**Bug fixes**
+
+- Fix markdown links not triggering the SDK click handler
+- (Android) Fix a crash occuring when visitor spam messages
+- (Android) Add some missing obfuscation instructions
+- (iOS) Fix deadlock state in case of first XMPP connection error
+
 # 2.13.4 (Cantal)
 
 ### Release date 2024/01/18
