@@ -1,3 +1,11 @@
+# 2.13.7
+
+### Release date 2024/04/11
+
+**Bug fixes**
+
+- (Android) Fix secured preferences initialization issue in case of modified decryption key
+
 # 2.13.6 (Cantal)
 
 ### Release date 2024/04/09
