@@ -1,4 +1,13 @@
-# 2.13.7
+# 2.13.8 (Cantal)
+
+### Release date 2024/05/14
+
+**Bug fixes**
+
+- Fix line feed escaping breaking markdown syntax in bot messages
+- (Android) Fix text selection breaking markdown link handling
+
+# 2.13.7 (Cantal)
 
 ### Release date 2024/04/11
 
@@ -18,7 +27,7 @@
 
 - (Android) Fix secured preferences initialization issue with Android auto-backup strategy
 
-# 2.13.5
+# 2.13.5 (Cantal)
 
 ### Release date 2024/03/21
 
