@@ -1,3 +1,12 @@
+# 2.13.9
+
+### Release date 2024/05/30
+
+**Bug fixes**
+
+- Add missing callback on `logout` API
+- (Android) Fix isolated markdown deeplink handling
+
 # 2.13.8 (Cantal)
 
 ### Release date 2024/05/14

@@ -302,7 +302,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _logout() {
-    IAdvizeSdk.logout();
+    IAdvizeSdk.logout().then((bool success) => success
+        ? log('iAdvize Example : SDK logged out')
+        : log('iAdvize Example : Error looging out of SDK'));
   }
 
   void _presentChatbox() {

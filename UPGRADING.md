@@ -1,3 +1,13 @@
+## 2.13.8 > 2.13.9
+
+This release adds a missing callback to the `logout` API. It now returns a `Future<bool>`:
+
+```
+IAdvizeSdk.logout().then((bool success) => success
+  ? log('iAdvize Example : SDK logged out')
+  : log('iAdvize Example : Error looging out of SDK'));
+```
+
 ## 2.13.7 > 2.13.8
 
 *Nothing to report*
