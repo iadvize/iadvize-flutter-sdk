@@ -1,4 +1,12 @@
-# 2.13.9
+# 2.13.10
+
+### Release date 2024/06/07
+
+**Bug fixes**
+
+- (iOS) Fix XMPP handling for GenAI product info messages
+
+# 2.13.9 (Cantal)
 
 ### Release date 2024/05/30
 
