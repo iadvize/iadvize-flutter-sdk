@@ -79,10 +79,10 @@ packages:
     dependency: "direct main"
     description:
       name: iadvize_flutter_sdk
-      sha256: "42b38d58c33f0db81fdc5946446f3eed74d33f5309c51bd2251425a72ad6e11b"
+      sha256: c268361e7d742b2bd83da2ec377556acd55d11ecdfc0622e1fb29fde069b9e07
       url: "https://pub.dev"
     source: hosted
-    version: "2.14.0"
+    version: "2.14.1"
   leak_tracker:
     dependency: transitive
     description:

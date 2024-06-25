@@ -1,3 +1,11 @@
+# 2.14.1 (Dauphin)
+
+### Release date 2024/06/25
+
+**Bug fixes**
+
+- (iOS) Fix the refreshed auth token not being added to the retry request
+
 # 2.14.0 (Dauphin)
 
 ### Release date 2024/06/13
