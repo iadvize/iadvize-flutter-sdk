@@ -61,6 +61,7 @@ class _MyAppState extends State<MyApp> {
   late StreamSubscription _hasOngoingSubscription;
   late StreamSubscription _clickedUrlSubscription;
   late StreamSubscription _targetingRuleAvailabilityUpdatedSubscription;
+  late StreamSubscription _targetingRuleAvailabilityUpdateFailedSubscription;
   late StreamSubscription _chatboxOpenedSubscription;
   late StreamSubscription _chatboxClosedSubscription;
 
@@ -76,6 +77,12 @@ class _MyAppState extends State<MyApp> {
         .onActiveTargetingRuleAvailabilityUpdated
         .listen((bool available) {
       log('iAdvize Example : Targeting Rule available: $available');
+      _updateCustomChatButtonVisibility();
+    });
+    _targetingRuleAvailabilityUpdateFailedSubscription = IAdvizeSdk
+        .onActiveTargetingRuleAvailabilityUpdateFailed
+        .listen((Map<String, String> error) {
+      log('iAdvize Example : Targeting Rule availability update error: $error');
       _updateCustomChatButtonVisibility();
     });
 
@@ -211,6 +218,11 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _registerCustomData(),
                 label: 'Register Custom Data',
               ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
+                onPressed: () => _printDebugInfo(),
+                label: 'Print debug info',
+              ),
             ],
           ),
         ),
@@ -301,6 +313,11 @@ class _MyAppState extends State<MyApp> {
         log('iAdvize Example : custom data registered: $success'));
   }
 
+  void _printDebugInfo() async {
+    final debugInfo = await IAdvizeSdk.debugInfo();
+    log(debugInfo ?? "");
+  }
+
   void _logout() {
     IAdvizeSdk.logout().then((bool success) => success
         ? log('iAdvize Example : SDK logged out')
@@ -330,6 +347,7 @@ class _MyAppState extends State<MyApp> {
     _chatboxOpenedSubscription.cancel();
     _chatboxClosedSubscription.cancel();
     _targetingRuleAvailabilityUpdatedSubscription.cancel();
+    _targetingRuleAvailabilityUpdateFailedSubscription.cancel();
     super.dispose();
   }
 }

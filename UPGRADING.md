@@ -1,3 +1,75 @@
+## 2.14.3 > 2.15.0
+
+### Debug Info
+
+This releases adds a new `debugInfo` API that returns the status of the SDK at any given moment. This API could be used for debugging
+purposes, you can add the JSON string output to your log reporting tool.
+
+```
+final debugInfo = await IAdvizeSdk.debugInfo();
+```
+
+```
+{
+  "targeting": {
+    "screenId": "67BA3181-EBE2-4F05-B4F3-ECB07A62FA92",
+    "activeTargetingRule": {
+      "id": "D8821AD6-E0A2-4CB9-BF45-B2D8A3CF4F8D",
+      "conversationChannel": "chat"
+    },
+    "isActiveTargetingRuleAvailable": false,
+    "currentLanguage": "en"
+  },
+  "device": {
+    "model": "iPhone",
+    "osVersion": "17.5",
+    "os": "iOS"
+  },
+  "ongoingConversation": {
+    "conversationChannel": "chat",
+    "conversationId": "02012815-4BDA-42EF-87DC-5C6ED317AF7F"
+  },
+  "chatbox": {
+    "useDefaultFloatingButton": true,
+    "isChatboxPresented": false
+  },
+  "activation": {
+    "activationStatus": "activated",
+    "authenticationMode": "simple",
+    "projectId": "7260"
+  },
+  "connectivity": {
+    "wifi": true,
+    "isReachable": true,
+    "cellular": false
+  },
+  "visitor": {
+    "vuid": "d4a57969c7fc4e2a9380f3931fdcee3a965650eb9c6b4",
+    "tokenExpiration": "2025-02-27T08:14:11Z"
+  },
+  "sdkVersion": "2.15.4"
+}
+```
+
+### Targeting Listener failure callback
+
+This release also adds a callback to notify the integrator about targeting rule trigger failures. This takes the form of a new subscription:
+
+```
+late StreamSubscription _targetingRuleAvailabilityUpdateFailedSubscription;
+
+_targetingRuleAvailabilityUpdateFailedSubscription = IAdvizeSdk
+    .onActiveTargetingRuleAvailabilityUpdateFailed
+    .listen((Map<String, String> error) {
+  log('iAdvize Example : Targeting Rule availability update error: $error');
+});
+```
+
+This will be called when triggering the targeting rule fails and give the reason of the failure when possible.
+Please note that the targeting rule triggering may fail, but for standard reasons (for instance if there is no agent availabale to answer). In those cases this `_targetingRuleAvailabilityUpdateFailedSubscription` would not be called, only the usual `_targetingRuleAvailabilityUpdatedSubscription` would be called with a `false` value for `available`.
+
+> To integrate this update you will have to update your code where you want to use this new callback.
+
 ## 2.14.2 > 2.14.3
 
 This release adds a new LogLevel.ALL to force the logging of all possible logs of the SDK. This must be used with caution as latencies may be noticed in the hosting app, so do not use this feature without iAdvize explicit authorization for live debugging.
