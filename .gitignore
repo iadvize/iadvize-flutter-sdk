@@ -46,3 +46,5 @@ app.*.map.json
 # iAdvize artifacts
 IAdvizeSDK.zip
 tmp/
+
+*.lock
