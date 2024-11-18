@@ -87,7 +87,7 @@ commands:
       - run:
           name: "Build iOS sample"
           command: |
-            cd sample/ios
+            cd example/ios
             pod install --repo-update
             xcodebuild clean build \
               -workspace Runner.xcworkspace \
