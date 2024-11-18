@@ -47,4 +47,5 @@ app.*.map.json
 IAdvizeSDK.zip
 tmp/
 
+local.properties
 *.lock

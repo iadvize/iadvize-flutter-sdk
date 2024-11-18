@@ -1,3 +1,18 @@
+## 2.15.1 > 2.15.2
+
+This versions updates several build system dependencies:
+
+- Android SDK 35
+- Kotlin 2.0
+- Gradle 8.10
+- Android Gradle Plugin 8.6
+- iOS 18
+- Xcode 16
+
+Please note that the minimum OS requirements have evolved with this version:
+- minimum Android supported version is now Android 7 (SDK 24)
+- minimum iOS supported version is now 13.4
+
 ## 2.15.0 > 2.15.1
 
 *Nothing to report*

@@ -1,26 +1,14 @@
-buildscript {
-    ext {
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 21
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        kotlinVersion = "1.9.20"
-        gradleVersion = "8.1.2"
-    }
-
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "com.android.tools.build:gradle:$gradleVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlinVersion"
-    }
-}
-
 allprojects {
+    ext {
+        buildToolsVersion = "35.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 35
+        targetSdkVersion = 35
+        kotlinVersion = "2.0.0"
+        gradleVersion = "8.6.1"
+        ndkVersion = "26.1.10909125"
+    }
+
     repositories {
         google()
         gradlePluginPortal()

@@ -1,0 +1,159 @@
+version: 2.1
+
+orbs:
+  macos: circleci/macos@2.5.2
+  go: circleci/go@1.7.3
+
+# ================================================================
+# Triggers
+
+on-version-tags: &on-version-tags
+  filters:
+    tags:
+      only: /^[0-9]*\.[0-9]*\.[0-9]*$/
+    branches:
+      ignore: /.*/
+
+# ================================================================
+# Executors
+
+macos-machine-executor: &macos-machine-executor
+  macos:
+    xcode: 16.1.0
+    resource_class: macos.m1.medium.gen1
+
+go-machine-executor: &go-machine-executor
+  executor:
+    name: go/default
+    tag: '1.19.2'
+
+# ================================================================
+# Commands
+
+commands:
+  checkout-git-repo:
+    steps:
+      - checkout
+      - run:
+          name: "Read SDK config"
+          command: |
+            SDK_VERSION_NAME=$(grep "iadvize_flutter_sdk:" example/pubspec.yaml | sed "s/  iadvize_flutter_sdk: \^\(.*\)/\1/")
+            SDK_RELEASE_NAME=$(grep '# '"${SDK_VERSION_NAME}"' (' CHANGELOG.md | sed 's/# '"${SDK_VERSION_NAME}"' (\(.*\))/\1/')
+            SDK_RELEASE_TITLE="$SDK_VERSION_NAME ($SDK_RELEASE_NAME)"
+            SDK_RELEASE_NOTES=$(sed '1,4 d' CHANGELOG.md | sed '/# /q' | sed '$d' | sed '$d')
+            echo "Version name is $SDK_VERSION_NAME"
+            echo "Release name is $SDK_RELEASE_NAME"
+            echo "Release title is $SDK_RELEASE_TITLE"
+            echo "Release note are:"
+            echo "$SDK_RELEASE_NOTES"
+            echo "Save them into BASH_ENV ($BASH_ENV)"
+            echo "export SDK_VERSION_NAME=\"$SDK_VERSION_NAME\"" >> $BASH_ENV
+            echo "export SDK_RELEASE_NAME=\"$SDK_RELEASE_NAME\"" >> $BASH_ENV
+            echo "export SDK_RELEASE_TITLE=\"$SDK_RELEASE_TITLE\"" >> $BASH_ENV
+            echo "export SDK_RELEASE_NOTES=\"$SDK_RELEASE_NOTES\"" >> $BASH_ENV
+
+  build-integration-project:
+    steps:
+      - macos/install-rosetta
+      - run:
+          name: "Installing Flutter"
+          command: |
+            brew install --cask flutter
+      - run:
+          name: "Installing Android SDK"
+          command: |
+            brew install openjdk@17
+            brew install --cask android-commandlinetools
+            echo y | sdkmanager platform-tools 
+            echo y | sdkmanager "build-tools;35.0.0"
+            echo y | sdkmanager "platforms;android-35"
+      - run:
+          name: "Installing sample dependencies"
+          command: |
+            cd example
+            flutter upgrade
+            flutter pub get
+            flutter pub upgrade
+            flutter pub outdated
+            gem install cocoapods
+      - run:
+          name: "Build Android sample"
+          command: |
+            cd example/android
+            touch local.properties
+            echo "" >> local.properties
+            echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
+            ./gradlew clean build
+      - run:
+          name: "Build iOS sample"
+          command: |
+            cd sample/ios
+            pod install --repo-update
+            xcodebuild clean build \
+              -workspace Runner.xcworkspace \
+              -scheme Runner \
+              -destination "generic/platform=iOS Simulator" \
+              -derivedDataPath "$PWD/DerivedData" \
+              -skipPackagePluginValidation
+
+  download-latest-sdk:
+    steps:
+      - run:
+          name: "Download latest SDK"
+          command: |
+            repo_url="https://api.github.com/repos/iadvize/mobile-flutter-sdk-conversation-library"
+            release_json=$(curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GITHUB_TOKEN}" "${repo_url}/releases/tags/${SDK_VERSION_NAME}")
+            asset_ids=($(echo "${release_json}" | grep "\"url\": \"${repo_url}/releases/assets/" | sed "s#\(.*\)/releases/assets/\(.*\)\"\(.*\)#\2#"))
+            for asset_id in "${asset_ids[@]}";
+            do
+                curl -LJO -H 'Accept: application/octet-stream' -H "Authorization: Bearer ${GITHUB_TOKEN}" "${repo_url}/releases/assets/${asset_id}"
+            done
+
+  prepare-artifacts:
+    steps:
+      - run:
+          name: "Prepare artifacts"
+          command: |
+            mkdir artifacts
+            mv IAdvizeSDK.zip artifacts
+
+  create-github-release:
+    steps:
+      - run:
+          name: "Create GitHub release"
+          command: |
+            echo "Create release \"${SDK_RELEASE_TITLE}\" on GitHub"
+            go install github.com/tcnksm/ghr@v0.16.2
+            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" -n "${SDK_RELEASE_TITLE}" -b "${SDK_RELEASE_NOTES}" "${SDK_VERSION_NAME}" artifacts/
+
+# ================================================================
+# Jobs
+
+jobs:
+  build:
+    description: "Check integration project build"
+    <<: *macos-machine-executor
+    steps:
+      - checkout-git-repo
+      - build-integration-project
+
+  release:
+    description: "Release SDK on GitHub"
+    <<: *go-machine-executor
+    steps:
+      - checkout-git-repo
+      - download-latest-sdk
+      - prepare-artifacts
+      - create-github-release
+
+# ================================================================
+# Workflows
+
+workflows:
+  release:
+    jobs:
+      - build: *on-version-tags
+      - release:
+          <<: *on-version-tags
+          requires:
+            - build
