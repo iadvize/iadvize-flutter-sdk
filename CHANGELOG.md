@@ -1,3 +1,17 @@
+# 2.15.5 (Epoisses)
+
+### Release date 2025/02/03
+
+**Updated**
+
+- (iOS) The iAdvize SDK now uses `OSLog` (instead of `print`) to send logs to the operating system.
+
+**Bug fixes**
+
+- (iOS) Fix rare crash on logout caused by XMPP modules deinitialization.
+- (iOS) Fix rare crash on logout caused by Keychain issue.
+- (Android) Fix crash in image viewer by downsampling bitmaps.
+
 # 2.15.4 (Epoisses)
 
 ### Release date 2025/01/14
