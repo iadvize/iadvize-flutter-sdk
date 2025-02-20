@@ -1,3 +1,28 @@
+# 2.16.0 (Fourme)
+
+### Release date 2025/02/19
+
+**Features**
+
+- The Chatbox can now be presented in a compact mode.
+
+The visitor can then expand the chatbox manually. The chatbox is automatically expanded when the keyboard opens.
+This compact mode can be enabled by using a flag in the `ChatboxConfiguration`:
+
+```dart
+IAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
+  // ...
+  isSmallerChatboxEnabled: true,
+  // ...
+);
+```
+
+**Bug fixes**
+
+- (iOS) Fix Auto Layout warnings displayed in the console.
+- (Android) Fix default floating button insets for Android 15.
+- (Android) Fix some intempestive logs related to tracking & coroutines.
+
 # 2.15.5 (Epoisses)
 
 ### Release date 2025/02/03

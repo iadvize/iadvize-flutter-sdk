@@ -1,3 +1,18 @@
+## 2.15.5 > 2.16.0
+
+**Smaller Chatbox**
+
+The Chatbox can now be presented in a compact mode, the visitor can resize the chatbox manually by dragging the toolbar.
+The chatbox is automatically expanded when the keyboard opens. This compact mode can be enabled by using a flag in the `ChatboxConfiguration`:
+
+```dart
+IAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
+  // ...
+  isSmallerChatboxEnabled: true,
+  // ...
+);
+```
+
 ## 2.15.4 > 2.15.5
 
 *Nothing to report*
