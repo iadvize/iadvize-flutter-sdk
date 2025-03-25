@@ -1,3 +1,24 @@
+# 2.16.1 (Fourme)
+
+### Release date 2025/03/25
+
+**Bug fixes**
+
+- Fix auth token request management to avoid successive call on token expiration.
+- (Android) Fix gesture navigation insets in chatbox.
+- (Android) Fix some accessibility issues (TalkBack).
+- (iOS) Fix wrong input area size when typing text.
+- (iOS) Fix issue allowing to start a conversation without accepting GDPR.
+- (iOS) Fix rare crash when loading messages (Index out of range).
+- (iOS) Fix Voice Over losing focus when reloading messages.
+
+**Dependencies**
+
+- Gradle 8.10.2 > 8.13
+- Android Gradle Plugin 8.6.1 > 8.9.0
+- Kotlin 2.0.21 > 2.1.10
+- Firebase 33.6.0 > 33.10.0
+
 # 2.16.0 (Fourme)
 
 ### Release date 2025/02/19

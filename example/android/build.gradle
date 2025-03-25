@@ -4,9 +4,9 @@ allprojects {
         minSdkVersion = 24
         compileSdkVersion = 35
         targetSdkVersion = 35
-        kotlinVersion = "2.0.0"
-        gradleVersion = "8.6.1"
-        ndkVersion = "26.1.10909125"
+        kotlinVersion = "2.1.10"
+        gradleVersion = "8.9.0"
+        ndkVersion = "29.0.13113456"
     }
 
     repositories {
