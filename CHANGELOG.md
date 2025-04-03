@@ -1,3 +1,18 @@
+# 2.16.2 (Fourme)
+
+### Release date 2025/04/01
+
+**Updated**
+
+- (iOS) Add `Sendable` conformance to several public types.
+- (iOS) Improve layout update of messages including a link preview.
+
+**Bug fixes**
+
+- (Android) Fix the toolbar color not updating correctly
+- (iOS) Fix rare crash in `isRunningUnitTests()`.
+- (iOS) Fix error log: *"Unable to create a conversation manager: no visitor JWT..."*.
+
 # 2.16.1 (Fourme)
 
 ### Release date 2025/03/25
