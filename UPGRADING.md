@@ -1,3 +1,9 @@
+## 2.16.2 > 2.16.3
+
+The update of `google-play-services-basement` library to version `18.7` adds the obligation to activate `coreLibraryDesugaring` inside the apps integrating the iAdvize Mobile SDK (see https://developers.google.com/android/guides/releases#april_14_2025)
+
+For more information on how to proceed, see https://developer.android.com/studio/write/java8-support#library-desugaring
+
 ## 2.16.1 > 2.16.2
 
 *Nothing to report*

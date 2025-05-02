@@ -1,0 +1,2 @@
+/Users/distiller/project/public/example/android/app/.cxx/RelWithDebInfo/1q1f1c5v/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/distiller/project/public/example/android/app/.cxx/RelWithDebInfo/1q1f1c5v/arm64-v8a/CMakeFiles/rebuild_cache.dir
