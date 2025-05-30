@@ -1,3 +1,68 @@
+# 2.17.0 (Gaperon)
+
+### Release date 2025/05/30
+
+**Features**
+
+The visitor targeting workflow has been simplified.
+
+You do not need to register the visitor navigation anymore.
+Thus, the method `registerUserNavigation(navigationOption)` is now deprecated.
+
+You now manage targeting using only these 2 methods:
+
+- To engage the visitor, call `activateTargetingRule(targetingRule, channel)` (as you already do).
+- To stop engaging the visitor, calls `deactivateTargetingRule()` (this is new).
+
+Between these 2 calls, the iAdvize SDK automatically updates the targeting rule availability (every 30 seconds) and updates the chat button accordingly. 
+
+If the update fails (e.g.: if there is no connection), you do not need to perform any special actions. The iAdvize SDK will try to update it again 30 seconds later.
+
+*Activating a new rule*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(
+  navigationOption: NavigationOption.optionNew,
+  newTargetingRule: TargetingRule(uuid: targetingRuleUUIDString, channel: channel)
+)
+
+// AFTER: simply activate the new rule
+IAdvizeSdk.activateTargetingRule(TargetingRule(uuid: targetingRuleUUIDString, channel: channel));
+```
+
+*Deactivating the rule*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(navigationOption: NavigationOption.optionClear);
+
+// AFTER: deactivate the active rule
+IAdvizeSDK.deactivateTargetingRule()
+```
+
+*Register user navigation (new screen)*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(navigationOption: NavigationOption.optionKeep);
+
+// AFTER: Nothing to do the SDK handles it
+```
+
+**Bug fixes**
+- (iOS) Fix rare crash in conversation (ConversationViewController.previewController(_:previewItemAt:)).
+
+**Dependencies**
+
+- Gradle `8.13` > `8.14`
+- Android Gradle Plugin `8.9.2` > `8.10.0`
+- Kotlin `2.1.10` > `2.1.20`
+- Twilio `7.6.4` > `7.8.0`
+
+This Twilio update ensures that the SDK is now compatible with the new Android `16 KB page sizes` feature.
+https://developer.android.com/guide/practices/page-sizes
+
 # 2.16.3 (Fourme)
 
 ### Release date 2025/05/02

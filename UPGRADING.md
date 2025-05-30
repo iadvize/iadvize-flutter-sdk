@@ -1,3 +1,51 @@
+## 2.16.3 > 2.17.0
+
+The visitor targeting workflow has been simplified.
+
+You do not need to register the visitor navigation anymore.
+Thus, the method `registerUserNavigation(navigationOption)` is now deprecated.
+
+You now manage targeting using only these 2 methods:
+
+- To engage the visitor, call `activateTargetingRule(targetingRule, channel)` (as you already do).
+- To stop engaging the visitor, calls `deactivateTargetingRule()` (this is new).
+
+Between these 2 calls, the iAdvize SDK automatically updates the targeting rule availability (every 30 seconds) and updates the chat button accordingly. 
+
+If the update fails (e.g.: if there is no connection), you do not need to perform any special actions. The iAdvize SDK will try to update it again 30 seconds later.
+
+*Activating a new rule*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(
+  navigationOption: NavigationOption.optionNew,
+  newTargetingRule: TargetingRule(uuid: targetingRuleUUIDString, channel: channel)
+)
+
+// AFTER: simply activate the new rule
+IAdvizeSdk.activateTargetingRule(TargetingRule(uuid: targetingRuleUUIDString, channel: channel));
+```
+
+*Deactivating the rule*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(navigationOption: NavigationOption.optionClear);
+
+// AFTER: deactivate the active rule
+IAdvizeSDK.deactivateTargetingRule()
+```
+
+*Register user navigation (new screen)*
+
+```
+// BEFORE
+IAdvizeSdk.registerUserNavigation(navigationOption: NavigationOption.optionKeep);
+
+// AFTER: Nothing to do the SDK handles it
+```
+
 ## 2.16.2 > 2.16.3
 
 The update of `google-play-services-basement` library to version `18.7` adds the obligation to activate `coreLibraryDesugaring` inside the apps integrating the iAdvize Mobile SDK (see https://developers.google.com/android/guides/releases#april_14_2025)

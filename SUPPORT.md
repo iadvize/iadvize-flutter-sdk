@@ -12,10 +12,10 @@ Here is the list of currently supported versions:
 
 | Plugin version | Android version (status) | iOS version (status)     | Status          |
 | -------------- | ------------------------ | ------------------------ | --------------- |
-| `2.16`         | `2.15` (full support)    | `2.17` (full support)    | Full support    |
+| `2.17`         | `2.16` (full support)    | `2.18` (full support)    | Full support    |
+| `2.16`         | `2.15` (partial support) | `2.17` (partial support) | Partial support |
 | `2.15`         | `2.14` (partial support) | `2.16` (partial support) | Partial support |
 | `2.14`         | `2.13` (partial support) | `2.15` (partial support) | Partial support |
-| `2.13`         | `2.12` (partial support) | `2.14` (partial support) | Partial support |
 
 > *⚠️ All versions that are not listed in the table above are not supported anymore. Please update to a supported version and check your issue again before contacting the iAdvize Help Center.*
 

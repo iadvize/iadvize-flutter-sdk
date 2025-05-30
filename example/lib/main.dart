@@ -159,15 +159,15 @@ class _MyAppState extends State<MyApp> {
               ),
               const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
+                onPressed: () => _deactivateTargetingRule(),
+                label: 'Deactivate Targeting Rule',
+              ),
+              const SizedBox(height: spaceBetweenButton),
+              CustomTextButton(
                 onPressed: () => _isActiveTargetingRuleAvailable(),
                 label: 'Is Active Targeting Rule Available',
               ),
               const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _registerUserNavigation(),
-                label: 'Register User Navigation',
-              ),
-              const SizedBox(height: 2 * spaceBetweenButton),
               CustomTextButton(
                 onPressed: () => _registerPushToken(),
                 label: 'Register Push Token',
@@ -246,18 +246,13 @@ class _MyAppState extends State<MyApp> {
   void _activateVideoTargetingRule() =>
       IAdvizeSdk.activateTargetingRule(videoTargetingRule);
 
+  void _deactivateTargetingRule() => IAdvizeSdk.deactivateTargetingRule();
+
   void _isActiveTargetingRuleAvailable() {
     IAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
         available
             ? log('iAdvize Example : SDK targeting rule available')
             : log('iAdvize Example : targeting rule not available'));
-  }
-
-  void _registerUserNavigation() {
-    IAdvizeSdk.registerUserNavigation(
-      navigationOption: NavigationOption.optionNew,
-      newTargetingRule: videoTargetingRule,
-    );
   }
 
   void _registerPushToken() => IAdvizeSdk.registerPushToken(
