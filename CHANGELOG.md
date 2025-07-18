@@ -1,3 +1,19 @@
+# 2.17.1 (Gaperon)
+
+### Release date 2025/07/18
+
+**Features**
+
+- Add support for AI Quick Replies
+
+**Bug fixes**
+
+- (iOS) Fix targeting polling not being disabled during conversation.
+
+**Dependencies**
+
+- Android Gradle Plugin `8.10.0` > `8.10.1`
+
 # 2.17.0 (Gaperon)
 
 ### Release date 2025/05/30

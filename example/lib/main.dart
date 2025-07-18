@@ -24,30 +24,39 @@ class _MyAppState extends State<MyApp> {
   // Authentication
   final int projectId = -1; // TODO Replace with your project id
   final AuthenticationOption anonAuth = AuthenticationOption.anonymous();
-  final AuthenticationOption simpleAuth =
-      AuthenticationOption.simple(userId: 'user id');
-  final AuthenticationOption securedAuth =
-      AuthenticationOption.secured(onJweRequested: () {
-    return Future.value('JWE token retrieved via your third party secure auth');
-  });
+  final AuthenticationOption simpleAuth = AuthenticationOption.simple(
+    userId: 'user id',
+  );
+  final AuthenticationOption securedAuth = AuthenticationOption.secured(
+    onJweRequested: () {
+      return Future.value(
+        'JWE token retrieved via your third party secure auth',
+      );
+    },
+  );
 
   // GDPR
   final GDPROption gdprDisabled = GDPROption.disabled();
-  final GDPROption gdprURL =
-      GDPROption.url(url: "http://replace.with.your.gdpr.url/");
-  final GDPROption gdprListener = GDPROption.listener(onMoreInfoClicked: () {
-    log('iAdvize Example : GDPR More Info button clicked');
-    // Implement your own logic here
-  });
+  final GDPROption gdprURL = GDPROption.url(
+    url: "http://replace.with.your.gdpr.url/",
+  );
+  final GDPROption gdprListener = GDPROption.listener(
+    onMoreInfoClicked: () {
+      log('iAdvize Example : GDPR More Info button clicked');
+      // Implement your own logic here
+    },
+  );
 
   // Targeting / Engagement
   final TargetingRule chatTargetingRule = TargetingRule(
-      uuid: 'Replace with a chat channel targeting rule id',
-      channel: ConversationChannel.chat);
+    uuid: 'Replace with a chat channel targeting rule id',
+    channel: ConversationChannel.chat,
+  );
 
   final TargetingRule videoTargetingRule = TargetingRule(
-      uuid: 'Replace with a video channel targeting rule id',
-      channel: ConversationChannel.video);
+    uuid: 'Replace with a video channel targeting rule id',
+    channel: ConversationChannel.video,
+  );
 
   // Var for Custom button
   bool _showCustomButton = false;
@@ -76,40 +85,47 @@ class _MyAppState extends State<MyApp> {
     _targetingRuleAvailabilityUpdatedSubscription = IAdvizeSdk
         .onActiveTargetingRuleAvailabilityUpdated
         .listen((bool available) {
-      log('iAdvize Example : Targeting Rule available: $available');
-      _updateCustomChatButtonVisibility();
-    });
+          log('iAdvize Example : Targeting Rule available: $available');
+          _updateCustomChatButtonVisibility();
+        });
     _targetingRuleAvailabilityUpdateFailedSubscription = IAdvizeSdk
         .onActiveTargetingRuleAvailabilityUpdateFailed
         .listen((Map<String, String> error) {
-      log('iAdvize Example : Targeting Rule availability update error: $error');
-      _updateCustomChatButtonVisibility();
-    });
+          log(
+            'iAdvize Example : Targeting Rule availability update error: $error',
+          );
+          _updateCustomChatButtonVisibility();
+        });
 
     IAdvizeSdk.setConversationListener(manageUrlClick: true);
-    _messageSubscription =
-        IAdvizeSdk.onReceiveNewMessage.listen((String message) {
+    _messageSubscription = IAdvizeSdk.onReceiveNewMessage.listen((
+      String message,
+    ) {
       log('iAdvize Example : New message: $message');
       setState(() {
         _newMessage = true;
       });
     });
-    _hasOngoingSubscription =
-        IAdvizeSdk.onOngoingConversationUpdated.listen((bool ongoing) {
+    _hasOngoingSubscription = IAdvizeSdk.onOngoingConversationUpdated.listen((
+      bool ongoing,
+    ) {
       log('iAdvize Example : Ongoing: $ongoing');
       _hasOngoingConversation = ongoing;
       _updateCustomChatButtonVisibility();
     });
-    _clickedUrlSubscription =
-        IAdvizeSdk.onHandleClickedUrl.listen((String url) {
+    _clickedUrlSubscription = IAdvizeSdk.onHandleClickedUrl.listen((
+      String url,
+    ) {
       log('iAdvize Example : Click on url: $url');
     });
 
     IAdvizeSdk.setChatboxListener();
-    _chatboxOpenedSubscription = IAdvizeSdk.onChatboxOpened
-        .listen((event) => log('iAdvize Example : Chatbox opened'));
-    _chatboxClosedSubscription = IAdvizeSdk.onChatboxClosed
-        .listen((event) => log('iAdvize Example : Chatbox closed'));
+    _chatboxOpenedSubscription = IAdvizeSdk.onChatboxOpened.listen(
+      (event) => log('iAdvize Example : Chatbox opened'),
+    );
+    _chatboxClosedSubscription = IAdvizeSdk.onChatboxClosed.listen(
+      (event) => log('iAdvize Example : Chatbox closed'),
+    );
 
     IAdvizeSdk.setDefaultFloatingButton(true);
     IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
@@ -119,21 +135,20 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('iAdvize Flutter Plugin Example'),
-        ),
-        floatingActionButton: _showCustomButton && _useCustomButton
-            ? FloatingActionButton(
-                backgroundColor: _newMessage ? Colors.red : Colors.blue,
-                child: const Icon(Icons.chat),
-                onPressed: () {
-                  _presentChatbox();
-                  setState(() {
-                    _newMessage = false;
-                  });
-                },
-              )
-            : null,
+        appBar: AppBar(title: const Text('iAdvize Flutter Plugin Example')),
+        floatingActionButton:
+            _showCustomButton && _useCustomButton
+                ? FloatingActionButton(
+                  backgroundColor: _newMessage ? Colors.red : Colors.blue,
+                  child: const Icon(Icons.chat),
+                  onPressed: () {
+                    _presentChatbox();
+                    setState(() {
+                      _newMessage = false;
+                    });
+                  },
+                )
+                : null,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -143,10 +158,7 @@ class _MyAppState extends State<MyApp> {
                 label: 'Activate',
               ),
               const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _logout(),
-                label: 'Logout',
-              ),
+              CustomTextButton(onPressed: () => _logout(), label: 'Logout'),
               const SizedBox(height: 2 * spaceBetweenButton),
               CustomTextButton(
                 onPressed: () => _activateChatTargetingRule(),
@@ -235,9 +247,12 @@ class _MyAppState extends State<MyApp> {
       projectId: projectId,
       authenticationOption: simpleAuth,
       gdprOption: gdprListener,
-    ).then((bool activated) => activated
-        ? log('iAdvize Example : SDK activated')
-        : log('iAdvize Example : SDK not activated'));
+    ).then(
+      (bool activated) =>
+          activated
+              ? log('iAdvize Example : SDK activated')
+              : log('iAdvize Example : SDK not activated'),
+    );
   }
 
   void _activateChatTargetingRule() =>
@@ -249,52 +264,62 @@ class _MyAppState extends State<MyApp> {
   void _deactivateTargetingRule() => IAdvizeSdk.deactivateTargetingRule();
 
   void _isActiveTargetingRuleAvailable() {
-    IAdvizeSdk.isActiveTargetingRuleAvailable().then((bool available) =>
-        available
-            ? log('iAdvize Example : SDK targeting rule available')
-            : log('iAdvize Example : targeting rule not available'));
+    IAdvizeSdk.isActiveTargetingRuleAvailable().then(
+      (bool available) =>
+          available
+              ? log('iAdvize Example : SDK targeting rule available')
+              : log('iAdvize Example : targeting rule not available'),
+    );
   }
 
   void _registerPushToken() => IAdvizeSdk.registerPushToken(
-      pushToken: _pushToken, mode: applicationMode);
+    pushToken: _pushToken,
+    mode: applicationMode,
+  );
 
-  void _enablePushNotifications() =>
-      IAdvizeSdk.enablePushNotifications().then((bool success) =>
-          log('iAdvize Example : push notifications enabled $success'));
+  void _enablePushNotifications() => IAdvizeSdk.enablePushNotifications().then(
+    (bool success) =>
+        log('iAdvize Example : push notifications enabled $success'),
+  );
 
   void _disablePushNotifications() =>
-      IAdvizeSdk.disablePushNotifications().then((bool success) =>
-          log('iAdvize Example : push notifications disabled $success'));
+      IAdvizeSdk.disablePushNotifications().then(
+        (bool success) =>
+            log('iAdvize Example : push notifications disabled $success'),
+      );
 
   void _setChatboxConfiguration() {
-    IAdvizeSdk.setChatboxConfiguration(ChatboxConfiguration(
-      iosFontName: 'Baskerville',
-      iosFontSize: 16,
-      androidFontPath: 'fonts/baskerville_regular.ttf',
+    IAdvizeSdk.setChatboxConfiguration(
+      ChatboxConfiguration(
+        iosFontName: 'Baskerville',
+        iosFontSize: 16,
+        androidFontPath: 'fonts/baskerville_regular.ttf',
 
-      incomingMessageBackgroundColor: const Color(0xFFEEEFF0),
-      incomingMessageTextColor: const Color(0xFF34393F),
-      outgoingMessageBackgroundColor: const Color(0xFF320087),
-      outgoingMessageTextColor: const Color(0xFFEEEFF0),
-      accentColor: const Color(0xFFFFBF32),
+        incomingMessageBackgroundColor: const Color(0xFFEEEFF0),
+        incomingMessageTextColor: const Color(0xFF34393F),
+        outgoingMessageBackgroundColor: const Color(0xFF320087),
+        outgoingMessageTextColor: const Color(0xFFEEEFF0),
+        accentColor: const Color(0xFFFFBF32),
 
-      navigationBarBackgroundColor: const Color(0xFFFFBF32),
-      navigationBarMainColor: const Color(0xFF320087),
-      navigationBarTitle: 'Toolbar custom title',
+        navigationBarBackgroundColor: const Color(0xFFFFBF32),
+        navigationBarMainColor: const Color(0xFF320087),
+        navigationBarTitle: 'Toolbar custom title',
 
-      // If both incomingMessageAvatarImage & incomingMessageAvatarURL are set,
-      // incomingMessageAvatarURL takes precedence
-      incomingMessageAvatarImage: const AssetImage('assets/images/agent.png'),
-      //incomingMessageAvatarURL: 'https://picsum.photos/200/200',
+        // If both incomingMessageAvatarImage & incomingMessageAvatarURL are set,
+        // incomingMessageAvatarURL takes precedence
+        incomingMessageAvatarImage: const AssetImage('assets/images/agent.png'),
 
-      automaticMessage: 'Hello! What can we do for you today?',
-      gdprMessage: 'Custom GDPR explanation message...',
-    ));
+        //incomingMessageAvatarURL: 'https://picsum.photos/200/200',
+        automaticMessage: 'Hello! What can we do for you today?',
+        gdprMessage: 'Custom GDPR explanation message...',
+      ),
+    );
   }
 
   void _registerTransaction() {
-    IAdvizeSdk.registerTransaction(Transaction(
-        transactionId: 'transactionId', currency: 'EUR', amount: 25));
+    IAdvizeSdk.registerTransaction(
+      Transaction(transactionId: 'transactionId', currency: 'EUR', amount: 25),
+    );
   }
 
   void _registerCustomData() {
@@ -302,10 +327,12 @@ class _MyAppState extends State<MyApp> {
       CustomData.fromString("Test", "Test"),
       CustomData.fromBoolean("Test2", false),
       CustomData.fromDouble("Test3", 2.0),
-      CustomData.fromInt("Test4", 3)
+      CustomData.fromInt("Test4", 3),
     ];
-    IAdvizeSdk.registerCustomData(customData).then((bool success) =>
-        log('iAdvize Example : custom data registered: $success'));
+    IAdvizeSdk.registerCustomData(customData).then(
+      (bool success) =>
+          log('iAdvize Example : custom data registered: $success'),
+    );
   }
 
   void _printDebugInfo() async {
@@ -314,9 +341,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _logout() {
-    IAdvizeSdk.logout().then((bool success) => success
-        ? log('iAdvize Example : SDK logged out')
-        : log('iAdvize Example : Error looging out of SDK'));
+    IAdvizeSdk.logout().then(
+      (bool success) =>
+          success
+              ? log('iAdvize Example : SDK logged out')
+              : log('iAdvize Example : Error looging out of SDK'),
+    );
   }
 
   void _presentChatbox() {
@@ -348,17 +378,17 @@ class _MyAppState extends State<MyApp> {
 }
 
 class CustomTextButton extends StatelessWidget {
-  const CustomTextButton(
-      {super.key, required this.label, required this.onPressed});
+  const CustomTextButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
 
   final String label;
   final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Text(label),
-    );
+    return InkWell(onTap: onPressed, child: Text(label));
   }
 }
