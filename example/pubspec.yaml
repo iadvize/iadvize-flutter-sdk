@@ -4,12 +4,12 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.9.2
 
 dependencies:
   flutter:
     sdk: flutter
-  iadvize_flutter_sdk: ^2.17.1
+  iadvize_flutter_sdk: ^2.17.2
 
 dev_dependencies:
   flutter_test:

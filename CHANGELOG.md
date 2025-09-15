@@ -1,3 +1,28 @@
+# 2.17.2 (__CHEESE NAME GOES HERE__)
+
+### Release date 2025/09/12
+
+**Features**
+
+- Accessibility
+  - Improved message grouping and accessibility labels.
+  - Added missing accessibility labels and adjust contrast on buttons.
+  - Fixed Dynamic Type text-scaling issues.
+  - VoiceOver/TalkBack now announces incoming messages.
+
+**Bug fixes**
+
+- (iOS) Fix crash caused by concurrent access on visitor custom data.
+- (Android) Fix chatbox edge-to-edge display on pre-Android 15 devices
+
+**Dependencies**
+
+- React Native `0.80.1` > `0.81.4`
+- Gradle `8.14` > `8.14.3`
+- Android SDK `35.0.0` > `36.0.0`
+- Android Gradle Plugin `8.10.1` > `8.12.2`
+- Kotlin `2.1.20` > `2.2.10`
+
 # 2.17.1 (Gaperon)
 
 ### Release date 2025/07/18
