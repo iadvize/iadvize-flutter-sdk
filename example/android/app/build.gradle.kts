@@ -8,9 +8,9 @@ plugins {
 val versions_buildTools: String = "36.0.0"
 val versions_minSdk: Int = 24
 val versions_compileSdk: Int = 36
-val versions_kotlin: String = "2.2.10"
-val versions_gradle: String = "8.12.2"
-val versions_ndk: String = "29.0.14033849"
+val versions_kotlin: String = "2.2.20"
+val versions_gradle: String = "8.13.0"
+val versions_ndk: String = "29.0.14206865"
 
 android {
     namespace = "com.example.sample"
