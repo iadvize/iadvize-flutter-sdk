@@ -50,12 +50,6 @@ class _MyAppState extends State<MyApp> {
   // Targeting / Engagement
   final TargetingRule chatTargetingRule = TargetingRule(
     uuid: 'Replace with a chat channel targeting rule id',
-    channel: ConversationChannel.chat,
-  );
-
-  final TargetingRule videoTargetingRule = TargetingRule(
-    uuid: 'Replace with a video channel targeting rule id',
-    channel: ConversationChannel.video,
   );
 
   // Var for Custom button
@@ -88,6 +82,7 @@ class _MyAppState extends State<MyApp> {
           log('iAdvize Example : Targeting Rule available: $available');
           _updateCustomChatButtonVisibility();
         });
+
     _targetingRuleAvailabilityUpdateFailedSubscription = IAdvizeSdk
         .onActiveTargetingRuleAvailabilityUpdateFailed
         .listen((Map<String, String> error) {
@@ -136,19 +131,18 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('iAdvize Flutter Plugin Example')),
-        floatingActionButton:
-            _showCustomButton && _useCustomButton
-                ? FloatingActionButton(
-                  backgroundColor: _newMessage ? Colors.red : Colors.blue,
-                  child: const Icon(Icons.chat),
-                  onPressed: () {
-                    _presentChatbox();
-                    setState(() {
-                      _newMessage = false;
-                    });
-                  },
-                )
-                : null,
+        floatingActionButton: _showCustomButton && _useCustomButton
+            ? FloatingActionButton(
+                backgroundColor: _newMessage ? Colors.red : Colors.blue,
+                child: const Icon(Icons.chat),
+                onPressed: () {
+                  _presentChatbox();
+                  setState(() {
+                    _newMessage = false;
+                  });
+                },
+              )
+            : null,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -163,11 +157,6 @@ class _MyAppState extends State<MyApp> {
               CustomTextButton(
                 onPressed: () => _activateChatTargetingRule(),
                 label: 'Activate Chat Targeting Rule',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _activateVideoTargetingRule(),
-                label: 'Activate Video Targeting Rule',
               ),
               const SizedBox(height: spaceBetweenButton),
               CustomTextButton(
@@ -248,27 +237,22 @@ class _MyAppState extends State<MyApp> {
       authenticationOption: simpleAuth,
       gdprOption: gdprListener,
     ).then(
-      (bool activated) =>
-          activated
-              ? log('iAdvize Example : SDK activated')
-              : log('iAdvize Example : SDK not activated'),
+      (bool activated) => activated
+          ? log('iAdvize Example : SDK activated')
+          : log('iAdvize Example : SDK not activated'),
     );
   }
 
   void _activateChatTargetingRule() =>
       IAdvizeSdk.activateTargetingRule(chatTargetingRule);
 
-  void _activateVideoTargetingRule() =>
-      IAdvizeSdk.activateTargetingRule(videoTargetingRule);
-
   void _deactivateTargetingRule() => IAdvizeSdk.deactivateTargetingRule();
 
   void _isActiveTargetingRuleAvailable() {
     IAdvizeSdk.isActiveTargetingRuleAvailable().then(
-      (bool available) =>
-          available
-              ? log('iAdvize Example : SDK targeting rule available')
-              : log('iAdvize Example : targeting rule not available'),
+      (bool available) => available
+          ? log('iAdvize Example : SDK targeting rule available')
+          : log('iAdvize Example : targeting rule not available'),
     );
   }
 
@@ -295,23 +279,17 @@ class _MyAppState extends State<MyApp> {
         iosFontSize: 16,
         androidFontPath: 'fonts/baskerville_regular.ttf',
 
-        incomingMessageBackgroundColor: const Color(0xFFEEEFF0),
-        incomingMessageTextColor: const Color(0xFF34393F),
-        outgoingMessageBackgroundColor: const Color(0xFF320087),
-        outgoingMessageTextColor: const Color(0xFFEEEFF0),
-        accentColor: const Color(0xFFFFBF32),
+        primaryColor: const Color(0xFFFF0000),
+        secondaryColor: const Color(0xFF008000),
+        primaryTextColor: const Color(0xFF0000FF),
+        secondaryTextColor: const Color(0xFFFFFF00),
 
-        navigationBarBackgroundColor: const Color(0xFFFFBF32),
-        navigationBarMainColor: const Color(0xFF320087),
-        navigationBarTitle: 'Toolbar custom title',
+        title: 'Toolbar custom title',
+        avatar: const AssetImage('assets/images/agent.png'),
 
-        // If both incomingMessageAvatarImage & incomingMessageAvatarURL are set,
-        // incomingMessageAvatarURL takes precedence
-        incomingMessageAvatarImage: const AssetImage('assets/images/agent.png'),
-
-        //incomingMessageAvatarURL: 'https://picsum.photos/200/200',
         automaticMessage: 'Hello! What can we do for you today?',
         gdprMessage: 'Custom GDPR explanation message...',
+        isSmallerChatboxEnabled: true,
       ),
     );
   }
@@ -342,10 +320,9 @@ class _MyAppState extends State<MyApp> {
 
   void _logout() {
     IAdvizeSdk.logout().then(
-      (bool success) =>
-          success
-              ? log('iAdvize Example : SDK logged out')
-              : log('iAdvize Example : Error looging out of SDK'),
+      (bool success) => success
+          ? log('iAdvize Example : SDK logged out')
+          : log('iAdvize Example : Error looging out of SDK'),
     );
   }
 
