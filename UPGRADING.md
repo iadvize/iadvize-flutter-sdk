@@ -1,4 +1,4 @@
-## 2.17.5 > 3.0.0-beta1
+## 2.17.5 > 3.0.0
 
 ### New `ChatboxConfiguration` APIs
 
