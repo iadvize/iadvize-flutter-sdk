@@ -1,3 +1,11 @@
+# 3.0.1 (Herbillette)
+
+### Release date 2026/03/26
+
+**Features**
+
+- Update README.
+
 # 3.0.0 (Herbillette)
 
 ### Release date 2026/03/24
