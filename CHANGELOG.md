@@ -1,3 +1,26 @@
+# 3.1.0 (Immanente)
+
+### Release date 2026/06/08
+
+**Features**
+
+- Added response streaming. Messages from the Shopping Assistant are now streamed progressively, allowing visitors to start reading the response before it is fully generated.
+- Added thinking indicators. A thinking indicator is now displayed immediately after a visitor sends a message, providing instant visual feedback that the Shopping Assistant has received the request and is processing it. The indicator shows contextual labels depending on the action being performed (e.g. *"Searching for products…*", *"Checking your order details…"*).
+- Improved the experience for sending images and files. Visitors can now send images or files along with text. When chatting with an operator, a visitor can send up to 5 images or PDFs in a single message; when chatting with a bot, a visitor can send a single image or PDF.
+- (iOS) Added the iAdvize logo at the bottom of the conversation.
+
+**Bug fixes**
+
+- Fixed Quick Replies UI when they spread multiple on lines
+- (iOS) Fixed an error that occurred when sending certain transactions. Previously failed transactions are retried automatically once you migrate to this version.
+- (iOS) Fixed a disabled input field during the satisfaction survey comment step.
+- (iOS) Fixed a small visual glitch that could occur with proactive bot messages when starting a new conversation.
+
+**Dependencies**
+
+- Flutter `3.38.4` > `3.44.1`
+- Gradle `8.13` > `9.3.1`
+
 # 3.0.1 (Herbillette)
 
 ### Release date 2026/03/26

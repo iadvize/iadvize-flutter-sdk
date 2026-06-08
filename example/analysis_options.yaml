@@ -1,0 +1,9 @@
+# Analyzer configuration for the public example app.
+#
+# This is a throwaway integration/demo app: we only care that our own Dart code
+# (lib/) analyzes cleanly. Exclude the generated build output so the analyzer
+# does not descend into materialized SwiftPM package sources (e.g.
+# build/ios/SourcePackages/firebase_messaging-*/test), which are not our code.
+analyzer:
+  exclude:
+    - build/**
