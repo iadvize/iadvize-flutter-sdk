@@ -1,3 +1,19 @@
+## 3.1.0 > 3.2.0
+
+### Android: your app must compile against SDK 37
+
+The plugin now compiles against Android SDK 37.
+
+- If your app's Android config sets `compileSdk` explicitly, set it to `37`.
+- If it relies on `flutter.compileSdkVersion`, make sure your Flutter version provides SDK 37; otherwise set `compileSdk = 37` yourself.
+
+### iOS: Swift Package Manager support
+
+The plugin now ships a `Package.swift` and can be integrated through Swift Package Manager. CocoaPods stays fully supported, so you don't need to do anything to keep using it.
+
+- If you have enabled Flutter's Swift Package Manager (`flutter config --enable-swift-package-manager`), the plugin resolves as a Swift package with no extra setup.
+- The minimum iOS version is unchanged (15.0).
+
 ## 3.0.1 > 3.1.0
 
 *Nothing to report*

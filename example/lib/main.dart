@@ -124,6 +124,9 @@ class _MyAppState extends State<MyApp> {
 
     IAdvizeSdk.setDefaultFloatingButton(true);
     IAdvizeSdk.setFloatingButtonPosition(leftMargin: 20, bottomMargin: 20);
+
+    // Add to cart: set the success handler by default.
+    _setSuccessAddToCartHandler();
   }
 
   @override
@@ -143,88 +146,105 @@ class _MyAppState extends State<MyApp> {
                 },
               )
             : null,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomTextButton(
-                onPressed: () => _activateSDK(),
-                label: 'Activate',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(onPressed: () => _logout(), label: 'Logout'),
-              const SizedBox(height: 2 * spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _activateChatTargetingRule(),
-                label: 'Activate Chat Targeting Rule',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _deactivateTargetingRule(),
-                label: 'Deactivate Targeting Rule',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _isActiveTargetingRuleAvailable(),
-                label: 'Is Active Targeting Rule Available',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _registerPushToken(),
-                label: 'Register Push Token',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _enablePushNotifications(),
-                label: 'Enable Push Notifications',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _disablePushNotifications(),
-                label: 'Disnable Push Notifications',
-              ),
-              const SizedBox(height: 2 * spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _setChatboxConfiguration(),
-                label: 'Set ChatboxConfiguration',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () {
-                  setState(() {
-                    _useCustomButton = true;
-                  });
-                  IAdvizeSdk.setDefaultFloatingButton(false);
-                },
-                label: 'Show Custom Button example',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () {
-                  setState(() {
-                    _useCustomButton = false;
-                    _newMessage = false;
-                  });
-                  IAdvizeSdk.setDefaultFloatingButton(true);
-                },
-                label: 'Hide Custom Button example',
-              ),
-              const SizedBox(height: 2 * spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _registerTransaction(),
-                label: 'Register Transaction',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _registerCustomData(),
-                label: 'Register Custom Data',
-              ),
-              const SizedBox(height: spaceBetweenButton),
-              CustomTextButton(
-                onPressed: () => _printDebugInfo(),
-                label: 'Print debug info',
-              ),
-            ],
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomTextButton(
+                  onPressed: () => _activateSDK(),
+                  label: 'Activate',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(onPressed: () => _logout(), label: 'Logout'),
+                const SizedBox(height: 2 * spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _activateChatTargetingRule(),
+                  label: 'Activate Chat Targeting Rule',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _deactivateTargetingRule(),
+                  label: 'Deactivate Targeting Rule',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _isActiveTargetingRuleAvailable(),
+                  label: 'Is Active Targeting Rule Available',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _registerPushToken(),
+                  label: 'Register Push Token',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _enablePushNotifications(),
+                  label: 'Enable Push Notifications',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _disablePushNotifications(),
+                  label: 'Disnable Push Notifications',
+                ),
+                const SizedBox(height: 2 * spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _setChatboxConfiguration(),
+                  label: 'Set ChatboxConfiguration',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () {
+                    setState(() {
+                      _useCustomButton = true;
+                    });
+                    IAdvizeSdk.setDefaultFloatingButton(false);
+                  },
+                  label: 'Show Custom Button example',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () {
+                    setState(() {
+                      _useCustomButton = false;
+                      _newMessage = false;
+                    });
+                    IAdvizeSdk.setDefaultFloatingButton(true);
+                  },
+                  label: 'Hide Custom Button example',
+                ),
+                const SizedBox(height: 2 * spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _registerTransaction(),
+                  label: 'Register Transaction',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _registerCustomData(),
+                  label: 'Register Custom Data',
+                ),
+                const SizedBox(height: 2 * spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _setSuccessAddToCartHandler(),
+                  label: 'Set Success Add To Cart Handler',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _setFailureAddToCartHandler(),
+                  label: 'Set Failure Add To Cart Handler',
+                ),
+                const SizedBox(height: spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _removeAddToCartHandler(),
+                  label: 'Remove Add To Cart Handler',
+                ),
+                const SizedBox(height: 2 * spaceBetweenButton),
+                CustomTextButton(
+                  onPressed: () => _printDebugInfo(),
+                  label: 'Print debug info',
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -311,6 +331,30 @@ class _MyAppState extends State<MyApp> {
       (bool success) =>
           log('iAdvize Example : custom data registered: $success'),
     );
+  }
+
+  // Add to cart: simulate the integrator's cart logic succeeding after 2s.
+  void _setSuccessAddToCartHandler() {
+    IAdvizeSdk.setAddToCartHandler((String productId) async {
+      log('iAdvize Example : Add to cart requested for product: $productId');
+      await Future<void>.delayed(const Duration(seconds: 2));
+      log('iAdvize Example : Add to cart succeeded for product: $productId');
+    });
+  }
+
+  // Add to cart: simulate the integrator's cart logic failing after 2s.
+  void _setFailureAddToCartHandler() {
+    IAdvizeSdk.setAddToCartHandler((String productId) async {
+      log('iAdvize Example : Add to cart requested for product: $productId');
+      await Future<void>.delayed(const Duration(seconds: 2));
+      log('iAdvize Example : Add to cart failed for product: $productId');
+      throw Exception('Simulated add to cart failure');
+    });
+  }
+
+  void _removeAddToCartHandler() {
+    IAdvizeSdk.removeAddToCartHandler();
+    log('iAdvize Example : Add to cart handler removed');
   }
 
   void _printDebugInfo() async {

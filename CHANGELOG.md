@@ -1,3 +1,31 @@
+# 3.2.0 (Jonchée)
+
+### Release date 2026/09/14
+
+**Features**
+
+- **Add-To-Cart**. The Add-To-Cart feature allows visitors to add a product directly to their cart from a conversation with the Assistant. Its goal: to simplify the shopping experience without leaving the chat, by reducing frictions linked to traditional navigation.
+- The Assistant recommends products to the visitor.
+  
+- The visitor clicks on "Add to cart" without leaving the conversation.
+  
+- The product is immediately added to the cart on your e-commerce website.
+  
+- A confirmation message is displayed in the conversation.
+- **Scroll-to-bottom button**. When the conversation is not scrolled to bottom, a button appears to quickly reach the bottom of the conversation.
+- **Swift Package Manager**. The iAdvize Flutter SDK now supports Swift Package Manager, in anticipation of [incoming CocoaPods maintenance mode](https://blog.cocoapods.org/CocoaPods-Specs-Repo/).
+
+**Bug fixes**
+
+- (Android) Fixed conversation history loss after consecutive logouts.
+- (iOS) Fixed a display issue that sometimes affected streamed messages.
+
+**Dependencies**
+
+- Gradle `9.3.1` > `9.7.1`
+- Kotlin `2.2.21` > `2.3.21`
+- Android Compile SDK `36` > `37`, Build Tools `36.0.0` > `37.0.0`
+
 # 3.1.0 (Immanente)
 
 ### Release date 2026/06/08
